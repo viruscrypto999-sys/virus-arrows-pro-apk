@@ -1,2816 +1,2410 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Virus Arrows Game — Pro Edition</title>
-  <style>
-    :root {
-      --bg-app: #f3f5f9;
-      --bg-surface: #ffffff;
-      --bg-canvas: #ffffff;
-      --bg-pill: #eef2f6;
-      --text-main: #0f172a;
-      --text-muted: #64748b;
-      --primary-blue: #1d7dfa;
-      --primary-blue-dark: #1565d8;
-      --primary-blue-soft: #e8f2ff;
-      --arrow-idle: #061838;
-      --arrow-moving: #1d7dfa;
-      --arrow-hint: #f59e0b;
-      --arrow-blocked: #ef4444;
-      --dot-color: #cbd5e1;
-      --ray-clear: rgba(29, 125, 250, 0.16);
-      --ray-blocked: rgba(239, 68, 68, 0.16);
-      --border-light: #e2e8f0;
-      --card-shadow: 0 6px 20px rgba(15, 23, 42, 0.06);
-      --watermark-stroke: rgba(15, 23, 42, 0.035);
-      --virus-accent: #111827;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Virus Arrows Game — iTzVirus Pro Edition</title>
+<link rel="icon" type="image/jpeg" href="virus.jpg">
+<link rel="apple-touch-icon" href="virus.jpg">
+<style>
+  :root {
+    --bg-main: #f4f6f9;
+    --bg-card: #ffffff;
+    --bg-canvas: #ffffff;
+    --text-primary: #0f172a;
+    --text-secondary: #64748b;
+    --accent-main: #1d7dfa;
+    --accent-light: rgba(29, 125, 250, 0.12);
+    --arrow-idle: #091e42;
+    --arrow-active: #1d7dfa;
+    --arrow-gold: #f59e0b;
+    --dot-color: #cbd5e1;
+    --ruler-ray: rgba(29, 125, 250, 0.16);
+    --border-col: #e2e8f0;
+    --shadow-soft: 0 8px 24px rgba(15, 23, 42, 0.08);
+  }
 
-    body.dark-theme {
-      --bg-app: #0b0f19;
-      --bg-surface: #131b2e;
-      --bg-canvas: #0d1322;
-      --bg-pill: #1e293b;
-      --text-main: #f8fafc;
-      --text-muted: #94a3b8;
-      --primary-blue: #38bdf8;
-      --primary-blue-dark: #0284c7;
-      --primary-blue-soft: rgba(56, 189, 248, 0.16);
-      --arrow-idle: #e2e8f0;
-      --arrow-moving: #38bdf8;
-      --arrow-hint: #fbbf24;
-      --arrow-blocked: #f43f5e;
-      --dot-color: #334155;
-      --ray-clear: rgba(56, 189, 248, 0.22);
-      --ray-blocked: rgba(244, 63, 94, 0.22);
-      --border-light: #1e293b;
-      --card-shadow: 0 8px 26px rgba(0, 0, 0, 0.45);
-      --watermark-stroke: rgba(255, 255, 255, 0.03);
-      --virus-accent: #38bdf8;
-    }
+  body.dark-mode {
+    --bg-main: #090d16;
+    --bg-card: #121826;
+    --bg-canvas: #0b0f19;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --accent-main: #e11d48;
+    --accent-light: rgba(225, 29, 72, 0.18);
+    --arrow-idle: #e2e8f0;
+    --arrow-active: #ff2a5f;
+    --arrow-gold: #fbbf24;
+    --dot-color: #334155;
+    --ruler-ray: rgba(255, 42, 95, 0.22);
+    --border-col: #1e293b;
+    --shadow-soft: 0 8px 28px rgba(0, 0, 0, 0.5);
+  }
 
-    /* Skin Overrides */
-    body.skin-virus {
-      --arrow-idle: #09090b;
-      --arrow-moving: #e11d48;
-      --ray-clear: rgba(225, 29, 72, 0.18);
-    }
-    body.dark-theme.skin-virus {
-      --arrow-idle: #f4f4f5;
-      --arrow-moving: #f43f5e;
-    }
-    body.skin-matrix {
-      --bg-canvas: #050b08;
-      --arrow-idle: #10b981;
-      --arrow-moving: #34d399;
-      --dot-color: #064e3b;
-      --ray-clear: rgba(16, 185, 129, 0.25);
-    }
-    body.skin-gold {
-      --arrow-idle: #1e1b4b;
-      --arrow-moving: #d97706;
-      --ray-clear: rgba(245, 158, 11, 0.22);
-    }
-    body.dark-theme.skin-gold {
-      --arrow-idle: #fde68a;
-      --arrow-moving: #f59e0b;
-    }
+  /* Custom Arrow Skin Overrides */
+  body.skin-crimson {
+    --accent-main: #e11d48;
+    --arrow-idle: #111827;
+    --arrow-active: #e11d48;
+    --ruler-ray: rgba(225, 29, 72, 0.18);
+  }
+  body.dark-mode.skin-crimson {
+    --arrow-idle: #f43f5e;
+    --arrow-active: #ffffff;
+  }
+  body.skin-matrix {
+    --accent-main: #10b981;
+    --arrow-idle: #064e3b;
+    --arrow-active: #10b981;
+    --ruler-ray: rgba(16, 185, 129, 0.2);
+  }
+  body.dark-mode.skin-matrix {
+    --arrow-idle: #34d399;
+    --arrow-active: #a7f3d0;
+  }
+  body.skin-gold {
+    --accent-main: #d97706;
+    --arrow-idle: #451a03;
+    --arrow-active: #f59e0b;
+    --ruler-ray: rgba(245, 158, 11, 0.22);
+  }
+  body.dark-mode.skin-gold {
+    --arrow-idle: #fbbf24;
+    --arrow-active: #fef08a;
+  }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      user-select: none;
-      -webkit-user-select: none;
-      -webkit-tap-highlight-color: transparent;
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    }
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
 
-    html, body {
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      background-color: #090d16;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
+  body, html {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #05070b;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 
-    #app-shell {
-      width: 100%;
-      max-width: 450px;
-      height: 100%;
-      background-color: var(--bg-app);
-      color: var(--text-main);
-      display: flex;
-      flex-direction: column;
-      position: relative;
-      overflow: hidden;
-      box-shadow: 0 0 60px rgba(0, 0, 0, 0.65);
-      transition: background-color 0.25s ease, color 0.25s ease;
-    }
+  #app-frame {
+    width: 100%;
+    max-width: 460px;
+    height: 100%;
+    background: var(--bg-main);
+    color: var(--text-primary);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 0 50px rgba(0,0,0,0.65);
+    transition: background 0.25s, color 0.25s;
+  }
 
-    .view-screen {
-      flex: 1;
-      display: none;
-      flex-direction: column;
-      position: relative;
-      overflow-y: auto;
-      overflow-x: hidden;
-    }
-    .view-screen.active {
-      display: flex;
-    }
+  #virus-export-bar {
+    background: linear-gradient(90deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+    border-bottom: 2px solid #e11d48;
+    padding: 8px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    z-index: 100;
+    color: #fff;
+    box-shadow: 0 4px 16px rgba(225, 29, 72, 0.35);
+  }
+  .export-btn {
+    background: #e11d48;
+    color: #ffffff;
+    border: none;
+    padding: 7px 11px;
+    border-radius: 10px;
+    font-size: 11.5px;
+    font-weight: 800;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    box-shadow: 0 2px 8px rgba(225, 29, 72, 0.4);
+    white-space: nowrap;
+  }
+  .export-btn.txt-btn {
+    background: #2563eb;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.4);
+  }
+  .export-btn:active {
+    transform: scale(0.95);
+  }
+  .export-close {
+    background: #1e293b;
+    color: #94a3b8;
+    border: 1px solid #334155;
+    width: 26px;
+    height: 26px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 800;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
 
-    #view-main {
-      background-color: var(--bg-surface);
-      justify-content: space-between;
-      align-items: center;
-      padding: 22px 24px 22px;
-      position: relative;
-      z-index: 1;
-    }
+  .screen {
+    flex: 1;
+    display: none;
+    flex-direction: column;
+    overflow-y: auto;
+    position: relative;
+  }
+  .screen.active {
+    display: flex;
+  }
 
-    .watermark-bg {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      z-index: -1;
-      overflow: hidden;
-    }
+  .virus-top-strip {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 18px 4px;
+  }
+  .virus-profile-pill {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--bg-card);
+    padding: 5px 12px 5px 6px;
+    border-radius: 30px;
+    border: 1px solid var(--border-col);
+    box-shadow: var(--shadow-soft);
+    cursor: pointer;
+  }
+  .virus-avatar-wrap {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid #0f172a;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .virus-avatar-wrap img, .virus-avatar-wrap svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .admin-quick-btn {
+    background: linear-gradient(135deg, #111827 0%, #dc2626 100%);
+    color: #fff;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.6px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.35);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .stealth-hidden {
+    display: none !important;
+  }
 
-    /* Top Virus Brand & Admin Quick Bar on Home */
-    .home-top-strip {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .creator-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: var(--bg-pill);
-      padding: 5px 12px 5px 6px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 800;
-      color: var(--text-main);
-      border: 1px solid var(--border-light);
-      cursor: pointer;
-    }
-    .admin-trigger-pill {
-      background: #09090b;
-      color: #ffffff;
-      border: 1.5px solid #334155;
-      padding: 6px 13px;
-      border-radius: 999px;
-      font-size: 11.5px;
-      font-weight: 800;
-      letter-spacing: 0.4px;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      cursor: pointer;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.18);
-      transition: transform 0.12s ease;
-    }
-    .admin-trigger-pill:active {
-      transform: scale(0.94);
-    }
+  /* ================= MAIN TAB SCREEN ================= */
+  #screen-main {
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 18px;
+  }
 
-    .daily-widget-card {
-      width: 172px;
-      background: linear-gradient(180deg, #54b2ff 0%, #1177f7 100%);
-      border-radius: 18px;
-      padding: 16px 14px 15px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      color: #ffffff;
-      box-shadow: 0 14px 28px rgba(17, 119, 247, 0.28);
-      cursor: pointer;
-      transition: transform 0.15s ease;
-    }
-    .daily-widget-card:active {
-      transform: scale(0.96);
-    }
+  .daily-card {
+    width: 166px;
+    background: linear-gradient(180deg, #56b4ff 0%, #0d74f5 100%);
+    border-radius: 20px;
+    padding: 16px 14px 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #fff;
+    box-shadow: 0 12px 26px rgba(13, 116, 245, 0.3);
+    cursor: pointer;
+    transition: transform 0.15s;
+  }
+  .daily-card:active { transform: scale(0.96); }
+  .daily-cal-icon {
+    width: 38px;
+    height: 38px;
+    background: #fff;
+    border-radius: 10px;
+    border: 3px solid #f59e0b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #0d74f5;
+    font-size: 17px;
+    font-weight: 800;
+    margin-bottom: 8px;
+  }
+  .daily-label {
+    font-size: 10px;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    opacity: 0.9;
+    font-weight: 700;
+    margin-bottom: 2px;
+  }
+  .daily-date-text {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .daily-play-pill {
+    background: rgba(255, 255, 255, 0.25);
+    border: 1px solid rgba(255,255,255,0.45);
+    color: #fff;
+    padding: 5px 24px;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 13px;
+  }
 
-    .cal-star-icon {
-      width: 40px;
-      height: 40px;
-      background: #ffffff;
-      border: 3.5px solid #f59e0b;
-      border-radius: 11px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 10px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
-      position: relative;
-    }
-    .cal-star-icon::before {
-      content: "";
-      position: absolute;
-      top: -6px;
-      width: 22px;
-      height: 5px;
-      border-radius: 3px;
-      background: #d97706;
-    }
-    .cal-star-circle {
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      border: 2px solid #cbd5e1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #cbd5e1;
-      font-size: 12px;
-    }
+  /* Center Hero Branding */
+  .brand-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 0 20px;
+  }
+  .hero-avatar-badge {
+    width: 78px;
+    height: 78px;
+    border-radius: 50%;
+    border: 3px solid var(--accent-main);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.22);
+    overflow: hidden;
+    background: #fff;
+    margin-bottom: 8px;
+    cursor: pointer;
+    position: relative;
+  }
+  .hero-avatar-badge img, .hero-avatar-badge svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .brand-title {
+    font-size: 28px;
+    font-weight: 900;
+    letter-spacing: -0.6px;
+    color: var(--text-primary);
+    cursor: pointer;
+  }
+  .brand-sub {
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--accent-main);
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
 
-    .daily-tag {
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 0.7px;
-      text-transform: uppercase;
-      opacity: 0.85;
-      margin-bottom: 3px;
-    }
-    .daily-date-label {
-      font-size: 15.5px;
-      font-weight: 700;
-      margin-bottom: 11px;
-    }
-    .daily-play-btn {
-      background: rgba(255, 255, 255, 0.26);
-      color: #ffffff;
-      border: none;
-      border-radius: 999px;
-      padding: 6px 26px;
-      font-size: 14px;
-      font-weight: 700;
-      pointer-events: none;
-    }
+  /* Difficulty Mode Selector */
+  .mode-selector {
+    display: flex;
+    gap: 6px;
+    margin-top: 10px;
+    background: var(--bg-card);
+    padding: 4px;
+    border-radius: 22px;
+    border: 1px solid var(--border-col);
+  }
+  .mode-pill {
+    padding: 6px 12px;
+    border-radius: 18px;
+    font-size: 11px;
+    font-weight: 800;
+    cursor: pointer;
+    color: var(--text-secondary);
+    transition: all 0.15s;
+  }
+  .mode-pill.active {
+    background: var(--accent-main);
+    color: #fff;
+    box-shadow: 0 3px 10px rgba(29, 125, 250, 0.3);
+  }
 
-    /* Center Virus Avatar & Brand Block */
-    .main-brand-center {
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 6px;
-    }
-    .virus-avatar-ring {
-      width: 82px;
-      height: 82px;
-      border-radius: 50%;
-      background: #ffffff;
-      border: 3px solid #09090b;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.16);
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: transform 0.15s ease;
-    }
-    .virus-avatar-ring:active {
-      transform: scale(0.93);
-    }
-    .main-brand-title {
-      font-size: 31px;
-      font-weight: 900;
-      color: var(--text-main);
-      letter-spacing: -0.7px;
-      line-height: 1.05;
-    }
-    .virus-brand-sub {
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: 1.2px;
-      text-transform: uppercase;
-      color: #e11d48;
-      background: rgba(225, 29, 72, 0.1);
-      padding: 4px 11px;
-      border-radius: 999px;
-    }
+  .main-buttons {
+    width: 100%;
+    padding: 0 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+  }
+  .btn-primary {
+    width: 100%;
+    background: linear-gradient(90deg, var(--accent-main) 0%, #2563eb 100%);
+    color: #fff;
+    border: none;
+    border-radius: 30px;
+    padding: 13px 20px;
+    font-size: 16px;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(29, 125, 250, 0.32);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .btn-primary:active { transform: scale(0.98); }
+  .btn-primary span.sub-lvl {
+    font-size: 11.5px;
+    font-weight: 600;
+    opacity: 0.9;
+    margin-top: 2px;
+  }
+  .btn-secondary {
+    width: 100%;
+    background: var(--bg-card);
+    color: var(--accent-main);
+    border: 1px solid var(--border-col);
+    border-radius: 30px;
+    padding: 13px 20px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: var(--shadow-soft);
+  }
 
-    /* Difficulty Mode Selector Row on Home */
-    .diff-selector-row {
-      display: flex;
-      gap: 6px;
-      background: var(--bg-pill);
-      padding: 4px;
-      border-radius: 999px;
-      border: 1px solid var(--border-light);
-      margin-top: 4px;
-    }
-    .diff-chip {
-      padding: 5px 12px;
-      border-radius: 999px;
-      font-size: 11.5px;
-      font-weight: 700;
-      color: var(--text-muted);
-      cursor: pointer;
-      transition: all 0.15s ease;
-    }
-    .diff-chip.active {
-      background: #1d7dfa;
-      color: #ffffff;
-      box-shadow: 0 3px 8px rgba(29, 125, 250, 0.3);
-    }
-    .diff-chip.insane.active {
-      background: #e11d48;
-      box-shadow: 0 3px 10px rgba(225, 29, 72, 0.38);
-    }
+  .trophy-banner {
+    background: radial-gradient(circle at 50% 60%, #4facfe 0%, #1d7dfa 70%);
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 14px;
+    color: #fff;
+  }
+  .trophy-banner h2 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+  .trophy-svg { width: 105px; height: 125px; filter: drop-shadow(0 10px 16px rgba(0,0,0,0.28)); }
+  .cal-container {
+    flex: 1;
+    background: var(--bg-card);
+    padding: 16px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .cal-month { font-size: 16px; font-weight: 800; }
+  .cal-progress { display: flex; align-items: center; gap: 6px; font-weight: 700; font-size: 14px; }
+  .star-badge {
+    width: 21px; height: 21px; background: #f59e0b; color: #fff;
+    border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 11px;
+  }
+  .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; text-align: center; }
+  .cal-dow { font-size: 11px; color: var(--text-secondary); font-weight: 700; padding-bottom: 3px; }
+  .cal-day {
+    height: 32px; display: flex; align-items: center; justify-content: center;
+    border-radius: 50%; font-size: 13px; font-weight: 600; color: var(--text-primary);
+    cursor: pointer; position: relative;
+  }
+  .cal-day.selected { background: var(--accent-main); color: #fff; font-weight: 800; }
+  .cal-day.completed { background: #fef3c7; color: #d97706; font-weight: 800; }
+  .cal-day.completed::after {
+    content: "★"; position: absolute; bottom: -3px; right: 2px; font-size: 10px; color: #f59e0b;
+  }
 
-    .main-action-stack {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      gap: 11px;
-    }
-    .btn-continue {
-      width: 100%;
-      background: #1d7dfa;
-      color: #ffffff;
-      border: none;
-      border-radius: 999px;
-      padding: 12px 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 8px 22px rgba(29, 125, 250, 0.32);
-      cursor: pointer;
-      transition: transform 0.12s ease;
-    }
-    .btn-continue:active {
-      transform: scale(0.98);
-    }
-    .btn-continue .main-txt {
-      font-size: 17px;
-      font-weight: 700;
-    }
-    .btn-continue .sub-txt {
-      font-size: 12px;
-      font-weight: 500;
-      opacity: 0.88;
-      margin-top: 2px;
-    }
+  /* ================= ME & SETTINGS SCREEN ================= */
+  #screen-me { padding: 14px 16px; gap: 10px; }
+  .top-bar-title { text-align: center; font-size: 17px; font-weight: 800; padding-bottom: 2px; }
+  .me-card {
+    background: var(--bg-card); border-radius: 16px; padding: 12px 15px;
+    display: flex; align-items: center; justify-content: space-between;
+    box-shadow: var(--shadow-soft); cursor: pointer;
+  }
+  .me-card-left { display: flex; align-items: center; gap: 12px; }
+  .me-list-group {
+    background: var(--bg-card); border-radius: 16px; overflow: hidden; box-shadow: var(--shadow-soft);
+  }
+  .me-list-item {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 15px; border-bottom: 1px solid var(--border-col);
+    font-size: 13.5px; font-weight: 600;
+  }
+  .me-list-item:last-child { border-bottom: none; }
+  .me-item-left { display: flex; align-items: center; gap: 11px; }
+  .sq-icon {
+    width: 27px; height: 27px; border-radius: 7px;
+    display: flex; align-items: center; justify-content: center; color: #fff; font-size: 13px;
+  }
 
-    .btn-restart {
-      width: 100%;
-      background: var(--bg-surface);
-      color: #1d7dfa;
-      border: 1px solid var(--border-light);
-      border-radius: 999px;
-      padding: 14px 20px;
-      font-size: 16.5px;
-      font-weight: 700;
-      box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
-      cursor: pointer;
-      transition: transform 0.12s ease;
-    }
-    .btn-restart:active {
-      transform: scale(0.98);
-    }
+  .toggle-switch {
+    width: 44px; height: 24px; background: #cbd5e1; border-radius: 14px;
+    position: relative; cursor: pointer; transition: background 0.2s;
+  }
+  .toggle-switch.on { background: var(--accent-main); }
+  .toggle-knob {
+    width: 20px; height: 20px; background: #fff; border-radius: 50%;
+    position: absolute; top: 2px; left: 2px; transition: transform 0.2s;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  }
+  .toggle-switch.on .toggle-knob { transform: translateX(20px); }
 
-    #view-daily {
-      background-color: var(--bg-surface);
-    }
-    .daily-hero-banner {
-      height: 245px;
-      background: radial-gradient(circle at 50% 58%, #67bfff 0%, #1d7dfa 72%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding-top: 16px;
-      color: #ffffff;
-      position: relative;
-      flex-shrink: 0;
-    }
-    .daily-hero-header {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      margin-bottom: 8px;
-    }
-    .daily-hero-title {
-      font-size: 17.5px;
-      font-weight: 700;
-    }
-    .trophy-illustration {
-      width: 145px;
-      height: 170px;
-      filter: drop-shadow(0 14px 20px rgba(0, 0, 0, 0.25));
-    }
+  /* ================= VIRUS OWNER ADMIN PANEL SCREEN ================= */
+  #screen-admin {
+    padding: 14px;
+    gap: 10px;
+    background: #090d16;
+    color: #f8fafc;
+  }
+  .admin-header-banner {
+    background: linear-gradient(135deg, #111827 0%, #7f1d1d 100%);
+    border: 1px solid #ef4444;
+    border-radius: 16px;
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 8px 24px rgba(239, 68, 68, 0.25);
+  }
+  .admin-section {
+    background: #131b2e;
+    border: 1px solid #1e293b;
+    border-radius: 14px;
+    padding: 12px;
+  }
+  .admin-sec-title {
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: #f43f5e;
+    margin-bottom: 8px;
+  }
+  .admin-grid-btns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .adm-btn {
+    background: #1e293b;
+    color: #f8fafc;
+    border: 1px solid #334155;
+    padding: 9px 10px;
+    border-radius: 10px;
+    font-size: 11.5px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+  }
+  .adm-btn:active { transform: scale(0.96); }
+  .adm-btn.danger { background: #991b1b; border-color: #ef4444; }
+  .adm-btn.success { background: #065f46; border-color: #10b981; }
+  .adm-input {
+    background: #0b0f19;
+    border: 1px solid #334155;
+    color: #fff;
+    padding: 8px 10px;
+    border-radius: 8px;
+    width: 100%;
+    font-size: 13px;
+    font-weight: 700;
+  }
 
-    .calendar-sheet {
-      flex: 1;
-      background: var(--bg-surface);
-      padding: 18px 22px 20px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-    .cal-top-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 14px;
-    }
-    .cal-month-label {
-      font-size: 18px;
-      font-weight: 800;
-      color: var(--text-main);
-    }
-    .cal-score-pill {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 16px;
-      font-weight: 700;
-    }
-    .gold-star-circle {
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      background: #f59e0b;
-      color: #ffffff;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 12px;
-    }
+  .sec-gate-box {
+    width: 100%;
+    max-width: 345px;
+    background: #0d1322;
+    color: #f8fafc;
+    border: 2px solid #e11d48;
+    border-radius: 24px;
+    padding: 20px 18px;
+    text-align: center;
+    box-shadow: 0 0 45px rgba(225, 29, 72, 0.45);
+  }
+  .sec-gate-box.shake {
+    animation: errShake 0.35s ease-in-out;
+  }
+  @keyframes errShake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-10px); }
+    40%, 80% { transform: translateX(10px); }
+  }
+  .sec-input-display {
+    width: 100%;
+    background: #060911;
+    border: 1px solid #334155;
+    color: #38bdf8;
+    font-size: 19px;
+    font-weight: 900;
+    letter-spacing: 3px;
+    text-align: center;
+    padding: 10px;
+    border-radius: 12px;
+    margin: 10px 0 6px;
+    outline: none;
+  }
+  .sec-keypad {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 7px;
+    margin: 8px 0 12px;
+  }
+  .sec-key {
+    background: #161f33;
+    border: 1px solid #26334d;
+    color: #fff;
+    padding: 11px 0;
+    border-radius: 11px;
+    font-size: 16px;
+    font-weight: 800;
+    cursor: pointer;
+  }
+  .sec-key:active { background: #e11d48; }
 
-    .cal-weekdays, .cal-days-grid {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      text-align: center;
-    }
-    .cal-weekdays {
-      margin-bottom: 8px;
-    }
-    .cal-weekdays span {
-      font-size: 12.5px;
-      font-weight: 600;
-      color: #cbd5e1;
-    }
-    .cal-days-grid {
-      row-gap: 8px;
-      column-gap: 4px;
-    }
-    .cal-day-btn {
-      width: 35px;
-      height: 35px;
-      margin: 0 auto;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--text-muted);
-      cursor: pointer;
-      position: relative;
-      transition: all 0.15s ease;
-    }
-    .cal-day-btn.past-or-today {
-      color: var(--text-main);
-    }
-    .cal-day-btn.future-day {
-      color: #cbd5e1;
-    }
-    .cal-day-btn.selected {
-      background: #1d7dfa;
-      color: #ffffff !important;
-      font-weight: 700;
-      box-shadow: 0 4px 12px rgba(29, 125, 250, 0.38);
-    }
-    .cal-day-btn.completed::after {
-      content: "★";
-      position: absolute;
-      bottom: -4px;
-      right: 0px;
-      font-size: 11px;
-      color: #f59e0b;
-    }
+  /* ================= GAMEPLAY SCREEN ================= */
+  #screen-game { background: var(--bg-canvas); overflow: hidden; }
+  .game-top-bar {
+    padding: 8px 14px 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 5;
+  }
+  .icon-btn {
+    background: none; border: none; color: var(--accent-main);
+    font-size: 22px; cursor: pointer; width: 34px; height: 34px;
+    display: flex; align-items: center; justify-content: center; border-radius: 50%;
+  }
+  .game-lvl-title { font-size: 17px; font-weight: 800; display: flex; align-items: center; gap: 6px; cursor: pointer; }
+  .game-sub-hud {
+    padding: 2px 14px 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 5;
+  }
+  .hud-pill {
+    background: var(--bg-main);
+    padding: 5px 11px;
+    border-radius: 16px;
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    border: 1px solid var(--border-col);
+  }
+  .hearts-row { display: flex; gap: 5px; font-size: 20px; }
+  .heart { color: #ef4444; transition: transform 0.2s; }
+  .heart.lost { color: #cbd5e1; transform: scale(0.82); }
+  .heart.god { color: #f59e0b; text-shadow: 0 0 8px rgba(245, 158, 11, 0.6); }
 
-    #view-me {
-      padding: 16px 16px 24px;
-      gap: 12px;
-    }
-    .screen-header-title {
-      text-align: center;
-      font-size: 18px;
-      font-weight: 700;
-      margin-bottom: 2px;
-    }
+  #canvas-wrap {
+    flex: 1;
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    touch-action: none;
+  }
+  canvas { width: 100%; height: 100%; display: block; }
 
-    .feature-row-card {
-      background: var(--bg-surface);
-      border-radius: 16px;
-      padding: 14px 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      box-shadow: var(--card-shadow);
-      cursor: pointer;
-    }
-    .feature-row-left {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-    .circle-badge-icon {
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
-    }
-    .feature-row-title {
-      font-size: 16.5px;
-      font-weight: 700;
-    }
-    .chevron-right {
-      color: #cbd5e1;
-      font-size: 22px;
-      font-weight: 600;
-    }
+  #tutorial-popup {
+    position: absolute;
+    pointer-events: none;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    z-index: 8;
+    transform: translate(-50%, 0);
+  }
+  .hand-pointer {
+    font-size: 34px;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.22));
+    animation: tapBounce 1s infinite ease-in-out;
+  }
+  @keyframes tapBounce {
+    0%, 100% { transform: translateY(0) rotate(-15deg); }
+    50% { transform: translateY(-10px) rotate(-15deg); }
+  }
+  .tut-bubble {
+    margin-top: 6px;
+    background: var(--accent-main);
+    color: #fff;
+    padding: 8px 18px;
+    border-radius: 14px;
+    font-weight: 700;
+    font-size: 14px;
+    box-shadow: 0 8px 20px rgba(29, 125, 250, 0.35);
+  }
 
-    .ios-list-card {
-      background: var(--bg-surface);
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: var(--card-shadow);
-    }
-    .ios-list-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 13px 16px;
-      border-bottom: 1px solid var(--border-light);
-      cursor: pointer;
-    }
-    .ios-list-row:last-child {
-      border-bottom: none;
-    }
-    .ios-row-left {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      font-size: 15.5px;
-      font-weight: 500;
-    }
-    .ios-sq-icon {
-      width: 30px;
-      height: 30px;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #ffffff;
-      font-size: 15px;
-      font-weight: 700;
-    }
+  .game-bottom-dock {
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    padding-bottom: 8px;
+    z-index: 5;
+  }
+  .booster-btn {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: var(--bg-card);
+    border: 1px solid var(--border-col);
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 21px;
+    cursor: pointer;
+    position: relative;
+  }
+  .booster-btn:active { transform: scale(0.92); }
+  .booster-btn.active-tool {
+    background: var(--accent-light);
+    border: 2px solid var(--accent-main);
+  }
+  .badge-count {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    background: var(--accent-main);
+    color: #fff;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    font-size: 11px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--bg-card);
+  }
 
-    /* Sub-screen Overlays */
-    .subpage-overlay {
-      position: absolute;
-      inset: 0;
-      background: var(--bg-app);
-      z-index: 40;
-      display: none;
-      flex-direction: column;
-    }
-    .subpage-overlay.open {
-      display: flex;
-    }
-    .subpage-nav {
-      background: var(--bg-surface);
-      height: 54px;
-      padding: 0 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid var(--border-light);
-      flex-shrink: 0;
-    }
-    .subpage-nav-btn {
-      color: #1d7dfa;
-      font-size: 16px;
-      font-weight: 600;
-      background: none;
-      border: none;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-    .subpage-nav-title {
-      font-size: 17px;
-      font-weight: 700;
-    }
-    .subpage-body {
-      padding: 16px;
-      overflow-y: auto;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
+  .bottom-nav {
+    height: 60px;
+    background: var(--bg-card);
+    border-top: 1px solid var(--border-col);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 10;
+  }
+  .nav-tab {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    color: #94a3b8;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    height: 100%;
+  }
+  .nav-tab.active { color: var(--accent-main); }
+  .nav-tab svg { width: 22px; height: 22px; fill: currentColor; }
 
-    /* iOS Toggle Switch */
-    .ios-switch {
-      width: 48px;
-      height: 28px;
-      border-radius: 14px;
-      background: #cbd5e1;
-      position: relative;
-      cursor: pointer;
-      transition: background 0.2s ease;
-      flex-shrink: 0;
-    }
-    .ios-switch.checked {
-      background: #1d7dfa;
-    }
-    .ios-switch.virus-red.checked {
-      background: #e11d48;
-    }
-    .ios-switch-thumb {
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      background: #ffffff;
-      position: absolute;
-      top: 2px;
-      left: 2px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-      transition: transform 0.2s ease;
-    }
-    .ios-switch.checked .ios-switch-thumb {
-      transform: translateX(20px);
-    }
-
-    /* Bottom 3-Tab Navigation Bar */
-    #bottom-tab-bar {
-      height: 62px;
-      background: var(--bg-surface);
-      border-top: 1px solid var(--border-light);
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      flex-shrink: 0;
-      z-index: 20;
-    }
-    .tab-item {
-      flex: 1;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 4px;
-      color: #94a3b8;
-      font-size: 11px;
-      font-weight: 600;
-      cursor: pointer;
-    }
-    .tab-item.active {
-      color: #1d7dfa;
-    }
-    .tab-item svg {
-      width: 23px;
-      height: 23px;
-      fill: currentColor;
-    }
-
-    #view-game {
-      background: var(--bg-canvas);
-      overflow: hidden;
-    }
-    .game-header-bar {
-      height: 48px;
-      padding: 0 12px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      z-index: 10;
-    }
-    .game-icon-btn {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      border: none;
-      background: transparent;
-      color: #1d7dfa;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-    }
-    .game-icon-btn:active {
-      background: var(--primary-blue-soft);
-    }
-    .game-level-heading {
-      font-size: 17.5px;
-      font-weight: 800;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .game-status-row {
-      padding: 2px 14px 6px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      z-index: 10;
-    }
-    .status-pill {
-      background: var(--bg-pill);
-      padding: 5px 12px;
-      border-radius: 14px;
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--text-main);
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      cursor: pointer;
-    }
-    .hearts-container {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .heart-svg {
-      width: 22px;
-      height: 22px;
-      fill: #ff3b30;
-      transition: transform 0.25s ease, fill 0.25s ease;
-    }
-    .heart-svg.empty {
-      fill: #cbd5e1;
-      transform: scale(0.84);
-    }
-    .god-badge {
-      font-size: 11px;
-      font-weight: 800;
-      background: #fef3c7;
-      color: #d97706;
-      padding: 2px 7px;
-      border-radius: 8px;
-      display: none;
-    }
-
-    #board-stage {
-      flex: 1;
-      width: 100%;
-      position: relative;
-      overflow: hidden;
-      touch-action: none;
-    }
-    #puzzle-canvas {
-      width: 100%;
-      height: 100%;
-      display: block;
-    }
-
-    /* Sandbox Editor Banner */
-    #sandbox-banner {
-      position: absolute;
-      top: 6px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(9, 9, 11, 0.88);
-      color: #fff;
-      padding: 6px 14px;
-      border-radius: 999px;
-      font-size: 11.5px;
-      font-weight: 700;
-      display: none;
-      align-items: center;
-      gap: 8px;
-      z-index: 25;
-      white-space: nowrap;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.25);
-    }
-
-    /* Level 1 Hand & "Tap to remove" Tooltip */
-    #lvl1-tutorial {
-      position: absolute;
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      pointer-events: none;
-      z-index: 15;
-      transform: translate(-50%, 0);
-    }
-    .gloved-hand-svg {
-      width: 48px;
-      height: 48px;
-      filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.18));
-      animation: handFloat 1.1s ease-in-out infinite;
-    }
-    @keyframes handFloat {
-      0%, 100% { transform: translate(-6px, 0) rotate(-12deg); }
-      50% { transform: translate(-6px, -10px) rotate(-12deg); }
-    }
-    .tap-remove-tooltip {
-      margin-top: 10px;
-      background: #1d7dfa;
-      color: #ffffff;
-      padding: 11px 20px;
-      border-radius: 14px;
-      font-size: 15px;
-      font-weight: 600;
-      box-shadow: 0 8px 20px rgba(29, 125, 250, 0.35);
-      position: relative;
-      white-space: nowrap;
-    }
-    .tap-remove-tooltip::before {
-      content: "";
-      position: absolute;
-      top: -8px;
-      left: 50%;
-      transform: translateX(-50%);
-      border-width: 0 9px 9px 9px;
-      border-style: solid;
-      border-color: transparent transparent #1d7dfa transparent;
-    }
-
-    /* Bottom Circular Boosters Bar (Upgraded with EMP Blast & Auto-Step) */
-    .game-boosters-bar {
-      height: 88px;
-      padding-bottom: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 18px;
-      z-index: 10;
-    }
-    .round-booster-btn {
-      width: 56px;
-      height: 56px;
-      border-radius: 50%;
-      background: var(--bg-surface);
-      border: 1px solid var(--border-light);
-      box-shadow: 0 6px 18px rgba(15, 23, 42, 0.09);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      position: relative;
-      transition: transform 0.12s ease, border-color 0.2s ease, background 0.2s ease;
-    }
-    .round-booster-btn:active {
-      transform: scale(0.92);
-    }
-    .round-booster-btn.active-booster {
-      background: var(--primary-blue-soft);
-      border: 2px solid #1d7dfa;
-    }
-    .round-booster-btn.emp-active {
-      background: rgba(225, 29, 72, 0.15);
-      border: 2px solid #e11d48;
-      animation: pulseRed 1s infinite;
-    }
-    @keyframes pulseRed {
-      0%, 100% { box-shadow: 0 0 0 0 rgba(225, 29, 72, 0.4); }
-      50% { box-shadow: 0 0 0 10px rgba(225, 29, 72, 0); }
-    }
-    .booster-count-badge {
-      position: absolute;
-      top: -4px;
-      right: -4px;
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      background: #1d7dfa;
-      color: #ffffff;
-      font-size: 11.5px;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: 2px solid var(--bg-surface);
-    }
-
-    /* Admin Panel Styling */
-    .admin-section-card {
-      background: var(--bg-surface);
-      border-radius: 16px;
-      padding: 15px;
-      box-shadow: var(--card-shadow);
-      border: 1px solid var(--border-light);
-      display: flex;
-      flex-direction: column;
-      gap: 11px;
-    }
-    .admin-sec-title {
-      font-size: 12px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      color: #e11d48;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .admin-grid-btns {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-    }
-    .admin-btn {
-      padding: 10px 12px;
-      border-radius: 11px;
-      border: 1px solid var(--border-light);
-      background: var(--bg-pill);
-      color: var(--text-main);
-      font-size: 12.5px;
-      font-weight: 700;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      transition: transform 0.1s ease;
-    }
-    .admin-btn:active {
-      transform: scale(0.96);
-    }
-    .admin-btn.primary {
-      background: #1d7dfa;
-      color: #fff;
-      border-color: #1d7dfa;
-    }
-    .admin-btn.danger {
-      background: #e11d48;
-      color: #fff;
-      border-color: #e11d48;
-    }
-    .admin-btn.dark {
-      background: #09090b;
-      color: #fff;
-      border-color: #27272a;
-    }
-    .slider-row {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-    .slider-label {
-      display: flex;
-      justify-content: space-between;
-      font-size: 12.5px;
-      font-weight: 600;
-    }
-    input[type="range"] {
-      width: 100%;
-      accent-color: #e11d48;
-    }
-
-    /* Popup Modal */
-    .dialog-backdrop {
-      position: absolute;
-      inset: 0;
-      background: rgba(15, 23, 42, 0.55);
-      backdrop-filter: blur(4px);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-      z-index: 80;
-    }
-    .dialog-backdrop.visible {
-      display: flex;
-    }
-    .dialog-card {
-      width: 100%;
-      max-width: 335px;
-      background: var(--bg-surface);
-      border-radius: 24px;
-      padding: 24px 20px 20px;
-      text-align: center;
-      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.32);
-      animation: modalPop 0.2s ease-out;
-    }
-    @keyframes modalPop {
-      from { transform: scale(0.9); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
-    }
-    .dialog-icon {
-      font-size: 44px;
-      margin-bottom: 8px;
-    }
-    .dialog-title {
-      font-size: 21px;
-      font-weight: 800;
-      margin-bottom: 8px;
-    }
-    .dialog-text {
-      font-size: 14px;
-      color: var(--text-muted);
-      line-height: 1.48;
-      margin-bottom: 18px;
-      white-space: pre-line;
-    }
-  </style>
+  .modal-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(9, 13, 22, 0.65);
+    backdrop-filter: blur(4px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 22px;
+    z-index: 60;
+  }
+  .modal-overlay.show { display: flex; }
+  .modal-box {
+    width: 100%;
+    max-width: 340px;
+    background: var(--bg-card);
+    border-radius: 24px;
+    padding: 24px 20px;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+  }
+  .modal-emoji { font-size: 44px; margin-bottom: 8px; }
+  .modal-title { font-size: 22px; font-weight: 800; margin-bottom: 6px; }
+  .modal-desc { font-size: 13px; color: var(--text-secondary); margin-bottom: 18px; line-height: 1.45; white-space: pre-line; }
+</style>
 </head>
 <body>
 
-<!-- Reusable SVG Template for the User's Monochrome Anime "VIRUS" Avatar -->
 <svg style="display:none;">
   <symbol id="virus-anime-avatar" viewBox="0 0 200 200">
     <rect width="200" height="200" fill="#ffffff"/>
-    <!-- Black Hoodie Shoulders & Hood -->
-    <path d="M18 200 C22 152 52 135 100 135 C148 135 178 152 182 200 Z" fill="#09090b"/>
-    <path d="M40 155 C35 128 60 120 75 135 L100 165 L125 135 C140 120 165 128 160 155 Z" fill="#18181b" stroke="#000" stroke-width="3"/>
-    <!-- Hoodie Inner Shirt & Chain -->
-    <path d="M72 150 Q100 175 128 150 L124 200 L76 200 Z" fill="#09090b"/>
-    <path d="M75 152 Q100 182 125 152" fill="none" stroke="#52525b" stroke-width="3.5" stroke-dasharray="4 3"/>
-    <!-- Drawstrings -->
-    <line x1="73" y1="162" x2="69" y2="198" stroke="#a1a1aa" stroke-width="3" stroke-dasharray="3 2"/>
-    <line x1="127" y1="162" x2="131" y2="198" stroke="#a1a1aa" stroke-width="3" stroke-dasharray="3 2"/>
-    <!-- Neck & Gothic VIRUS Tattoo -->
-    <rect x="78" y="114" width="44" height="40" rx="8" fill="#f4f4f5" stroke="#09090b" stroke-width="3"/>
-    <path d="M80 116 Q100 126 120 116" fill="#d4d4d8"/>
-    <text x="100" y="143" text-anchor="middle" font-family="Impact, 'Arial Black', serif" font-size="17.5" font-weight="900" letter-spacing="1" fill="#09090b">VIRUS</text>
-    <!-- Ears -->
-    <ellipse cx="48" cy="95" rx="9" ry="14" fill="#fafafa" stroke="#09090b" stroke-width="3"/>
-    <ellipse cx="152" cy="95" rx="9" ry="14" fill="#fafafa" stroke="#09090b" stroke-width="3"/>
-    <!-- Anime Face Contour -->
-    <path d="M52 68 C52 108 72 125 100 126 C128 125 148 108 148 68 Z" fill="#ffffff" stroke="#09090b" stroke-width="3.5"/>
-    <!-- Upper Face Cap Shadow -->
-    <path d="M53 68 Q100 84 147 68 L147 86 Q100 94 53 86 Z" fill="#d4d4d8"/>
-    <!-- Intense Anime Eyes & Sharp Eyebrows -->
-    <path d="M60 79 L91 88" stroke="#09090b" stroke-width="5" stroke-linecap="round"/>
-    <path d="M140 79 L109 88" stroke="#09090b" stroke-width="5" stroke-linecap="round"/>
-    <ellipse cx="76" cy="92" rx="11" ry="9.5" fill="#09090b"/>
-    <ellipse cx="124" cy="92" rx="11" ry="9.5" fill="#09090b"/>
-    <circle cx="73" cy="89" r="2.5" fill="#ffffff"/>
-    <circle cx="121" cy="89" r="2.5" fill="#ffffff"/>
-    <!-- Nose & Serious Mouth -->
-    <path d="M99 102 L97 106 L101 106" fill="none" stroke="#09090b" stroke-width="2.2" stroke-linecap="round"/>
-    <path d="M91 114 Q100 112 109 114" fill="none" stroke="#09090b" stroke-width="2.5" stroke-linecap="round"/>
-    <!-- Spiky Black Hair Fringe -->
-    <path d="M40 75 L52 55 L58 84 L74 58 L85 88 L100 60 L112 87 L128 58 L142 84 L150 56 L162 76 L152 62 L48 62 Z" fill="#09090b"/>
-    <!-- Black Baseball Cap Crown & Curved Visor -->
-    <path d="M44 58 C44 16 156 16 156 58 Z" fill="#18181b" stroke="#09090b" stroke-width="3.5"/>
-    <circle cx="100" cy="18" r="4" fill="#09090b"/>
-    <path d="M42 56 Q100 32 158 56 Q162 72 146 70 Q100 48 54 70 Q38 72 42 56 Z" fill="#09090b" stroke="#27272a" stroke-width="2"/>
+    <path d="M15,200 C18,152 48,136 100,136 C152,136 182,152 185,200 Z" fill="#111318"/>
+    <path d="M45,142 L65,200 M155,142 L135,200" stroke="#ffffff" stroke-width="2.5" opacity="0.5"/>
+    <rect x="77" y="112" width="46" height="36" rx="8" fill="#f8fafc" stroke="#111318" stroke-width="3.5"/>
+    <text x="100" y="139" font-family="Impact, 'Arial Black', sans-serif" font-size="18" font-weight="900" letter-spacing="1.2" text-anchor="middle" fill="#090d16">VIRUS</text>
+    <path d="M76,144 Q100,168 124,144" fill="none" stroke="#cbd5e1" stroke-width="3.5" stroke-dasharray="4,3"/>
+    <circle cx="52" cy="95" r="11" fill="#f8fafc" stroke="#111318" stroke-width="3.5"/>
+    <circle cx="148" cy="95" r="11" fill="#f8fafc" stroke="#111318" stroke-width="3.5"/>
+    <path d="M56,66 C56,108 76,125 100,125 C124,125 144,108 144,66 Z" fill="#ffffff" stroke="#111318" stroke-width="3.5"/>
+    <path d="M57,66 C75,78 125,78 143,66 L143,84 C120,78 80,78 57,84 Z" fill="#cbd5e1"/>
+    <path d="M65,82 L92,89" stroke="#090d16" stroke-width="5" stroke-linecap="round"/>
+    <path d="M135,82 L108,89" stroke="#090d16" stroke-width="5" stroke-linecap="round"/>
+    <ellipse cx="79" cy="94" rx="9" ry="8" fill="#090d16"/>
+    <ellipse cx="121" cy="94" rx="9" ry="8" fill="#090d16"/>
+    <circle cx="76" cy="91" r="2.5" fill="#ffffff"/>
+    <circle cx="118" cy="91" r="2.5" fill="#ffffff"/>
+    <path d="M99,103 L101,106" stroke="#090d16" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M92,114 Q100,111 108,114" fill="none" stroke="#090d16" stroke-width="2.8" stroke-linecap="round"/>
+    <path d="M46,66 L36,78 L52,75 L48,92 L63,76 L72,90 L82,73 L98,90 L108,73 L122,89 L132,74 L148,90 L147,75 L164,78 L154,64 Z" fill="#090d16"/>
+    <path d="M50,62 C50,22 150,22 150,62 Z" fill="#111318" stroke="#090d16" stroke-width="3.5"/>
+    <path d="M44,60 C72,43 128,43 156,60 C142,72 58,72 44,60 Z" fill="#1e293b" stroke="#090d16" stroke-width="3.5"/>
+    <circle cx="100" cy="27" r="4" fill="#090d16"/>
   </symbol>
 </svg>
 
-<div id="app-shell">
+<div id="app-frame">
 
-  <!-- ==================== TAB 1: MAIN SCREEN ==================== -->
-  <section id="view-main" class="view-screen active">
-    <svg class="watermark-bg" viewBox="0 0 400 800" fill="none">
-      <path d="M-20 80 L190 250 L140 250 L140 310 L280 190 L140 70" stroke="var(--watermark-stroke)" stroke-width="38" stroke-linecap="round" stroke-linejoin="round"/>
-      <path d="M440 680 L210 500 L260 500 L260 440 L120 560 L260 680" stroke="var(--watermark-stroke)" stroke-width="38" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
+  <div id="virus-export-bar">
+    <div style="font-size:11px; font-weight:800; line-height:1.2;">
+      <span style="color:#f43f5e;">⚡ GET FULL FILE</span><br>
+      <span style="color:#94a3b8; font-size:9.5px;">No copy-paste cutoff!</span>
+    </div>
+    <div style="display:flex; gap:6px; align-items:center;">
+      <button class="export-btn" onclick="downloadCleanGameFile('html')">📥 index.html</button>
+      <button class="export-btn txt-btn" onclick="downloadCleanGameFile('txt')">📄 .txt</button>
+      <button class="export-close" onclick="document.getElementById('virus-export-bar').style.display='none'" title="Hide Bar">✕</button>
+    </div>
+  </div>
 
-    <!-- Top Creator & Admin Access Strip -->
-    <div class="home-top-strip">
-      <div class="creator-pill" onclick="switchTab('me')">
-        <svg width="22" height="22" style="border-radius:50%; border:1px solid #000;"><use href="#virus-anime-avatar"/></svg>
-        <span>iTzVirus</span>
+  <div id="screen-main" class="screen active">
+    <div class="virus-top-strip">
+      <div class="virus-profile-pill" onclick="handleSecretTriggerTap()">
+        <div class="virus-avatar-wrap" id="top-avatar-slot">
+          <svg><use href="#virus-anime-avatar"/></svg>
+        </div>
+        <div>
+          <div style="font-size:12px; font-weight:900; letter-spacing:0.3px;">iTzVirus</div>
+          <div style="font-size:10px; color:var(--accent-main); font-weight:700;" id="admin-status-tag">PRO EDITION</div>
+        </div>
       </div>
-      <button class="admin-trigger-pill" onclick="openSubpage('subpage-admin')">
-        <span>⚡</span>
-        <span>VIRUS ADMIN</span>
+
+      <button class="admin-quick-btn stealth-hidden" id="btn-top-admin" onclick="requestAdminAccess()">
+        <span>⚡ VIRUS ADMIN</span>
+        <span id="lock-indicator">🔒</span>
       </button>
     </div>
 
-    <!-- Daily Challenge Card -->
-    <div class="daily-widget-card" onclick="launchDailyChallenge(selectedDailyDate)">
-      <div class="cal-star-icon">
-        <div class="cal-star-circle">★</div>
-      </div>
-      <div class="daily-tag">DAILY CHALLENGE</div>
-      <div class="daily-date-label" id="home-daily-date">October 14</div>
-      <button class="daily-play-btn">Play</button>
+    <div class="daily-card" onclick="startDailyLevel(14)">
+      <div class="daily-cal-icon">✪</div>
+      <div class="daily-label">DAILY CHALLENGE</div>
+      <div class="daily-date-text" id="main-daily-label">October 14</div>
+      <div class="daily-play-pill">Play</div>
     </div>
 
-    <!-- Center Virus Avatar & Brand Title -->
-    <div class="main-brand-center">
-      <div class="virus-avatar-ring" onclick="openSubpage('subpage-admin')" title="Tap to open Virus Admin Panel">
-        <svg width="78" height="78"><use href="#virus-anime-avatar"/></svg>
+    <div class="brand-center">
+      <div class="hero-avatar-badge" id="hero-avatar-slot" onclick="handleSecretTriggerTap()">
+        <svg><use href="#virus-anime-avatar"/></svg>
       </div>
-      <h1 class="main-brand-title">Virus Arrows</h1>
-      <div class="virus-brand-sub">BY iTzVIRUS • PRO EDITION</div>
+      <div class="brand-title" onclick="handleSecretTriggerTap()">Virus Arrows</div>
+      <div class="brand-sub">BY TALIB HUSSAIN (iTzVirus)</div>
 
-      <!-- Difficulty Mode Selector -->
-      <div class="diff-selector-row">
-        <div class="diff-chip" id="chip-normal" onclick="setDifficultyMode('normal')">Normal</div>
-        <div class="diff-chip active" id="chip-hard" onclick="setDifficultyMode('hard')">Hard 🔥</div>
-        <div class="diff-chip insane" id="chip-insane" onclick="setDifficultyMode('insane')">Virus Insane 💀</div>
+      <div class="mode-selector">
+        <div class="mode-pill" id="mode-normal" onclick="setGameDifficulty('normal')">Normal</div>
+        <div class="mode-pill active" id="mode-hard" onclick="setGameDifficulty('hard')">Hard 🔥</div>
+        <div class="mode-pill" id="mode-virus" onclick="setGameDifficulty('virus')">Virus Insane 💀</div>
       </div>
     </div>
 
-    <!-- Bottom Action Pill Buttons -->
-    <div class="main-action-stack">
-      <button class="btn-continue" onclick="continueMainLevel()">
-        <span class="main-txt">Continue Game</span>
-        <span class="sub-txt" id="home-continue-sub">Level 1 • Hard Mode</span>
+    <div class="main-buttons">
+      <button class="btn-primary" onclick="continueSavedLevel()">
+        <span>Continue Game</span>
+        <span class="sub-lvl" id="continue-lvl-text">Level 1</span>
       </button>
-      <button class="btn-restart" onclick="restartCurrentLevel()">
-        Restart Game
+      <button class="btn-secondary" onclick="restartCurrentLevelFromHome()">
+        Restart Level 1
       </button>
     </div>
-  </section>
+  </div>
 
-  <!-- ==================== TAB 2: DAILY CHALLENGES SCREEN ==================== -->
-  <section id="view-daily" class="view-screen">
-    <div class="daily-hero-banner">
-      <div class="daily-hero-header">
-        <span class="daily-hero-title">Daily Challenges</span>
-      </div>
-      <svg class="trophy-illustration" viewBox="0 0 160 180">
+  <!-- ==================== 2. DAILY CHALLENGES SCREEN ==================== -->
+  <div id="screen-daily" class="screen">
+    <div class="trophy-banner">
+      <h2>Virus Daily Challenges</h2>
+      <svg class="trophy-svg" viewBox="0 0 120 140">
         <defs>
-          <linearGradient id="metallicBlue" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stop-color="#08203e"/>
-            <stop offset="28%" stop-color="#3898ff"/>
-            <stop offset="52%" stop-color="#d8f0ff"/>
-            <stop offset="76%" stop-color="#0b65c6"/>
-            <stop offset="100%" stop-color="#051933"/>
-          </linearGradient>
-          <linearGradient id="pedestalGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stop-color="#041022"/>
-            <stop offset="50%" stop-color="#1e4b7a"/>
-            <stop offset="100%" stop-color="#041022"/>
+          <linearGradient id="cupGrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#0d253f"/>
+            <stop offset="35%" stop-color="#4facfe"/>
+            <stop offset="55%" stop-color="#e0f2fe"/>
+            <stop offset="80%" stop-color="#0284c7"/>
+            <stop offset="100%" stop-color="#082f49"/>
           </linearGradient>
         </defs>
-        <circle cx="32" cy="44" r="5" fill="rgba(255,255,255,0.25)"/>
-        <circle cx="128" cy="70" r="8" fill="rgba(255,255,255,0.18)"/>
-        <circle cx="40" cy="115" r="4" fill="rgba(255,255,255,0.3)"/>
-        <path d="M44 36 L22 36 C20 65 36 74 52 78" fill="none" stroke="url(#metallicBlue)" stroke-width="5.5" stroke-linecap="round"/>
-        <path d="M116 36 L138 36 C140 65 124 74 108 78" fill="none" stroke="url(#metallicBlue)" stroke-width="5.5" stroke-linecap="round"/>
-        <path d="M42 28 H118 C118 76 100 96 80 96 C60 96 42 76 42 28 Z" fill="url(#metallicBlue)"/>
-        <ellipse cx="80" cy="28" rx="38" ry="5" fill="#092952" stroke="#7cc4ff" stroke-width="1.5"/>
-        <rect x="73" y="95" width="14" height="34" rx="4" fill="url(#metallicBlue)"/>
-        <ellipse cx="80" cy="110" rx="11" ry="4" fill="url(#metallicBlue)"/>
-        <path d="M54 128 H106 L114 146 H46 Z" fill="url(#metallicBlue)"/>
-        <rect x="40" y="146" width="80" height="14" rx="5" fill="url(#pedestalGrad)"/>
+        <path d="M22,22 H98 V35 C98,55 82,62 78,62 H42 C38,62 22,55 22,35 Z" fill="none" stroke="url(#cupGrad)" stroke-width="5" rx="8"/>
+        <path d="M34,18 H86 C86,56 74,74 60,74 C46,74 34,56 34,18 Z" fill="url(#cupGrad)"/>
+        <rect x="54" y="72" width="12" height="28" rx="4" fill="url(#cupGrad)"/>
+        <path d="M40,100 H80 L86,115 H34 Z" fill="url(#cupGrad)"/>
+        <rect x="28" y="115" width="64" height="12" rx="4" fill="#0f172a"/>
       </svg>
     </div>
 
-    <div class="calendar-sheet">
+    <div class="cal-container">
       <div>
-        <div class="cal-top-row">
-          <div class="cal-month-label">October 2026</div>
-          <div class="cal-score-pill">
-            <span class="gold-star-circle">★</span>
-            <span id="cal-star-progress">0/31</span>
+        <div class="cal-header">
+          <div class="cal-month">October 2026</div>
+          <div class="cal-progress">
+            <span class="star-badge">★</span>
+            <span id="daily-star-count">0/31</span>
           </div>
         </div>
-        <div class="cal-weekdays">
-          <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
-        </div>
-        <div class="cal-days-grid" id="october-cal-grid"></div>
+        <div class="cal-grid" id="calendar-grid"></div>
       </div>
-
-      <button class="btn-continue" onclick="launchDailyChallenge(selectedDailyDate)">
-        <span class="main-txt">Play</span>
-      </button>
+      <button class="btn-primary" onclick="playSelectedDaily()">Play Daily</button>
     </div>
-  </section>
+  </div>
 
-  <!-- ==================== TAB 3: ME / PROFILE SCREEN ==================== -->
-  <section id="view-me" class="view-screen">
-    <div class="screen-header-title">Me</div>
+  <!-- ==================== 3. ME / OPTIONS & CUSTOM SKINS SCREEN ==================== -->
+  <div id="screen-me" class="screen">
+    <div class="top-bar-title">Me & Virus Profile</div>
 
-    <!-- Owner Profile Banner Card -->
-    <div class="feature-row-card" onclick="openSubpage('subpage-admin')" style="border: 1.5px solid #e11d48;">
-      <div class="feature-row-left">
-        <div class="circle-badge-icon" style="border: 2px solid #09090b; overflow: hidden; padding: 0;">
-          <svg width="48" height="48"><use href="#virus-anime-avatar"/></svg>
+    <div class="me-card" onclick="handleSecretTriggerTap()">
+      <div class="me-card-left">
+        <div class="virus-avatar-wrap" id="me-avatar-slot" style="width:48px; height:48px;">
+          <svg><use href="#virus-anime-avatar"/></svg>
         </div>
         <div>
-          <div class="feature-row-title">iTzVirus Command Center</div>
-          <div style="font-size: 12px; color: #e11d48; font-weight: 700;">Tap to open Admin Panel & Level Sandbox ⚡</div>
+          <div style="font-weight:800; font-size:15px;">iTzVirus (Talib Hussain)</div>
+          <div style="font-size:11.5px; color:var(--text-secondary);" id="achieve-sub">0 Levels Cleared</div>
         </div>
       </div>
-      <span class="chevron-right">›</span>
+      <span style="color:var(--accent-main); font-weight:800; font-size:18px;">⚡</span>
     </div>
 
-    <!-- Arrow Skin & Theme Selector Card -->
-    <div class="ios-list-card" style="padding: 13px 16px;">
-      <div style="font-size: 12px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px;">
-        🎨 Arrow Skin & Visual Style
+    <!-- Direct File Download Card inside Me Tab too -->
+    <div class="me-list-group">
+      <div class="me-list-item" style="cursor:pointer;" onclick="downloadCleanGameFile('html')">
+        <div class="me-item-left">
+          <div class="sq-icon" style="background:#e11d48;">📥</div>
+          <span style="font-weight:800;">Download Clean index.html File</span>
+        </div>
+        <span style="color:var(--accent-main); font-weight:800; font-size:12px;">SAVE</span>
       </div>
+      <div class="me-list-item" style="cursor:pointer;" onclick="downloadCleanGameFile('txt')">
+        <div class="me-item-left">
+          <div class="sq-icon" style="background:#2563eb;">📄</div>
+          <span style="font-weight:800;">Download Full Code as .TXT</span>
+        </div>
+        <span style="color:#2563eb; font-weight:800; font-size:12px;">SAVE</span>
+      </div>
+    </div>
+
+    <div class="me-list-group">
+      <div class="me-list-item">
+        <div class="me-item-left">
+          <div class="sq-icon" style="background:#e11d48;">🎨</div>
+          <span>Arrow Theme Skin</span>
+        </div>
+        <select id="skin-select" onchange="changeSkin(this.value)" style="padding:5px 9px; border-radius:8px; font-weight:700; border:1px solid var(--border-col); background:var(--bg-main); color:var(--text-primary);">
+          <option value="default">Classic Blue</option>
+          <option value="crimson">Virus Crimson 🩸</option>
+          <option value="matrix">Cyber Matrix 🟢</option>
+          <option value="gold">Royal Gold 👑</option>
+        </select>
+      </div>
+
+      <div class="me-list-item">
+        <div class="me-item-left">
+          <div class="sq-icon" style="background:#6366f1;">🌙</div>
+          <span>Dark / Cyber Mode</span>
+        </div>
+        <div id="tog-dark" class="toggle-switch" onclick="toggleSetting('dark')">
+          <div class="toggle-knob"></div>
+        </div>
+      </div>
+
+      <div class="me-list-item">
+        <div class="me-item-left">
+          <div class="sq-icon" style="background:#2563eb;">🔊</div>
+          <span>Sounds</span>
+        </div>
+        <div id="tog-sound" class="toggle-switch on" onclick="toggleSetting('sound')">
+          <div class="toggle-knob"></div>
+        </div>
+      </div>
+
+      <div class="me-list-item">
+        <div class="me-item-left">
+          <div class="sq-icon" style="background:#0ea5e9;">📳</div>
+          <span>Vibration</span>
+        </div>
+        <div id="tog-vib" class="toggle-switch on" onclick="toggleSetting('vib')">
+          <div class="toggle-knob"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="me-list-group">
+      <div class="me-list-item stealth-hidden" id="me-admin-row" style="cursor:pointer;" onclick="requestAdminAccess()">
+        <div class="me-item-left">
+          <div class="sq-icon" style="background:#dc2626;">⚡</div>
+          <span style="font-weight:800; color:#dc2626;">Open Virus Admin Panel 🔒</span>
+        </div>
+        <span style="color:#94a3b8; font-size:20px;">›</span>
+      </div>
+
+      <div class="me-list-item" style="cursor:pointer;" onclick="showInfoModal('❓ What is Virus Arrows?', 'Virus Arrows is a hardcore logic puzzle game crafted by iTzVirus.\n\n• Clear normal, Locked (🔒), Bomb (💣), and Ice (❄️) arrows.\n• Use the Ruler (📏) laser sight or EMP Blast (💣) when trapped!')">
+        <div class="me-item-left">
+          <div class="sq-icon" style="background:#22c55e;">?</div>
+          <span>Help & Hazard Guide</span>
+        </div>
+        <span style="color:#94a3b8; font-size:20px;">›</span>
+      </div>
+
+      <div class="me-list-item" style="cursor:pointer;" onclick="handleSecretTriggerTap(); showInfoModal('ℹ️ About Game', 'Virus Arrows Game\nVersion 3.6.0 (GitHub Pro Edition)\nCreated by Talib Hussain (iTzVirus)')">
+        <div class="me-item-left">
+          <div class="sq-icon" style="background:#3b82f6;">i</div>
+          <span>About Game (v3.6.0)</span>
+        </div>
+        <span style="color:#94a3b8; font-size:20px;">›</span>
+      </div>
+    </div>
+  </div>
+
+  <div id="screen-admin" class="screen">
+    <div class="admin-header-banner">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <div class="virus-avatar-wrap" id="admin-avatar-slot" style="width:44px; height:44px; border-color:#ef4444;">
+          <svg><use href="#virus-anime-avatar"/></svg>
+        </div>
+        <div>
+          <div style="font-size:15px; font-weight:900; letter-spacing:0.5px;">⚡ iTzVIRUS ADMIN OS</div>
+          <div style="font-size:10.5px; color:#fca5a5;">Authenticated Root Session • Unlocked</div>
+        </div>
+      </div>
+      <div style="display:flex; gap:6px;">
+        <button class="adm-btn danger" onclick="lockAdminSession()" style="width:auto; padding:6px 10px;">🔒 Lock</button>
+        <button class="adm-btn" onclick="openTab('main')" style="width:auto; padding:6px 11px;">✕</button>
+      </div>
+    </div>
+
+    <div class="admin-section" style="border-color:#e11d48;">
+      <div class="admin-sec-title">🔐 Admin Security & Stealth</div>
+      <div style="display:flex; gap:8px; margin-bottom:10px;">
+        <input type="text" id="adm-new-pass" class="adm-input" placeholder="New Passcode / PIN">
+        <button class="adm-btn success" style="width:auto; white-space:nowrap;" onclick="adminChangePassword()">💾 Save Pass</button>
+      </div>
+      <div style="display:flex; justify-content:space-between; align-items:center; font-size:12px; padding-top:4px;">
+        <span>🕵️ Stealth Mode (Hide Admin Buttons)</span>
+        <div id="tog-stealth" class="toggle-switch on" onclick="toggleStealthMode()">
+          <div class="toggle-knob"></div>
+        </div>
+      </div>
+      <div style="font-size:10px; color:#94a3b8; margin-top:6px;">
+        *When Stealth Mode is ON, tap your VIRUS Avatar or Game Title 5 times quickly to open the Password Gate.
+      </div>
+    </div>
+
+    <div class="admin-section">
+      <div class="admin-sec-title">1. Custom Virus Branding Photo</div>
+      <div style="display:flex; gap:8px; align-items:center;">
+        <label class="adm-btn" style="flex:1; cursor:pointer;">
+          📷 Override Avatar Locally
+          <input type="file" accept="image/*" style="display:none;" onchange="uploadCustomAvatar(event)">
+        </label>
+        <button class="adm-btn" style="width:auto;" onclick="resetDefaultAvatar()">Use Repo virus.jpg</button>
+      </div>
+    </div>
+
+    <div class="admin-section">
+      <div class="admin-sec-title">2. Owner Cheats & God Mode</div>
       <div class="admin-grid-btns">
-        <button class="admin-btn primary" id="skin-btn-classic" onclick="selectArrowSkin('classic')">Classic Blue</button>
-        <button class="admin-btn" id="skin-btn-virus" onclick="selectArrowSkin('virus')">Virus Crimson 🩸</button>
-        <button class="admin-btn" id="skin-btn-matrix" onclick="selectArrowSkin('matrix')">Cyber Matrix 🟢</button>
-        <button class="admin-btn" id="skin-btn-gold" onclick="selectArrowSkin('gold')">Royal Gold 👑</button>
+        <button class="adm-btn" id="adm-god-btn" onclick="toggleAdminFeature('godMode')">🛡️ God Mode: OFF</button>
+        <button class="adm-btn" id="adm-xray-btn" onclick="toggleAdminFeature('xrayOrder')">👁️ X-Ray Order: OFF</button>
+        <button class="adm-btn success" onclick="adminAutoSolveCurrent()">🤖 AI Auto-Win Level</button>
+        <button class="adm-btn" onclick="adminRefillBoosters()">💎 +99 Hints & Bombs</button>
       </div>
     </div>
 
-    <div class="feature-row-card" onclick="openDialog('🏆', 'Awards', 'Complete Daily Challenges in October 2026 to earn Golden Stars and unlock monthly trophies!\n\nStars Earned: ' + completedDailies.length + ' / 31')">
-      <div class="feature-row-left">
-        <div class="circle-badge-icon" style="background: #d8ecff;">🏆</div>
-        <span class="feature-row-title">Awards</span>
+    <div class="admin-section">
+      <div class="admin-sec-title">3. Level Warper & Generator Engine</div>
+      <div style="display:flex; gap:8px; margin-bottom:10px;">
+        <input type="number" id="adm-lvl-input" class="adm-input" value="1" min="1" max="9999" placeholder="Level #">
+        <button class="adm-btn danger" style="width:auto; white-space:nowrap;" onclick="adminWarpToLevel()">🚀 Warp Level</button>
       </div>
-      <span class="chevron-right">›</span>
+
+      <div style="font-size:12px; margin-bottom:6px; display:flex; justify-content:space-between;">
+        <span>Force Grid Size Override:</span>
+        <span id="adm-grid-val" style="color:#38bdf8; font-weight:800;">Auto</span>
+      </div>
+      <input type="range" id="adm-grid-slider" min="5" max="15" value="5" style="width:100%; margin-bottom:10px;" oninput="updateAdminGridOverride(this.value)">
+
+      <div style="font-size:12px; margin-bottom:6px; display:flex; justify-content:space-between;">
+        <span>Hazard Spawn Rate (🔒 / 💣 / ❄️):</span>
+        <span id="adm-haz-val" style="color:#f43f5e; font-weight:800;">35%</span>
+      </div>
+      <input type="range" id="adm-haz-slider" min="0" max="85" value="35" style="width:100%;" oninput="updateAdminHazardRate(this.value)">
     </div>
 
-    <div class="feature-row-card" onclick="openDialog('🎮', 'Achievements', 'Highest Level Reached: Level ' + unlockedLevel + '\nTotal Arrows Cleared: ' + totalClearedCount + '\nDaily Puzzles Solved: ' + completedDailies.length)">
-      <div class="feature-row-left">
-        <div class="circle-badge-icon" style="background: #eaf7d5;">🎮</div>
-        <span class="feature-row-title">Achievements</span>
-      </div>
-      <span class="chevron-right">›</span>
-    </div>
-
-    <div class="ios-list-card">
-      <div class="ios-list-row" onclick="openSubpage('subpage-settings')">
-        <div class="ios-row-left">
-          <div class="ios-sq-icon" style="background: #1d7dfa;">⚙️</div>
-          <span>Settings & Cool Hazards</span>
-        </div>
-        <span class="chevron-right">›</span>
-      </div>
-    </div>
-
-    <div class="ios-list-card">
-      <div class="ios-list-row" onclick="openSubpage('subpage-help')">
-        <div class="ios-row-left">
-          <div class="ios-sq-icon" style="background: #22c55e;">?</div>
-          <span>Help</span>
-        </div>
-        <span class="chevron-right">›</span>
-      </div>
-
-      <div class="ios-list-row" onclick="openSubpage('subpage-about')">
-        <div class="ios-row-left">
-          <div class="ios-sq-icon" style="background: #1d7dfa;">i</div>
-          <span>About Game</span>
-        </div>
-        <span class="chevron-right">›</span>
-      </div>
-
-      <div class="ios-list-row" onclick="openDialog('🚫', 'Remove Ads (VIP Active)', 'Ad-Free Virus Pro build is permanently unlocked on your account.')">
-        <div class="ios-row-left">
-          <div class="ios-sq-icon" style="background: #ef4444;">Ad</div>
-          <span>Remove Ads</span>
-        </div>
-        <span style="font-size: 12px; font-weight: 800; color: #22c55e;">VIP UNLOCKED</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- ==================== GAMEPLAY SCREEN ==================== -->
-  <section id="view-game" class="view-screen">
-    <!-- Top Header -->
-    <div class="game-header-bar">
-      <button class="game-icon-btn" onclick="returnToMainMenu()" title="Back">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="15 18 9 12 15 6"></polyline>
-        </svg>
-      </button>
-
-      <div class="game-level-heading">
-        <span id="game-title-label">Level 1</span>
-        <span class="god-badge" id="hud-god-badge">GOD MODE</span>
-      </div>
-
-      <div style="display:flex; align-items:center; gap:4px;">
-        <button class="game-icon-btn" onclick="openSubpage('subpage-admin')" title="Virus Admin Panel" style="color:#e11d48; font-weight:900; font-size:18px;">
-          ⚡
-        </button>
-        <button class="game-icon-btn" onclick="openSubpage('subpage-options')" title="Options">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="3"></circle>
-            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-          </svg>
-        </button>
-      </div>
-    </div>
-
-    <!-- Sub-HUD Row: Remaining Arrows Pill | 3 Red Hearts | Difficulty Pill (Tap to cycle!) -->
-    <div class="game-status-row" id="game-sub-hud">
-      <div class="status-pill" title="Remaining Arrows">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="color: var(--arrow-idle);">
-          <path d="M5 19L19 5M19 5H8M19 5V16" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <span id="hud-remaining-count">3</span>
-      </div>
-
-      <div class="hearts-container" id="hud-hearts-row">
-        <svg class="heart-svg" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-        <svg class="heart-svg" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-        <svg class="heart-svg" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-      </div>
-
-      <div class="status-pill" id="hud-difficulty-pill" onclick="cycleDifficultyInGame()" title="Tap to switch Difficulty Mode">
-        Hard 🔥
-      </div>
-    </div>
-
-    <!-- Puzzle Interactive Canvas Area -->
-    <div id="board-stage">
-      <!-- Sandbox Editor Floating Banner -->
-      <div id="sandbox-banner">
-        <span>✏️ SANDBOX DRAW MODE: Drag on grid to draw arrows!</span>
-        <button onclick="toggleSandboxDrawMode()" style="background:#e11d48; color:#fff; border:none; border-radius:8px; padding:3px 8px; font-weight:800; cursor:pointer;">Done</button>
-      </div>
-
-      <canvas id="puzzle-canvas"></canvas>
-
-      <!-- Exact Level 1 Gloved Hand & "Tap to remove" Tooltip -->
-      <div id="lvl1-tutorial">
-        <svg class="gloved-hand-svg" viewBox="0 0 64 64" fill="none">
-          <path d="M24 12C24 8.686 26.686 6 30 6C33.314 6 36 8.686 36 12V28H39C41.761 28 44 30.239 44 33V35H46C48.761 35 51 37.239 51 40V46C51 53.732 44.732 60 37 60H27C19.82 60 14 54.18 14 47V36C14 32.686 16.686 30 20 30H24V12Z" fill="#ffffff" stroke="#0f172a" stroke-width="3.5" stroke-linejoin="round"/>
-        </svg>
-        <div class="tap-remove-tooltip">Tap to remove</div>
-      </div>
-    </div>
-
-    <!-- Bottom Boosters Dock: Bulb Hint, Purple Ruler, EMP Virus Blast, & AI Auto-Step -->
-    <div class="game-boosters-bar" id="game-boosters-bar">
-      <!-- 1. Bulb Hint Booster -->
-      <button class="round-booster-btn" onclick="triggerHintBooster()" title="Highlight unblocked arrow">
-        <svg width="28" height="28" viewBox="0 0 36 36">
-          <path d="M18 4C11.925 4 7 8.925 7 15C7 18.88 9.01 22.29 12.05 24.25C12.95 24.83 13.5 25.84 13.5 26.92V28.5C13.5 30.43 15.07 32 17 32H19C20.93 32 22.5 30.43 22.5 28.5V26.92C22.5 25.84 23.05 24.83 23.95 24.25C26.99 22.29 29 18.88 29 15C29 8.925 24.075 4 18 4Z" fill="#fbbf24" stroke="#d97706" stroke-width="2"/>
-          <rect x="14" y="29" width="8" height="4" rx="2" fill="#94a3b8" stroke="#475569" stroke-width="1.5"/>
-        </svg>
-        <span class="booster-count-badge" id="hint-badge-num">3</span>
-      </button>
-
-      <!-- 2. Purple Ruler Trajectory Guide Booster -->
-      <button class="round-booster-btn" id="ruler-booster-btn" onclick="toggleRulerGuide()" title="Show exit trajectory lines">
-        <svg width="28" height="28" viewBox="0 0 36 36">
-          <g transform="rotate(30 18 18)">
-            <rect x="11" y="3" width="14" height="30" rx="3" fill="#7c83f7" stroke="#4338ca" stroke-width="2"/>
-            <line x1="11" y1="8" x2="16" y2="8" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
-            <line x1="11" y1="13" x2="18" y2="13" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
-            <line x1="11" y1="18" x2="16" y2="18" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
-            <line x1="11" y1="23" x2="18" y2="23" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
-            <line x1="11" y1="28" x2="16" y2="28" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
-          </g>
-        </svg>
-      </button>
-
-      <!-- 3. NEW: Virus EMP Blast (Destroy ANY blocked/hazard arrow on tap!) -->
-      <button class="round-booster-btn" id="emp-booster-btn" onclick="toggleEmpBlaster()" title="Virus EMP Blast: Tap any blocked arrow to vaporize it!">
-        <span style="font-size:23px;">💣</span>
-        <span class="booster-count-badge" id="emp-badge-num" style="background:#e11d48;">2</span>
-      </button>
-
-      <!-- 4. NEW: AI Auto-Tap Next Arrow -->
-      <button class="round-booster-btn" onclick="triggerSingleAutoStep()" title="AI Auto-Step: Automatically fire the next solvable arrow">
-        <span style="font-size:22px;">🤖</span>
-      </button>
-    </div>
-  </section>
-
-  <!-- ==================== SUBPAGE: VIRUS OWNER ADMIN PANEL ==================== -->
-  <div class="subpage-overlay" id="subpage-admin">
-    <div class="subpage-nav" style="background:#09090b; color:#ffffff; border-bottom:1px solid #27272a;">
-      <div style="display:flex; align-items:center; gap:8px;">
-        <svg width="28" height="28" style="border-radius:50%; border:1.5px solid #e11d48;"><use href="#virus-anime-avatar"/></svg>
-        <span style="font-weight:900; font-size:15.5px; letter-spacing:0.3px;">⚡ iTzVIRUS ADMIN PANEL</span>
-      </div>
-      <button class="subpage-nav-btn" style="color:#38bdf8;" onclick="closeSubpage('subpage-admin')">Done</button>
-    </div>
-
-    <div class="subpage-body">
-      <!-- 1. Quick Instant Actions -->
-      <div class="admin-section-card">
-        <div class="admin-sec-title">
-          <span>🚀 Instant Match Actions</span>
-          <span style="color:var(--text-muted); font-size:11px;">OWNER ACCESS</span>
-        </div>
-        <div class="admin-grid-btns">
-          <button class="admin-btn danger" onclick="adminAutoSolveAll()">🤖 AI Auto-Win Level</button>
-          <button class="admin-btn primary" onclick="adminInstantClearWin()">🏆 Instant Win Skip</button>
-          <button class="admin-btn dark" onclick="adminClearAllHazards()">🛡️ Disarm All Hazards</button>
-          <button class="admin-btn" onclick="toggleSandboxDrawMode()">✏️ Draw Custom Level</button>
-        </div>
-      </div>
-
-      <!-- 2. God Mode & Visual Cheats -->
-      <div class="admin-section-card">
-        <div class="admin-sec-title">
-          <span>🔥 God Mode & Visual X-Ray</span>
-        </div>
-        <div class="ios-list-row" style="padding:8px 0;" onclick="toggleAdminCheat('godMode')">
-          <span style="font-size:14.5px; font-weight:600;">♾️ God Mode (Infinite Hearts)</span>
-          <div class="ios-switch virus-red" id="sw-admin-god"><div class="ios-switch-thumb"></div></div>
-        </div>
-        <div class="ios-list-row" style="padding:8px 0;" onclick="toggleAdminCheat('xrayOrder')">
-          <span style="font-size:14.5px; font-weight:600;">👁️ X-Ray Solution Order (#1, #2...)</span>
-          <div class="ios-switch virus-red" id="sw-admin-xray"><div class="ios-switch-thumb"></div></div>
-        </div>
-        <div class="ios-list-row" style="padding:8px 0; border:none;" onclick="toggleAdminCheat('infBoosters')">
-          <span style="font-size:14.5px; font-weight:600;">💎 Infinite Boosters (Hints & EMP)</span>
-          <div class="ios-switch virus-red" id="sw-admin-inf"><div class="ios-switch-thumb"></div></div>
-        </div>
-      </div>
-
-      <!-- 3. Custom Maze & Difficulty Generator -->
-      <div class="admin-section-card">
-        <div class="admin-sec-title">
-          <span>🧩 Custom Maze & Hazard Generator</span>
-        </div>
-
-        <div class="slider-row">
-          <div class="slider-label">
-            <span>Jump to Level #</span>
-            <span id="lbl-admin-lvl">1</span>
-          </div>
-          <input type="range" id="rng-admin-lvl" min="1" max="500" value="1" oninput="document.getElementById('lbl-admin-lvl').textContent=this.value"/>
-        </div>
-
-        <div class="slider-row">
-          <div class="slider-label">
-            <span>Grid Size (Cols × Rows)</span>
-            <span id="lbl-admin-grid">10 × 12</span>
-          </div>
-          <input type="range" id="rng-admin-grid" min="6" max="15" value="10" oninput="document.getElementById('lbl-admin-grid').textContent=this.value+' × '+(parseInt(this.value)+2)"/>
-        </div>
-
-        <div class="slider-row">
-          <div class="slider-label">
-            <span>Target Interlocking Arrows</span>
-            <span id="lbl-admin-density">28 Arrows</span>
-          </div>
-          <input type="range" id="rng-admin-density" min="5" max="55" value="28" oninput="document.getElementById('lbl-admin-density').textContent=this.value+' Arrows'"/>
-        </div>
-
-        <div class="slider-row">
-          <div class="slider-label">
-            <span>Hazard Rate (Locks 🔒, Bombs 💣, Ice ❄️)</span>
-            <span id="lbl-admin-hazards">35%</span>
-          </div>
-          <input type="range" id="rng-admin-hazards" min="0" max="85" value="35" oninput="document.getElementById('lbl-admin-hazards').textContent=this.value+'%'"/>
-        </div>
-
-        <button class="admin-btn danger" style="width:100%; padding:12px;" onclick="adminGenerateCustomBoard()">
-          ⚡ Generate & Launch Custom Board Now
-        </button>
-      </div>
-
-      <!-- 4. Account & Calendar Progression Manager -->
-      <div class="admin-section-card">
-        <div class="admin-sec-title">
-          <span>📅 Progression & Save Data</span>
-        </div>
-        <div class="admin-grid-btns">
-          <button class="admin-btn primary" onclick="adminUnlockAllOctober()">★ Unlock All 31 Oct Stars</button>
-          <button class="admin-btn" onclick="adminResetAllData()">🗑️ Reset All Save Data</button>
-        </div>
+    <div class="admin-section">
+      <div class="admin-sec-title">4. Custom Level Sandbox Builder</div>
+      <div class="admin-grid-btns">
+        <button class="adm-btn" onclick="startSandboxEditor()">✏️ Open Level Editor</button>
+        <button class="adm-btn danger" onclick="unlockAllOctoberDaily()">🏆 Complete All 31 Daily</button>
       </div>
     </div>
   </div>
 
-  <!-- ==================== SUBPAGE: OPTIONS (FROM GEAR ICON) ==================== -->
-  <div class="subpage-overlay" id="subpage-options">
-    <div class="subpage-nav">
-      <span style="width: 48px;"></span>
-      <span class="subpage-nav-title">Options</span>
-      <button class="subpage-nav-btn" onclick="closeSubpage('subpage-options')">Done</button>
+  <!-- ==================== 5. GAMEPLAY SCREEN ==================== -->
+  <div id="screen-game" class="screen">
+    <div class="game-top-bar">
+      <button class="icon-btn" onclick="exitToHome()" title="Back">‹</button>
+      <div class="game-lvl-title">
+        <span id="hud-level-title" onclick="handleSecretTriggerTap()">Level 1</span>
+      </div>
+      <div style="display:flex; gap:4px;">
+        <button class="icon-btn stealth-hidden" id="btn-hud-admin" onclick="requestAdminAccess()" title="Virus Admin Panel" style="font-size:18px;">⚡</button>
+        <button class="icon-btn" onclick="openTab('me')" title="Settings" style="font-size:18px;">⚙️</button>
+      </div>
     </div>
-    <div class="subpage-body">
-      <div class="ios-list-card">
-        <div class="ios-list-row" onclick="openSubpage('subpage-admin')">
-          <div class="ios-row-left">
-            <div class="ios-sq-icon" style="background: #09090b;">⚡</div>
-            <span style="font-weight:700;">iTzVirus Admin Panel</span>
-          </div>
-          <span class="chevron-right">›</span>
-        </div>
-        <div class="ios-list-row" onclick="openSubpage('subpage-settings')">
-          <div class="ios-row-left">
-            <div class="ios-sq-icon" style="background: #1d7dfa;">⚙️</div>
-            <span>Settings & Hazards</span>
-          </div>
-          <span class="chevron-right">›</span>
-        </div>
+
+    <div class="game-sub-hud">
+      <div class="hud-pill">
+        <span style="color:var(--accent-main);">↗</span>
+        <span id="hud-arrows-left">3</span>
       </div>
 
-      <div class="ios-list-card">
-        <div class="ios-list-row" onclick="openSubpage('subpage-help')">
-          <div class="ios-row-left">
-            <div class="ios-sq-icon" style="background: #22c55e;">?</div>
-            <span>Help</span>
-          </div>
-          <span class="chevron-right">›</span>
-        </div>
-        <div class="ios-list-row" onclick="openSubpage('subpage-about')">
-          <div class="ios-row-left">
-            <div class="ios-sq-icon" style="background: #1d7dfa;">i</div>
-            <span>About Game</span>
-          </div>
-          <span class="chevron-right">›</span>
-        </div>
+      <div class="hearts-row" id="hud-hearts">
+        <span class="heart">♥</span>
+        <span class="heart">♥</span>
+        <span class="heart">♥</span>
       </div>
+
+      <div class="hud-pill" id="hud-diff-badge" onclick="cycleDifficultyInGame()" style="cursor:pointer;">Hard 🔥</div>
+    </div>
+
+    <div id="sandbox-bar" style="display:none; background:#111827; color:#fff; padding:8px 14px; font-size:12px; justify-content:space-between; align-items:center;">
+      <span>✏️ <b>SANDBOX:</b> Drag on grid to draw arrows!</span>
+      <div style="display:flex; gap:6px;">
+        <button onclick="clearSandboxBoard()" style="background:#334155; color:#fff; border:none; padding:4px 8px; border-radius:6px; font-weight:700; cursor:pointer;">Clear</button>
+        <button onclick="finishSandboxAndPlay()" style="background:#10b981; color:#fff; border:none; padding:4px 10px; border-radius:6px; font-weight:800; cursor:pointer;">▶ Play</button>
+      </div>
+    </div>
+
+    <div id="canvas-wrap">
+      <canvas id="game-canvas"></canvas>
+
+      <div id="tutorial-popup">
+        <div class="hand-pointer">👆</div>
+        <div class="tut-bubble">Tap to remove</div>
+      </div>
+    </div>
+
+    <div class="game-bottom-dock">
+      <button class="booster-btn" onclick="useHintBooster()" title="Highlight Free Arrow">
+        💡
+        <span class="badge-count" id="badge-hints">3</span>
+      </button>
+
+      <button class="booster-btn" id="btn-ruler" onclick="toggleRulerBooster()" title="Toggle Ruler Laser Guide">
+        📏
+      </button>
+
+      <button class="booster-btn" id="btn-emp" onclick="toggleEmpBombMode()" title="Virus EMP Blast: Destroy Any Blocked Arrow!">
+        💣
+        <span class="badge-count" id="badge-bombs">2</span>
+      </button>
+
+      <button class="booster-btn" onclick="triggerSingleAiStep()" title="AI Smart Move">
+        🤖
+      </button>
     </div>
   </div>
 
-  <!-- ==================== SUBPAGE: SETTINGS (SOUNDS / VIBRATION / HAZARDS / DARK MODE) ==================== -->
-  <div class="subpage-overlay" id="subpage-settings">
-    <div class="subpage-nav">
-      <button class="subpage-nav-btn" onclick="closeSubpage('subpage-settings')">‹</button>
-      <span class="subpage-nav-title">Settings</span>
-      <button class="subpage-nav-btn" onclick="closeAllSubpages()">Done</button>
-    </div>
-    <div class="subpage-body">
-      <div class="ios-list-card">
-        <div class="ios-list-row" onclick="togglePref('sound')">
-          <span style="font-size: 15.5px; font-weight: 500;">Sounds</span>
-          <div class="ios-switch checked" id="sw-sound"><div class="ios-switch-thumb"></div></div>
-        </div>
-        <div class="ios-list-row" onclick="togglePref('vibration')">
-          <span style="font-size: 15.5px; font-weight: 500;">Vibration</span>
-          <div class="ios-switch checked" id="sw-vibration"><div class="ios-switch-thumb"></div></div>
-        </div>
-        <div class="ios-list-row" onclick="togglePref('hazards')">
-          <span style="font-size: 15.5px; font-weight: 500;">Virus Hazards (Locks 🔒, Bombs 💣, Ice ❄️)</span>
-          <div class="ios-switch checked" id="sw-hazards"><div class="ios-switch-thumb"></div></div>
-        </div>
-        <div class="ios-list-row" onclick="togglePref('stealth')">
-          <span style="font-size: 15.5px; font-weight: 500;">Stealth Fog Mode (Hide Heads Until Scanned)</span>
-          <div class="ios-switch" id="sw-stealth"><div class="ios-switch-thumb"></div></div>
-        </div>
-        <div class="ios-list-row" onclick="togglePref('dark')">
-          <span style="font-size: 15.5px; font-weight: 500;">Dark / Neon Theme</span>
-          <div class="ios-switch" id="sw-dark"><div class="ios-switch-thumb"></div></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ==================== SUBPAGE: HELP ("WHAT IS VIRUS ARROWS?") ==================== -->
-  <div class="subpage-overlay" id="subpage-help">
-    <div class="subpage-nav" style="background: #09090b; color: #ffffff;">
-      <button class="subpage-nav-btn" style="color: #ffffff;" onclick="closeSubpage('subpage-help')">←</button>
-      <span class="subpage-nav-title" style="color: #ffffff;">What is Virus Arrows?</span>
-      <span style="width: 32px;"></span>
-    </div>
-    <div class="subpage-body" style="background: var(--bg-surface); padding: 24px 20px;">
-      <h2 style="font-size: 22px; font-weight: 800; margin-bottom: 8px;">What is Virus Arrows Game?</h2>
-      <p style="font-size: 15px; line-height: 1.6; color: var(--text-muted); margin-bottom: 14px;">
-        Virus Arrows Game is an upgraded, high-intensity logic puzzle created by <strong>iTzVirus</strong>. Your goal is to find unobstructed exit paths, tap snaking arrows in the right topological sequence, and clear the entire grid.
-      </p>
-      <div style="font-size: 14px; line-height: 1.65; color: var(--text-main); background: var(--bg-pill); padding: 14px; border-radius: 14px;">
-        <strong>🔥 Virus Pro Mechanics:</strong><br/>
-        • <strong>🔒 Locked Arrows:</strong> Clear other arrows first to unlock the chain counter.<br/>
-        • <strong>💣 Virus Bomb Arrows:</strong> Clear before the move countdown hits 0!<br/>
-        • <strong>❄️ Ice Frozen Arrows:</strong> Slide an adjacent arrow past them to shatter the frost.<br/>
-        • <strong>💣 EMP Blast Booster:</strong> Vaporizes any blocking arrow instantly!
-      </div>
-    </div>
-  </div>
-
-  <!-- ==================== SUBPAGE: ABOUT GAME ==================== -->
-  <div class="subpage-overlay" id="subpage-about">
-    <div class="subpage-nav">
-      <button class="subpage-nav-btn" onclick="closeSubpage('subpage-about')">‹</button>
-      <span class="subpage-nav-title">About Game</span>
-      <button class="subpage-nav-btn" onclick="closeAllSubpages()">Done</button>
-    </div>
-    <div class="subpage-body">
-      <div class="ios-list-card" style="padding: 20px; display: flex; align-items: center; gap: 16px;">
-        <svg width="72" height="72" style="border-radius: 18px; border: 2.5px solid #09090b; background: #fff; flex-shrink: 0;">
-          <use href="#virus-anime-avatar"/>
-        </svg>
-        <div>
-          <div style="font-size: 19px; font-weight: 900;">Virus Arrows Game</div>
-          <div style="font-size: 13.5px; font-weight: 700; color: #e11d48; margin-top: 2px;">Version 2.5.0 (iTzVirus Pro Build)</div>
-          <div style="font-size: 12px; color: var(--text-muted); margin-top: 6px;">© 2025–2026 Created by iTzVirus.<br/>Includes Owner Admin Panel & Insane Maze Engine.</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ==================== BOTTOM 3-TAB NAVIGATION BAR ==================== -->
-  <nav id="bottom-tab-bar">
-    <div class="tab-item active" id="nav-main" onclick="switchTab('main')">
+  <!-- ==================== BOTTOM NAVIGATION BAR ==================== -->
+  <div class="bottom-nav" id="bottom-nav">
+    <div class="nav-tab active" id="tab-main" onclick="openTab('main')">
       <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
       <span>Main</span>
     </div>
-    <div class="tab-item" id="nav-daily" onclick="switchTab('daily')">
-      <svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c-1.1 0-2-.9-2-2zm0 16H5V10h14v10zm-7-8l-1.45 3.15L7 15.6l2.6 2.35-.65 3.45L12 19.65l3.05 1.75-.65-3.45L17 15.6l-3.55-.45z"/></svg>
+    <div class="nav-tab" id="tab-daily" onclick="openTab('daily')">
+      <svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm-7-8l-1.45 3.15L7 15.6l2.6 2.35-.65 3.45L12 19.65l3.05 1.75-.65-3.45L17 15.6l-3.55-.45z"/></svg>
       <span>Daily</span>
     </div>
-    <div class="tab-item" id="nav-me" onclick="switchTab('me')">
+    <div class="nav-tab" id="tab-me" onclick="openTab('me')">
       <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
       <span>Me</span>
     </div>
-  </nav>
+  </div>
 
-  <!-- ==================== DIALOG MODAL ==================== -->
-  <div class="dialog-backdrop" id="dialog-backdrop">
-    <div class="dialog-card">
-      <div class="dialog-icon" id="dialog-icon">🎉</div>
-      <div class="dialog-title" id="dialog-title">Level Complete!</div>
-      <div class="dialog-text" id="dialog-text">Great job clearing the board.</div>
-      <button class="btn-continue" id="dialog-action-btn" onclick="handleDialogConfirm()">
-        <span class="main-txt" id="dialog-btn-label">Continue</span>
-      </button>
+  <!-- ==================== SECURITY GATE PASSWORD MODAL ==================== -->
+  <div class="modal-overlay" id="security-modal">
+    <div class="sec-gate-box" id="sec-gate-box">
+      <div style="display:flex; justify-content:center; margin-bottom:8px;">
+        <div class="virus-avatar-wrap" id="gate-avatar-slot" style="width:54px; height:54px; border:2px solid #e11d48;">
+          <svg><use href="#virus-anime-avatar"/></svg>
+        </div>
+      </div>
+      <div style="font-size:17px; font-weight:900; letter-spacing:0.8px; color:#fff;">🔒 VIRUS SECURITY GATE</div>
+      <div style="font-size:11px; color:#94a3b8; margin-top:2px;">OWNER AUTHENTICATION REQUIRED</div>
+
+      <input type="password" id="sec-pass-input" class="sec-input-display" placeholder="PASSCODE / PIN" autocomplete="off" onkeydown="if(event.key==='Enter') verifyAdminPassword()">
+      <div id="sec-error-msg" style="font-size:11px; color:#f43f5e; font-weight:700; min-height:16px;"></div>
+
+      <div class="sec-keypad">
+        <button class="sec-key" onclick="appendPinDigit('1')">1</button>
+        <button class="sec-key" onclick="appendPinDigit('2')">2</button>
+        <button class="sec-key" onclick="appendPinDigit('3')">3</button>
+        <button class="sec-key" onclick="appendPinDigit('4')">4</button>
+        <button class="sec-key" onclick="appendPinDigit('5')">5</button>
+        <button class="sec-key" onclick="appendPinDigit('6')">6</button>
+        <button class="sec-key" onclick="appendPinDigit('7')">7</button>
+        <button class="sec-key" onclick="appendPinDigit('8')">8</button>
+        <button class="sec-key" onclick="appendPinDigit('9')">9</button>
+        <button class="sec-key" onclick="clearPinInput()" style="color:#f43f5e; font-size:13px;">CLR</button>
+        <button class="sec-key" onclick="appendPinDigit('0')">0</button>
+        <button class="sec-key" onclick="verifyAdminPassword()" style="background:#e11d48; border-color:#f43f5e; font-size:14px;">OK</button>
+      </div>
+
+      <div style="display:flex; gap:8px;">
+        <button class="adm-btn" style="flex:1;" onclick="closeSecurityModal()">Cancel</button>
+        <button class="adm-btn danger" style="flex:1; background:#e11d48;" onclick="verifyAdminPassword()">⚡ Unlock Admin</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== STANDARD GAME MODAL OVERLAY ==================== -->
+  <div class="modal-overlay" id="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-emoji" id="modal-emoji">🎉</div>
+      <div class="modal-title" id="modal-title">Level Complete!</div>
+      <div class="modal-desc" id="modal-desc">Every arrow escaped cleanly.</div>
+      <button class="btn-primary" id="modal-btn" onclick="closeModal()">Continue</button>
     </div>
   </div>
 
 </div>
 
 <script>
-  /* =========================================================================
-     1. PERSISTENT STATE, DIFFICULTY MODES & ADMIN SETTINGS
-     ========================================================================= */
-  let unlockedLevel = parseInt(localStorage.getItem('virus_ap_level') || '1', 10);
-  let totalClearedCount = parseInt(localStorage.getItem('virus_ap_cleared') || '0', 10);
-  let completedDailies = JSON.parse(localStorage.getItem('virus_ap_dailies') || '[]');
+function downloadCleanGameFile(format) {
+  // Clone the entire document so we can strip the top downloader bar in the exported file
+  const clone = document.documentElement.cloneNode(true);
+  const expBar = clone.querySelector('#virus-export-bar');
+  if (expBar) expBar.remove();
 
-  let activeLevelNum = unlockedLevel;
-  let activeDailyDate = null;
-  let selectedDailyDate = 14;
-  let difficultyMode = 'hard'; // 'normal' | 'hard' | 'insane'
-  let currentSkin = 'classic'; // 'classic' | 'virus' | 'matrix' | 'gold'
+  const fullSource = '<!DOCTYPE html>\n' + clone.outerHTML;
+  const mime = format === 'txt' ? 'text/plain;charset=utf-8' : 'text/html;charset=utf-8';
+  const filename = format === 'txt' ? 'virus_arrows_code.txt' : 'index.html';
 
-  const prefs = {
-    sound: true,
-    vibration: true,
-    hazards: true,
-    stealth: false,
-    dark: false
-  };
+  const blob = new Blob([fullSource], { type: mime });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => {
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }, 500);
+}
 
-  const adminCheats = {
-    godMode: false,
-    xrayOrder: false,
-    infBoosters: false,
-    sandboxDraw: false
-  };
+let savedLevel = parseInt(localStorage.getItem('virus_ap_level') || '1', 10);
+let totalArrowsCleared = parseInt(localStorage.getItem('virus_ap_cleared') || '0', 10);
+let completedDailyDays = JSON.parse(localStorage.getItem('virus_ap_daily') || '[]');
 
-  const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-  let audioCtx = null;
+// Automatically loads 'virus.jpg' from your GitHub repo unless overridden locally
+let customAvatarData = localStorage.getItem('virus_custom_avatar') || 'virus.jpg';
 
-  function playSynthTone(freqStart, freqEnd, duration = 0.16, wave = 'sine', gainVal = 0.13) {
-    if (!prefs.sound) return;
-    try {
-      if (!audioCtx) audioCtx = new AudioContextClass();
-      if (audioCtx.state === 'suspended') audioCtx.resume();
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.type = wave;
-      osc.frequency.setValueAtTime(freqStart, audioCtx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(freqEnd, audioCtx.currentTime + duration);
-      gain.gain.setValueAtTime(gainVal, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-      osc.start();
-      osc.stop(audioCtx.currentTime + duration);
-    } catch (err) {}
+// Admin Security State (Default accepts: "VIRUS", "ITZVIRUS", or "7860")
+let savedCustomPassword = localStorage.getItem('virus_admin_pass') || '';
+let isAdminAuthenticated = false;
+
+// Stealth Mode defaults to TRUE on GitHub so public visitors don't see Admin buttons
+let stealthMode = localStorage.getItem('virus_stealth_mode') !== 'false';
+
+let currentLevel = savedLevel;
+let activeDailyDay = null;
+let selectedCalendarDay = 14;
+let gameDifficulty = 'hard'; // 'normal', 'hard', 'virus'
+
+let settings = {
+  sound: true,
+  vib: true,
+  dark: false
+};
+
+let adminConfig = {
+  godMode: false,
+  xrayOrder: false,
+  gridOverride: 0,
+  hazardRate: 0.35
+};
+
+let secretTapCount = 0;
+let secretTapTimer = null;
+
+function handleSecretTriggerTap() {
+  secretTapCount++;
+  clearTimeout(secretTapTimer);
+  if (secretTapCount >= 5) {
+    secretTapCount = 0;
+    playTone(740, 'sine', 0.12, 0.15);
+    requestAdminAccess();
+  } else {
+    secretTapTimer = setTimeout(() => { secretTapCount = 0; }, 1400);
   }
+}
 
-  function triggerHaptic(pattern) {
-    if (prefs.vibration && navigator.vibrate) {
-      navigator.vibrate(pattern);
-    }
+function requestAdminAccess() {
+  if (isAdminAuthenticated) {
+    openTab('admin');
+    return;
   }
+  document.getElementById('sec-pass-input').value = '';
+  document.getElementById('sec-error-msg').textContent = '';
+  document.getElementById('security-modal').classList.add('show');
+  setTimeout(() => document.getElementById('sec-pass-input').focus(), 80);
+}
 
-  /* =========================================================================
-     2. NAVIGATION, SKIN SWITCHER & DIFFICULTY SELECTOR
-     ========================================================================= */
-  function switchTab(tabId) {
-    closeAllSubpages();
-    document.querySelectorAll('.view-screen').forEach(v => v.classList.remove('active'));
-    document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+function closeSecurityModal() {
+  document.getElementById('security-modal').classList.remove('show');
+}
 
-    document.getElementById('bottom-tab-bar').style.display = 'flex';
-    document.getElementById('view-' + tabId).classList.add('active');
-    const navEl = document.getElementById('nav-' + tabId);
-    if (navEl) navEl.classList.add('active');
+function appendPinDigit(digit) {
+  const inp = document.getElementById('sec-pass-input');
+  inp.value += digit;
+  playTone(620, 'sine', 0.05, 0.08);
+}
 
-    refreshMenuUI();
-    if (tabId === 'daily') buildOctoberCalendar();
+function clearPinInput() {
+  document.getElementById('sec-pass-input').value = '';
+  document.getElementById('sec-error-msg').textContent = '';
+}
+
+function verifyAdminPassword() {
+  const raw = document.getElementById('sec-pass-input').value.trim();
+  const upper = raw.toUpperCase();
+
+  const isValid = savedCustomPassword
+    ? (raw === savedCustomPassword || upper === 'ITZVIRUS')
+    : (upper === 'VIRUS' || upper === 'ITZVIRUS' || raw === '7860');
+
+  if (isValid) {
+    isAdminAuthenticated = true;
+    document.getElementById('lock-indicator').textContent = '🔓';
+    document.getElementById('admin-status-tag').textContent = 'ROOT UNLOCKED';
+    closeSecurityModal();
+    playTone(880, 'sine', 0.18, 0.18);
+    openTab('admin');
+  } else {
+    const box = document.getElementById('sec-gate-box');
+    box.classList.remove('shake');
+    void box.offsetWidth;
+    box.classList.add('shake');
+    document.getElementById('sec-error-msg').textContent = '❌ ACCESS DENIED — INVALID PASSCODE';
+    playTone(140, 'sawtooth', 0.25, 0.2);
+    vibrate([60, 40, 60]);
   }
+}
 
-  function setDifficultyMode(mode) {
-    difficultyMode = mode;
-    ['normal', 'hard', 'insane'].forEach(m => {
-      const chip = document.getElementById('chip-' + m);
-      if (chip) chip.classList.toggle('active', m === mode);
-    });
-    refreshMenuUI();
+function lockAdminSession() {
+  isAdminAuthenticated = false;
+  document.getElementById('lock-indicator').textContent = '🔒';
+  document.getElementById('admin-status-tag').textContent = 'PRO EDITION';
+  playTone(300, 'sine', 0.12, 0.1);
+  openTab('main');
+}
+
+function adminChangePassword() {
+  const newPass = document.getElementById('adm-new-pass').value.trim();
+  if (!newPass) {
+    showInfoModal('⚠️ Empty Passcode', 'Enter a new password or PIN first.');
+    return;
   }
+  savedCustomPassword = newPass;
+  localStorage.setItem('virus_admin_pass', newPass);
+  document.getElementById('adm-new-pass').value = '';
+  showInfoModal('🔐 Passcode Updated!', 'Your new Admin Passcode is saved on this device: "' + newPass + '"\n(Master backup code "iTzVirus" also remains active.)');
+}
 
-  function cycleDifficultyInGame() {
-    const order = ['normal', 'hard', 'insane'];
-    const nextIdx = (order.indexOf(difficultyMode) + 1) % order.length;
-    setDifficultyMode(order[nextIdx]);
-    startPuzzleSession(activeLevelNum, activeDailyDate);
+function toggleStealthMode() {
+  stealthMode = !stealthMode;
+  localStorage.setItem('virus_stealth_mode', stealthMode ? 'true' : 'false');
+  applyStealthUI();
+}
+
+function applyStealthUI() {
+  const tog = document.getElementById('tog-stealth');
+  if (tog) tog.classList.toggle('on', stealthMode);
+  document.getElementById('btn-top-admin').classList.toggle('stealth-hidden', stealthMode);
+  document.getElementById('btn-hud-admin').classList.toggle('stealth-hidden', stealthMode);
+  document.getElementById('me-admin-row').classList.toggle('stealth-hidden', stealthMode);
+}
+
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+let audioCtx = null;
+
+function playTone(freq, type, duration, vol = 0.12) {
+  if (!settings.sound) return;
+  try {
+    if (!audioCtx) audioCtx = new AudioCtx();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(freq * 1.4, audioCtx.currentTime + duration);
+    gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + duration);
+  } catch (e) {}
+}
+
+function vibrate(ms) {
+  if (settings.vib && navigator.vibrate) navigator.vibrate(ms);
+}
+
+function fallbackToSvgAvatar(imgEl) {
+  const parent = imgEl.parentElement;
+  if (parent) {
+    parent.innerHTML = `<svg><use href="#virus-anime-avatar"/></svg>`;
   }
+}
 
-  function getDifficultyLabel() {
-    if (difficultyMode === 'normal') return 'Normal';
-    if (difficultyMode === 'hard') return 'Hard 🔥';
-    return 'Insane 💀';
-  }
-
-  function selectArrowSkin(skin) {
-    currentSkin = skin;
-    document.body.classList.remove('skin-virus', 'skin-matrix', 'skin-gold');
-    if (skin !== 'classic') {
-      document.body.classList.add('skin-' + skin);
-    }
-    ['classic', 'virus', 'matrix', 'gold'].forEach(s => {
-      const btn = document.getElementById('skin-btn-' + s);
-      if (btn) btn.classList.toggle('primary', s === skin);
-    });
-  }
-
-  function refreshMenuUI() {
-    document.getElementById('home-continue-sub').textContent = 'Level ' + unlockedLevel + ' • ' + getDifficultyLabel();
-    document.getElementById('home-daily-date').textContent = 'October ' + selectedDailyDate;
-    document.getElementById('cal-star-progress').textContent = completedDailies.length + '/31';
-  }
-
-  function buildOctoberCalendar() {
-    const grid = document.getElementById('october-cal-grid');
-    grid.innerHTML = '';
-    for (let empty = 0; empty < 4; empty++) {
-      grid.appendChild(document.createElement('div'));
-    }
-    for (let day = 1; day <= 31; day++) {
-      const btn = document.createElement('div');
-      btn.className = 'cal-day-btn ' + (day <= 14 ? 'past-or-today' : 'future-day');
-      if (completedDailies.includes(day)) btn.classList.add('completed');
-      if (day === selectedDailyDate) btn.classList.add('selected');
-      btn.textContent = day;
-      btn.onclick = () => {
-        selectedDailyDate = day;
-        refreshMenuUI();
-        buildOctoberCalendar();
-      };
-      grid.appendChild(btn);
-    }
-  }
-
-  function openSubpage(id) {
-    document.getElementById(id).classList.add('open');
-  }
-  function closeSubpage(id) {
-    document.getElementById(id).classList.remove('open');
-  }
-  function closeAllSubpages() {
-    document.querySelectorAll('.subpage-overlay').forEach(el => el.classList.remove('open'));
-  }
-
-  function togglePref(key) {
-    prefs[key] = !prefs[key];
-    const sw = document.getElementById('sw-' + key);
-    if (sw) sw.classList.toggle('checked', prefs[key]);
-    if (key === 'dark') {
-      document.body.classList.toggle('dark-theme', prefs.dark);
-    }
-  }
-
-  /* =========================================================================
-     3. HARDER MULTI-BEND MAZE GENERATOR & VIRUS HAZARDS
-     ========================================================================= */
-  let cols = 7;
-  let rows = 9;
-  let arrowsList = [];
-  let trackDotsList = [];
-  let livesCount = 3;
-  let hintCount = 3;
-  let empCount = 2;
-  let rulerMode = false;
-  let empArmed = false;
-  let hintedArrowId = null;
-  let level1FirstTapDone = false;
-
-  // Direction vectors: 0: UP, 1: RIGHT, 2: DOWN, 3: LEFT
-  const DIR_X = [0, 1, 0, -1];
-  const DIR_Y = [-1, 0, 1, 0];
-
-  function createExactLevel1() {
-    cols = 7;
-    rows = 9;
-    level1FirstTapDone = false;
-    arrowsList = [
-      {
-        id: 1,
-        solveOrder: 2,
-        cells: [{x: 2, y: 6}, {x: 2, y: 5}, {x: 2, y: 4}, {x: 2, y: 3}, {x: 2, y: 2}],
-        dir: 0,
-        state: 'idle',
-        slideDist: 0,
-        bumpPhase: 0,
-        lockCount: 0,
-        bombMoves: 0,
-        frozen: false
-      },
-      {
-        id: 2,
-        solveOrder: 1,
-        cells: [{x: 3, y: 6}, {x: 3, y: 5}, {x: 3, y: 4}, {x: 3, y: 3}, {x: 3, y: 2}],
-        dir: 0,
-        state: 'idle',
-        slideDist: 0,
-        bumpPhase: 0,
-        lockCount: 0,
-        bombMoves: 0,
-        frozen: false
-      },
-      {
-        id: 3,
-        solveOrder: 3,
-        cells: [{x: 4, y: 2}, {x: 4, y: 3}, {x: 4, y: 4}, {x: 4, y: 5}, {x: 4, y: 6}],
-        dir: 2,
-        state: 'idle',
-        slideDist: 0,
-        bumpPhase: 0,
-        lockCount: 0,
-        bombMoves: 0,
-        frozen: false
-      }
-    ];
-    saveInitialTrackDots();
-  }
-
-  let seedVal = 42;
-  function setSeed(s) {
-    seedVal = s % 2147483647;
-    if (seedVal <= 0) seedVal += 2147483646;
-  }
-  function randFloat() {
-    seedVal = (seedVal * 16807) % 2147483647;
-    return (seedVal - 1) / 2147483646;
-  }
-
-  function hasClearRayToBorder(head, dir, gridMap, selfId = -1) {
-    let cx = head.x + DIR_X[dir];
-    let cy = head.y + DIR_Y[dir];
-    while (cx >= 0 && cx < cols && cy >= 0 && cy < rows) {
-      if (gridMap[cy][cx] !== 0 && gridMap[cy][cx] !== selfId) return false;
-      cx += DIR_X[dir];
-      cy += DIR_Y[dir];
-    }
-    return true;
-  }
-
-  function generateSolvableBentMaze(levelNumber, customSeed = null, customOpts = null) {
-    // Keep Level 1 as the exact 3-arrow tutorial when in Normal mode
-    if (levelNumber === 1 && customSeed === null && !customOpts && difficultyMode === 'normal') {
-      createExactLevel1();
-      return;
-    }
-
-    setSeed(customSeed || (levelNumber * 19381 + (difficultyMode === 'insane' ? 999 : 79)));
-
-    // Determine Grid Dimensions & Density based on Difficulty Mode or Admin Overrides
-    let desiredArrows = 16;
-    let hazardChance = prefs.hazards ? 0.25 : 0;
-
-    if (customOpts) {
-      cols = customOpts.cols;
-      rows = customOpts.rows;
-      desiredArrows = customOpts.density;
-      hazardChance = customOpts.hazardRate / 100;
-    } else if (difficultyMode === 'insane') {
-      cols = Math.min(13, 10 + Math.floor(levelNumber / 3));
-      rows = Math.min(15, 12 + Math.floor(levelNumber / 3));
-      desiredArrows = Math.min(48, 24 + levelNumber * 4);
-      hazardChance = prefs.hazards ? 0.42 : 0;
-    } else if (difficultyMode === 'hard') {
-      cols = Math.min(11, 8 + Math.floor(levelNumber / 2));
-      rows = Math.min(13, 10 + Math.floor(levelNumber / 2));
-      desiredArrows = Math.min(34, 14 + levelNumber * 3);
-      hazardChance = prefs.hazards ? 0.28 : 0;
+function renderAllAvatarSlots() {
+  const slots = ['top-avatar-slot', 'hero-avatar-slot', 'me-avatar-slot', 'admin-avatar-slot', 'gate-avatar-slot'];
+  slots.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (customAvatarData) {
+      el.innerHTML = `<img src="${customAvatarData}" alt="Virus Avatar" onerror="fallbackToSvgAvatar(this)">`;
     } else {
-      if (levelNumber <= 2) { cols = 7; rows = 8; }
-      else if (levelNumber <= 5) { cols = 8; rows = 10; }
-      else { cols = 9; rows = 11; }
-      desiredArrows = Math.min(24, 6 + levelNumber * 3);
-      hazardChance = (prefs.hazards && levelNumber >= 2) ? 0.18 : 0;
-    }
-
-    const gridMap = Array.from({ length: rows }, () => Array(cols).fill(0));
-    const generated = [];
-    let nextId = 1;
-    let tries = 0;
-
-    // Reverse Topological Construction:
-    // Every placed arrow is guaranteed unobstructed at the moment of insertion.
-    // Clearing them in reverse insertion order (last placed -> first placed) is 100% solvable!
-    while (generated.length < desiredArrows && tries < 2200) {
-      tries++;
-      const hx = 1 + Math.floor(randFloat() * (cols - 2));
-      const hy = 1 + Math.floor(randFloat() * (rows - 2));
-      if (gridMap[hy][hx] !== 0) continue;
-
-      const candidateDirs = [0, 1, 2, 3].sort(() => randFloat() - 0.5);
-      let validDir = -1;
-      for (const d of candidateDirs) {
-        if (hasClearRayToBorder({x: hx, y: hy}, d, gridMap)) {
-          validDir = d;
-          break;
-        }
-      }
-      if (validDir === -1) continue;
-
-      const maxLen = difficultyMode === 'insane' ? (4 + Math.floor(randFloat() * 6)) : (3 + Math.floor(randFloat() * 5));
-      const chain = [{x: hx, y: hy}];
-      gridMap[hy][hx] = nextId;
-
-      let curX = hx - DIR_X[validDir];
-      let curY = hy - DIR_Y[validDir];
-      let lastGrowthDir = (validDir + 2) % 4;
-
-      if (curX >= 1 && curX < cols - 1 && curY >= 1 && curY < rows - 1 && gridMap[curY][curX] === 0) {
-        chain.push({x: curX, y: curY});
-        gridMap[curY][curX] = nextId;
-
-        for (let s = 2; s < maxLen; s++) {
-          // Favor 90-degree bends so arrows wrap tightly around each other like Easybrain's maze icon
-          const turnDirs = [(lastGrowthDir + 1) % 4, (lastGrowthDir + 3) % 4, lastGrowthDir];
-          if (randFloat() < 0.45) turnDirs.reverse();
-
-          let extended = false;
-          for (const nd of turnDirs) {
-            const nx = curX + DIR_X[nd];
-            const ny = curY + DIR_Y[nd];
-            if (nx >= 1 && nx < cols - 1 && ny >= 1 && ny < rows - 1 && gridMap[ny][nx] === 0) {
-              curX = nx;
-              curY = ny;
-              lastGrowthDir = nd;
-              chain.push({x: curX, y: curY});
-              gridMap[curY][curX] = nextId;
-              extended = true;
-              break;
-            }
-          }
-          if (!extended) break;
-        }
-      }
-
-      if (chain.length < 2) {
-        gridMap[hy][hx] = 0;
-        continue;
-      }
-
-      chain.reverse();
-      generated.push({
-        id: nextId++,
-        solveOrder: 0,
-        cells: chain,
-        dir: validDir,
-        state: 'idle',
-        slideDist: 0,
-        bumpPhase: 0,
-        lockCount: 0,
-        bombMoves: 0,
-        frozen: false
-      });
-    }
-
-    // Assign exact topological solveOrder (1 = last placed arrow, N = first placed arrow)
-    const total = generated.length;
-    generated.forEach((arrow, idx) => {
-      const orderNum = total - idx; // 1, 2, 3...
-      arrow.solveOrder = orderNum;
-
-      // Only assign hazards to arrows that are solved after step 2 so the opening moves are always fair
-      if (orderNum >= 3 && randFloat() < hazardChance) {
-        const roll = randFloat();
-        if (roll < 0.4) {
-          // Locked arrow: needs between 1 and min(4, orderNum-1) arrows cleared first
-          arrow.lockCount = Math.min(4, Math.max(1, Math.floor(orderNum * 0.45)));
-        } else if (roll < 0.72) {
-          // Virus Bomb arrow: generous countdown above its solveOrder so it's 100% fair
-          arrow.bombMoves = orderNum + 3 + Math.floor(randFloat() * 4);
-        } else {
-          // Frozen Ice arrow
-          arrow.frozen = true;
-        }
-      }
-    });
-
-    arrowsList = generated;
-    saveInitialTrackDots();
-  }
-
-  function saveInitialTrackDots() {
-    trackDotsList = [];
-    const visited = new Set();
-    arrowsList.forEach(arrow => {
-      arrow.cells.forEach(c => {
-        const key = c.x + ':' + c.y;
-        if (!visited.has(key)) {
-          visited.add(key);
-          trackDotsList.push({x: c.x, y: c.y});
-        }
-      });
-    });
-  }
-
-  /* =========================================================================
-     4. CANVAS RENDERING, HAZARD BADGES, X-RAY NUMBERS & SNAKE ANIMATION
-     ========================================================================= */
-  const canvas = document.getElementById('puzzle-canvas');
-  const ctx = canvas.getContext('2d');
-  let cellPx = 40;
-  let offsetX = 0;
-  let offsetY = 0;
-
-  function fitCanvasToStage() {
-    const stage = document.getElementById('board-stage');
-    const dpr = window.devicePixelRatio || 1;
-    canvas.width = stage.clientWidth * dpr;
-    canvas.height = stage.clientHeight * dpr;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-    const padW = stage.clientWidth - 36;
-    const padH = stage.clientHeight - 36;
-    cellPx = Math.min(Math.floor(padW / cols), Math.floor(padH / rows), 46);
-    offsetX = (stage.clientWidth - cols * cellPx) / 2;
-    offsetY = (stage.clientHeight - rows * cellPx) / 2;
-
-    updateLevel1TutorialOverlay();
-  }
-
-  window.addEventListener('resize', fitCanvasToStage);
-
-  function gridToCanvasPx(gx, gy) {
-    return {
-      x: offsetX + (gx + 0.5) * cellPx,
-      y: offsetY + (gy + 0.5) * cellPx
-    };
-  }
-
-  function canvasPxToGrid(px, py) {
-    return {
-      gx: (px - offsetX) / cellPx - 0.5,
-      gy: (py - offsetY) / cellPx - 0.5
-    };
-  }
-
-  function updateLevel1TutorialOverlay() {
-    const tutEl = document.getElementById('lvl1-tutorial');
-    const subHud = document.getElementById('game-sub-hud');
-    const boostersBar = document.getElementById('game-boosters-bar');
-
-    const isLvl1Start = (activeLevelNum === 1 && activeDailyDate === null && difficultyMode === 'normal' && arrowsList.length === 3 && !level1FirstTapDone);
-    if (isLvl1Start) {
-      subHud.style.visibility = 'hidden';
-      boostersBar.style.visibility = 'hidden';
-      const anchor = gridToCanvasPx(3, 4.15);
-      tutEl.style.display = 'flex';
-      tutEl.style.left = anchor.x + 'px';
-      tutEl.style.top = anchor.y + 'px';
-    } else {
-      subHud.style.visibility = 'visible';
-      boostersBar.style.visibility = 'visible';
-      tutEl.style.display = 'none';
-    }
-  }
-
-  function buildBoardOccupancy() {
-    const map = Array.from({ length: rows }, () => Array(cols).fill(0));
-    arrowsList.forEach(a => {
-      if (a.state === 'idle' || a.state === 'bumping') {
-        a.cells.forEach(c => {
-          if (c.x >= 0 && c.x < cols && c.y >= 0 && c.y < rows) {
-            map[c.y][c.x] = a.id;
-          }
-        });
-      }
-    });
-    return map;
-  }
-
-  function getSnakeShiftedVertices(arrow, shiftUnits) {
-    const base = arrow.cells;
-    const head = base[base.length - 1];
-    const extra = Math.ceil(shiftUnits) + 2;
-    const extendedTrack = [...base];
-    for (let i = 1; i <= extra; i++) {
-      extendedTrack.push({
-        x: head.x + DIR_X[arrow.dir] * i,
-        y: head.y + DIR_Y[arrow.dir] * i
-      });
-    }
-
-    const segCount = base.length - 1;
-    const idx = Math.floor(shiftUnits);
-    const frac = shiftUnits - idx;
-
-    const vertices = [];
-    const t0 = extendedTrack[idx];
-    const t1 = extendedTrack[idx + 1];
-    vertices.push({
-      x: t0.x + (t1.x - t0.x) * frac,
-      y: t0.y + (t1.y - t0.y) * frac
-    });
-
-    for (let k = idx + 1; k <= idx + segCount - 1; k++) {
-      vertices.push({ x: extendedTrack[k].x, y: extendedTrack[k].y });
-    }
-
-    const h0 = extendedTrack[idx + segCount];
-    const h1 = extendedTrack[idx + segCount + 1];
-    vertices.push({
-      x: h0.x + (h1.x - h0.x) * frac,
-      y: h0.y + (h1.y - h0.y) * frac
-    });
-
-    return vertices;
-  }
-
-  function renderFrame() {
-    ctx.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
-
-    const styles = getComputedStyle(document.body);
-    const dotCol = styles.getPropertyValue('--dot-color').trim();
-    const idleCol = styles.getPropertyValue('--arrow-idle').trim();
-    const movingCol = styles.getPropertyValue('--arrow-moving').trim();
-    const hintCol = styles.getPropertyValue('--arrow-hint').trim();
-    const blockedCol = styles.getPropertyValue('--arrow-blocked').trim();
-    const rayClearCol = styles.getPropertyValue('--ray-clear').trim();
-    const rayBlockedCol = styles.getPropertyValue('--ray-blocked').trim();
-
-    // If Sandbox Draw mode is active, draw full grid dots so user can see all coordinates
-    if (adminCheats.sandboxDraw) {
-      ctx.fillStyle = dotCol;
-      for (let gx = 0; gx < cols; gx++) {
-        for (let gy = 0; gy < rows; gy++) {
-          const p = gridToCanvasPx(gx, gy);
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, 2.5, 0, Math.PI * 2);
-          ctx.fill();
-        }
-      }
-    } else {
-      // Draw subtle grey track dots on puzzle cells
-      ctx.fillStyle = dotCol;
-      const dotRad = Math.max(2.2, cellPx * 0.075);
-      trackDotsList.forEach(pt => {
-        const p = gridToCanvasPx(pt.x, pt.y);
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, dotRad, 0, Math.PI * 2);
-        ctx.fill();
-      });
-    }
-
-    const occGrid = buildBoardOccupancy();
-
-    // 2. Draw Ruler Laser Trajectory Rays
-    arrowsList.forEach(arrow => {
-      const isSliding = arrow.state === 'clearing';
-      if (!rulerMode && !isSliding) return;
-
-      const head = arrow.cells[arrow.cells.length - 1];
-      const clear = hasClearRayToBorder(head, arrow.dir, occGrid, arrow.id);
-      const pStart = gridToCanvasPx(head.x, head.y);
-      const pEnd = gridToCanvasPx(head.x + DIR_X[arrow.dir] * 24, head.y + DIR_Y[arrow.dir] * 24);
-
-      ctx.save();
-      ctx.strokeStyle = (isSliding || clear) ? rayClearCol : rayBlockedCol;
-      ctx.lineWidth = Math.max(4, cellPx * 0.13);
-      ctx.lineCap = 'round';
-      ctx.beginPath();
-      ctx.moveTo(pStart.x, pStart.y);
-      ctx.lineTo(pEnd.x, pEnd.y);
-      ctx.stroke();
-      ctx.restore();
-    });
-
-    // 3. Draw Arrows & Virus Hazards
-    arrowsList.forEach(arrow => {
-      let shift = 0;
-      if (arrow.state === 'clearing') {
-        arrow.slideDist += 0.42;
-        shift = arrow.slideDist;
-      } else if (arrow.state === 'bumping') {
-        arrow.bumpPhase += 0.22;
-        if (arrow.bumpPhase >= Math.PI) {
-          arrow.bumpPhase = 0;
-          arrow.state = 'idle';
-        } else {
-          shift = Math.sin(arrow.bumpPhase) * 0.36;
-        }
-      }
-
-      const gridPts = getSnakeShiftedVertices(arrow, shift);
-      const screenPts = gridPts.map(gp => gridToCanvasPx(gp.x, gp.y));
-
-      let color = idleCol;
-      if (arrow.state === 'clearing') color = movingCol;
-      else if (arrow.state === 'bumping') color = blockedCol;
-      else if (arrow.id === hintedArrowId) color = hintCol;
-      else if (arrow.frozen) color = '#06b6d4'; // Ice Frost Cyan
-      else if (arrow.lockCount > 0) color = '#64748b'; // Locked Slate
-      else if (arrow.bombMoves > 0) color = '#e11d48'; // Virus Bomb Crimson
-
-      ctx.save();
-      ctx.strokeStyle = color;
-      ctx.fillStyle = color;
-      ctx.lineWidth = Math.max(3.6, cellPx * 0.13);
-      ctx.lineCap = 'round';
-      ctx.lineJoin = 'round';
-
-      // Draw multi-segment shaft
-      ctx.beginPath();
-      ctx.moveTo(screenPts[0].x, screenPts[0].y);
-      for (let i = 1; i < screenPts.length; i++) {
-        ctx.lineTo(screenPts[i].x, screenPts[i].y);
-      }
-      ctx.stroke();
-
-      // Draw arrowhead (Unless Stealth Fog mode is hiding un-scanned arrows)
-      const hideHead = prefs.stealth && !rulerMode && arrow.state === 'idle' && arrow.id !== hintedArrowId;
-      const tip = screenPts[screenPts.length - 1];
-      const neck = screenPts[screenPts.length - 2];
-
-      if (!hideHead) {
-        const angle = Math.atan2(tip.y - neck.y, tip.x - neck.x);
-        const headLen = Math.max(10.5, cellPx * 0.34);
-        const headWing = Math.max(7, cellPx * 0.23);
-
-        ctx.beginPath();
-        ctx.moveTo(
-          tip.x + Math.cos(angle) * (headLen * 0.36),
-          tip.y + Math.sin(angle) * (headLen * 0.36)
-        );
-        ctx.lineTo(
-          tip.x - Math.cos(angle) * (headLen * 0.64) + Math.cos(angle + Math.PI / 2) * headWing,
-          tip.y - Math.sin(angle) * (headLen * 0.64) + Math.sin(angle + Math.PI / 2) * headWing
-        );
-        ctx.lineTo(
-          tip.x - Math.cos(angle) * (headLen * 0.64) + Math.cos(angle - Math.PI / 2) * headWing,
-          tip.y - Math.sin(angle) * (headLen * 0.64) + Math.sin(angle - Math.PI / 2) * headWing
-        );
-        ctx.closePath();
-        ctx.fill();
-      }
-
-      // 4. Draw Hazard Badges (🔒 Lock, 💣 Bomb Countdown, ❄️ Frozen) at midpoint of arrow
-      if (arrow.state !== 'clearing') {
-        const midIdx = Math.floor(screenPts.length / 2);
-        const badgePt = screenPts[midIdx];
-
-        if (arrow.lockCount > 0 || arrow.bombMoves > 0 || arrow.frozen) {
-          ctx.beginPath();
-          ctx.arc(badgePt.x, badgePt.y, Math.max(9, cellPx * 0.26), 0, Math.PI * 2);
-          ctx.fillStyle = arrow.bombMoves > 0 ? '#e11d48' : (arrow.frozen ? '#0891b2' : '#1e293b');
-          ctx.fill();
-          ctx.lineWidth = 1.5;
-          ctx.strokeStyle = '#ffffff';
-          ctx.stroke();
-
-          ctx.fillStyle = '#ffffff';
-          ctx.font = 'bold ' + Math.max(9, Math.floor(cellPx * 0.25)) + 'px sans-serif';
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'middle';
-          let label = '';
-          if (arrow.lockCount > 0) label = '🔒' + arrow.lockCount;
-          else if (arrow.bombMoves > 0) label = '💣' + arrow.bombMoves;
-          else if (arrow.frozen) label = '❄️';
-          ctx.fillText(label, badgePt.x, badgePt.y + 0.5);
-        }
-
-        // 5. Draw Admin X-Ray Solution Order Number (#1, #2...) if enabled
-        if (adminCheats.xrayOrder && arrow.solveOrder) {
-          ctx.beginPath();
-          ctx.arc(tip.x, tip.y, 9, 0, Math.PI * 2);
-          ctx.fillStyle = '#f59e0b';
-          ctx.fill();
-          ctx.fillStyle = '#000000';
-          ctx.font = '900 10px sans-serif';
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'middle';
-          ctx.fillText(arrow.solveOrder, tip.x, tip.y);
-        }
-      }
-
-      ctx.restore();
-    });
-
-    // Clean up arrows that have exited the canvas
-    const prevLen = arrowsList.length;
-    arrowsList = arrowsList.filter(a => a.slideDist < Math.max(cols, rows) + a.cells.length + 2);
-    if (arrowsList.length < prevLen) {
-      syncGameHUD();
-      if (arrowsList.length === 0 && !adminCheats.sandboxDraw) {
-        handleLevelVictory();
-      }
-    }
-
-    requestAnimationFrame(renderFrame);
-  }
-
-  /* =========================================================================
-     5. SMART HITBOXES, HAZARD LOGIC, EMP BLAST & SANDBOX EDITOR
-     ========================================================================= */
-  function pointToSegDistance(px, py, x1, y1, x2, y2) {
-    const l2 = (x2 - x1) ** 2 + (y2 - y1) ** 2;
-    if (l2 === 0) return Math.hypot(px - x1, py - y1);
-    let t = ((px - x1) * (x2 - x1) + (py - y1) * (y2 - y1)) / l2;
-    t = Math.max(0, Math.min(1, t));
-    return Math.hypot(px - (x1 + t * (x2 - x1)), py - (y1 + t * (y2 - y1)));
-  }
-
-  let sandboxPath = [];
-  let isDrawingSandbox = false;
-
-  canvas.addEventListener('pointerdown', (evt) => {
-    const rect = canvas.getBoundingClientRect();
-    const px = evt.clientX - rect.left;
-    const py = evt.clientY - rect.top;
-    const { gx, gy } = canvasPxToGrid(px, py);
-
-    // Sandbox Custom Arrow Draw Mode
-    if (adminCheats.sandboxDraw) {
-      const rx = Math.max(0, Math.min(cols - 1, Math.round(gx)));
-      const ry = Math.max(0, Math.min(rows - 1, Math.round(gy)));
-      isDrawingSandbox = true;
-      sandboxPath = [{x: rx, y: ry}];
-      return;
-    }
-
-    let closestArrow = null;
-    let minD = 0.68;
-
-    arrowsList.forEach(arrow => {
-      if (arrow.state !== 'idle') return;
-      for (let i = 0; i < arrow.cells.length - 1; i++) {
-        const a = arrow.cells[i];
-        const b = arrow.cells[i + 1];
-        const d = pointToSegDistance(gx, gy, a.x, a.y, b.x, b.y);
-        if (d < minD) {
-          minD = d;
-          closestArrow = arrow;
-        }
-      }
-    });
-
-    if (closestArrow) {
-      activateArrowTap(closestArrow);
+      el.innerHTML = `<svg><use href="#virus-anime-avatar"/></svg>`;
     }
   });
+}
 
-  canvas.addEventListener('pointermove', (evt) => {
-    if (!adminCheats.sandboxDraw || !isDrawingSandbox) return;
-    const rect = canvas.getBoundingClientRect();
-    const { gx, gy } = canvasPxToGrid(evt.clientX - rect.left, evt.clientY - rect.top);
-    const rx = Math.max(0, Math.min(cols - 1, Math.round(gx)));
-    const ry = Math.max(0, Math.min(rows - 1, Math.round(gy)));
-    const last = sandboxPath[sandboxPath.length - 1];
-    if (Math.abs(rx - last.x) + Math.abs(ry - last.y) === 1) {
-      if (!sandboxPath.some(c => c.x === rx && c.y === ry)) {
-        sandboxPath.push({x: rx, y: ry});
+function uploadCustomAvatar(ev) {
+  const file = ev.target.files && ev.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    customAvatarData = e.target.result;
+    localStorage.setItem('virus_custom_avatar', customAvatarData);
+    renderAllAvatarSlots();
+    showInfoModal('✅ Branding Updated!', 'Your custom Virus photo is now saved on this device.');
+  };
+  reader.readAsDataURL(file);
+}
+
+function resetDefaultAvatar() {
+  customAvatarData = 'virus.jpg';
+  localStorage.removeItem('virus_custom_avatar');
+  renderAllAvatarSlots();
+  showInfoModal('🔄 Reset to Repo Image', 'Now using "virus.jpg" from your GitHub repository (with automatic vector fallback).');
+}
+
+function changeSkin(skinName) {
+  document.body.classList.remove('skin-crimson', 'skin-matrix', 'skin-gold');
+  if (skinName !== 'default') {
+    document.body.classList.add('skin-' + skinName);
+  }
+}
+
+function setGameDifficulty(mode) {
+  gameDifficulty = mode;
+  document.querySelectorAll('.mode-pill').forEach(p => p.classList.remove('active'));
+  const activeBtn = document.getElementById('mode-' + mode);
+  if (activeBtn) activeBtn.classList.add('active');
+}
+
+function cycleDifficultyInGame() {
+  const order = ['normal', 'hard', 'virus'];
+  const next = order[(order.indexOf(gameDifficulty) + 1) % order.length];
+  setGameDifficulty(next);
+  startLevel(currentLevel, activeDailyDay);
+}
+
+function openTab(tabName) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+
+  document.getElementById('bottom-nav').style.display = (tabName === 'admin') ? 'none' : 'flex';
+  document.getElementById('screen-' + tabName).classList.add('active');
+  const navTab = document.getElementById('tab-' + tabName);
+  if (navTab) navTab.classList.add('active');
+
+  updateHomeLabels();
+  if (tabName === 'daily') renderCalendar();
+}
+
+function updateHomeLabels() {
+  document.getElementById('continue-lvl-text').textContent = 'Level ' + savedLevel;
+  document.getElementById('daily-star-count').textContent = completedDailyDays.length + '/31';
+  document.getElementById('achieve-sub').textContent = (savedLevel - 1) + ' Levels Cleared • ' + totalArrowsCleared + ' Arrows';
+}
+
+function renderCalendar() {
+  const grid = document.getElementById('calendar-grid');
+  grid.innerHTML = '';
+  ['S', 'M', 'T', 'W', 'T', 'F', 'S'].forEach(d => {
+    const el = document.createElement('div');
+    el.className = 'cal-dow';
+    el.textContent = d;
+    grid.appendChild(el);
+  });
+  for (let i = 0; i < 4; i++) grid.appendChild(document.createElement('div'));
+  for (let day = 1; day <= 31; day++) {
+    const cell = document.createElement('div');
+    cell.className = 'cal-day';
+    if (completedDailyDays.includes(day)) cell.classList.add('completed');
+    if (day === selectedCalendarDay) cell.classList.add('selected');
+    cell.textContent = day;
+    cell.onclick = () => {
+      selectedCalendarDay = day;
+      document.getElementById('main-daily-label').textContent = 'October ' + day;
+      renderCalendar();
+    };
+    grid.appendChild(cell);
+  }
+}
+
+function toggleSetting(key) {
+  settings[key] = !settings[key];
+  const el = document.getElementById('tog-' + key);
+  if (el) el.classList.toggle('on', settings[key]);
+  if (key === 'dark') document.body.classList.toggle('dark-mode', settings.dark);
+}
+
+let gridW = 8;
+let gridH = 10;
+let arrows = [];
+let allLevelCells = [];
+let hearts = 3;
+let hintsLeft = 3;
+let bombsLeft = 2;
+let rulerActive = false;
+let empBombActive = false;
+let sandboxMode = false;
+let highlightedArrowId = null;
+
+const DX = [0, 1, 0, -1];
+const DY = [-1, 0, 1, 0];
+
+let rngState = 1337;
+function seedRng(seed) {
+  rngState = seed % 2147483647;
+  if (rngState <= 0) rngState += 2147483646;
+}
+function nextRand() {
+  rngState = (rngState * 16807) % 2147483647;
+  return (rngState - 1) / 2147483646;
+}
+
+function isPathClearOnBoard(headCell, dir, occupiedMap, ignoreId = -1) {
+  let cx = headCell.x + DX[dir];
+  let cy = headCell.y + DY[dir];
+  while (cx >= 0 && cx < gridW && cy >= 0 && cy < gridH) {
+    const occ = occupiedMap[cy][cx];
+    if (occ !== 0 && occ !== ignoreId) return false;
+    cx += DX[dir];
+    cy += DY[dir];
+  }
+  return true;
+}
+
+function buildTutorialLevel1() {
+  gridW = 7;
+  gridH = 9;
+  arrows = [
+    { id: 1, orderIdx: 2, cells: [{x:2,y:6},{x:2,y:5},{x:2,y:4},{x:2,y:3},{x:2,y:2}], dir: 0, state: 'idle', slideSteps: 0, bumpProgress: 0, lockCount: 0, bombTurns: 0, frozen: false },
+    { id: 2, orderIdx: 1, cells: [{x:3,y:6},{x:3,y:5},{x:3,y:4},{x:3,y:3},{x:3,y:2}], dir: 0, state: 'idle', slideSteps: 0, bumpProgress: 0, lockCount: 0, bombTurns: 0, frozen: false },
+    { id: 3, orderIdx: 3, cells: [{x:4,y:2},{x:4,y:3},{x:4,y:4},{x:4,y:5},{x:4,y:6}], dir: 2, state: 'idle', slideSteps: 0, bumpProgress: 0, lockCount: 0, bombTurns: 0, frozen: false }
+  ];
+}
+
+function generateSolvableMazeLevel(levelNum, seedOverride = null) {
+  if (levelNum === 1 && !seedOverride && gameDifficulty === 'normal' && adminConfig.gridOverride === 0) {
+    buildTutorialLevel1();
+    recordInitialDots();
+    return;
+  }
+
+  seedRng(seedOverride || (levelNum * 15485863 + (gameDifficulty === 'virus' ? 999 : 7)));
+
+  if (adminConfig.gridOverride >= 6) {
+    gridW = adminConfig.gridOverride;
+    gridH = adminConfig.gridOverride + 2;
+  } else if (gameDifficulty === 'normal') {
+    gridW = Math.min(10, 7 + Math.floor(levelNum / 3));
+    gridH = Math.min(12, 9 + Math.floor(levelNum / 3));
+  } else if (gameDifficulty === 'hard') {
+    gridW = Math.min(12, 9 + Math.floor(levelNum / 2));
+    gridH = Math.min(14, 11 + Math.floor(levelNum / 2));
+  } else {
+    gridW = Math.min(14, 11 + Math.floor(levelNum / 2));
+    gridH = Math.min(16, 13 + Math.floor(levelNum / 2));
+  }
+
+  const densityDiv = gameDifficulty === 'virus' ? 2.4 : (gameDifficulty === 'hard' ? 2.8 : 3.4);
+  const targetArrows = Math.min(8 + levelNum * 4, Math.floor((gridW * gridH) / densityDiv));
+  const occupied = Array.from({ length: gridH }, () => Array(gridW).fill(0));
+  const placed = [];
+
+  let nextId = 1;
+  let attempts = 0;
+
+  while (placed.length < targetArrows && attempts < 1600) {
+    attempts++;
+    const hx = 1 + Math.floor(nextRand() * (gridW - 2));
+    const hy = 1 + Math.floor(nextRand() * (gridH - 2));
+    if (occupied[hy][hx] !== 0) continue;
+
+    const dirs = [0, 1, 2, 3].sort(() => nextRand() - 0.5);
+    let chosenDir = -1;
+    for (const d of dirs) {
+      if (isPathClearOnBoard({x: hx, y: hy}, d, occupied)) {
+        chosenDir = d;
+        break;
+      }
+    }
+    if (chosenDir === -1) continue;
+
+    const maxLen = gameDifficulty === 'virus' ? (4 + Math.floor(nextRand() * 6)) : (3 + Math.floor(nextRand() * 5));
+    const chain = [{x: hx, y: hy}];
+    occupied[hy][hx] = nextId;
+
+    let curX = hx - DX[chosenDir];
+    let curY = hy - DY[chosenDir];
+    let prevDir = (chosenDir + 2) % 4;
+
+    if (curX >= 1 && curX < gridW - 1 && curY >= 1 && curY < gridH - 1 && occupied[curY][curX] === 0) {
+      chain.push({x: curX, y: curY});
+      occupied[curY][curX] = nextId;
+
+      for (let step = 2; step < maxLen; step++) {
+        const turn1 = (prevDir + 1) % 4;
+        const turn2 = (prevDir + 3) % 4;
+        const candDirs = nextRand() < 0.65 ? [turn1, turn2, prevDir] : [prevDir, turn1, turn2];
+        let grew = false;
+        for (const cd of candDirs) {
+          const nx = curX + DX[cd];
+          const ny = curY + DY[cd];
+          if (nx >= 1 && nx < gridW - 1 && ny >= 1 && ny < gridH - 1 && occupied[ny][nx] === 0) {
+            curX = nx;
+            curY = ny;
+            prevDir = cd;
+            chain.push({x: curX, y: curY});
+            occupied[curY][curX] = nextId;
+            grew = true;
+            break;
+          }
+        }
+        if (!grew) break;
+      }
+    }
+
+    if (chain.length < 2) {
+      occupied[hy][hx] = 0;
+      continue;
+    }
+
+    chain.reverse();
+    placed.push({
+      id: nextId++,
+      cells: chain,
+      dir: chosenDir,
+      state: 'idle',
+      slideSteps: 0,
+      bumpProgress: 0,
+      lockCount: 0,
+      bombTurns: 0,
+      frozen: false
+    });
+  }
+
+  const total = placed.length;
+  const hazChance = gameDifficulty === 'normal' ? adminConfig.hazardRate * 0.4 : (gameDifficulty === 'virus' ? Math.min(0.75, adminConfig.hazardRate * 1.4) : adminConfig.hazardRate);
+
+  placed.forEach((arr, idx) => {
+    const solveOrder = total - idx;
+    arr.orderIdx = solveOrder;
+
+    if (levelNum >= 2 && solveOrder > 3 && nextRand() < hazChance) {
+      const roll = nextRand();
+      if (roll < 0.42) {
+        arr.lockCount = Math.min(solveOrder - 1, 2 + Math.floor(nextRand() * 4));
+      } else if (roll < 0.75) {
+        arr.bombTurns = solveOrder + 4 + Math.floor(nextRand() * 4);
+      } else {
+        arr.frozen = true;
       }
     }
   });
 
-  window.addEventListener('pointerup', () => {
-    if (!adminCheats.sandboxDraw || !isDrawingSandbox) return;
-    isDrawingSandbox = false;
-    if (sandboxPath.length >= 2) {
-      const head = sandboxPath[sandboxPath.length - 1];
-      const neck = sandboxPath[sandboxPath.length - 2];
+  arrows = placed;
+  recordInitialDots();
+}
+
+function recordInitialDots() {
+  allLevelCells = [];
+  const seen = new Set();
+  arrows.forEach(a => {
+    a.cells.forEach(c => {
+      const k = c.x + ',' + c.y;
+      if (!seen.has(k)) {
+        seen.add(k);
+        allLevelCells.push({x: c.x, y: c.y});
+      }
+    });
+  });
+}
+
+const canvas = document.getElementById('game-canvas');
+const ctx = canvas.getContext('2d');
+let cellSize = 36;
+let boardOriginX = 0;
+let boardOriginY = 0;
+let camScale = 1;
+let camOffsetX = 0;
+let camOffsetY = 0;
+
+function resizeCanvas() {
+  const wrap = document.getElementById('canvas-wrap');
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = wrap.clientWidth * dpr;
+  canvas.height = wrap.clientHeight * dpr;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+  const availW = wrap.clientWidth - 32;
+  const availH = wrap.clientHeight - 32;
+  cellSize = Math.min(Math.floor(availW / gridW), Math.floor(availH / gridH), 44);
+  boardOriginX = (wrap.clientWidth - gridW * cellSize) / 2;
+  boardOriginY = (wrap.clientHeight - gridH * cellSize) / 2;
+  positionTutorialHand();
+}
+window.addEventListener('resize', resizeCanvas);
+
+function gridToScreen(gx, gy) {
+  const rawX = boardOriginX + (gx + 0.5) * cellSize;
+  const rawY = boardOriginY + (gy + 0.5) * cellSize;
+  const cx = canvas.clientWidth / 2;
+  const cy = canvas.clientHeight / 2;
+  return {
+    x: cx + (rawX - cx + camOffsetX) * camScale,
+    y: cy + (rawY - cy + camOffsetY) * camScale
+  };
+}
+
+function screenToGridFloat(sx, sy) {
+  const cx = canvas.clientWidth / 2;
+  const cy = canvas.clientHeight / 2;
+  const rawX = (sx - cx) / camScale + cx - camOffsetX;
+  const rawY = (sy - cy) / camScale + cy - camOffsetY;
+  return {
+    gx: (rawX - boardOriginX) / cellSize - 0.5,
+    gy: (rawY - boardOriginY) / cellSize - 0.5
+  };
+}
+
+function positionTutorialHand() {
+  const tut = document.getElementById('tutorial-popup');
+  if (currentLevel === 1 && activeDailyDay === null && arrows.length === 3 && !sandboxMode) {
+    const mid = arrows.find(a => a.id === 2);
+    if (mid) {
+      const p = gridToScreen(3, 4.3);
+      tut.style.display = 'flex';
+      tut.style.left = p.x + 'px';
+      tut.style.top = p.y + 'px';
+      return;
+    }
+  }
+  tut.style.display = 'none';
+}
+
+function getOccupiedLookup() {
+  const map = Array.from({ length: gridH }, () => Array(gridW).fill(0));
+  arrows.forEach(a => {
+    if (a.state === 'idle' || a.state === 'bumping') {
+      a.cells.forEach(c => {
+        if (c.x >= 0 && c.x < gridW && c.y >= 0 && c.y < gridH) {
+          map[c.y][c.x] = a.id;
+        }
+      });
+    }
+  });
+  return map;
+}
+
+function findBlockingCell(arrow, map) {
+  const head = arrow.cells[arrow.cells.length - 1];
+  let cx = head.x + DX[arrow.dir];
+  let cy = head.y + DY[arrow.dir];
+  while (cx >= 0 && cx < gridW && cy >= 0 && cy < gridH) {
+    if (map[cy][cx] !== 0 && map[cy][cx] !== arrow.id) {
+      return { blocked: true, x: cx, y: cy };
+    }
+    cx += DX[arrow.dir];
+    cy += DY[arrow.dir];
+  }
+  return { blocked: false };
+}
+
+function getArrowSnakePoints(arrow, shiftAmount) {
+  const base = arrow.cells;
+  const head = base[base.length - 1];
+  const extCount = Math.ceil(shiftAmount) + 2;
+  const track = [...base];
+  for (let i = 1; i <= extCount; i++) {
+    track.push({
+      x: head.x + DX[arrow.dir] * i,
+      y: head.y + DY[arrow.dir] * i
+    });
+  }
+  const L = base.length - 1;
+  const i0 = Math.floor(shiftAmount);
+  const frac = shiftAmount - i0;
+
+  const pts = [];
+  const tA = track[i0];
+  const tB = track[i0 + 1];
+  pts.push({
+    x: tA.x + (tB.x - tA.x) * frac,
+    y: tA.y + (tB.y - tA.y) * frac
+  });
+  for (let k = i0 + 1; k <= i0 + L - 1; k++) {
+    pts.push({ x: track[k].x, y: track[k].y });
+  }
+  const hA = track[i0 + L];
+  const hB = track[i0 + L + 1];
+  pts.push({
+    x: hA.x + (hB.x - hA.x) * frac,
+    y: hA.y + (hB.y - hA.y) * frac
+  });
+  return pts;
+}
+
+function renderBoard() {
+  ctx.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
+
+  const style = getComputedStyle(document.body);
+  const dotCol = style.getPropertyValue('--dot-color').trim();
+  const idleCol = style.getPropertyValue('--arrow-idle').trim();
+  const activeCol = style.getPropertyValue('--arrow-active').trim();
+  const goldCol = style.getPropertyValue('--arrow-gold').trim();
+  const rayClearCol = style.getPropertyValue('--ruler-ray').trim();
+
+  ctx.fillStyle = dotCol;
+  const dotRadius = Math.max(2.2, cellSize * 0.075 * camScale);
+  if (sandboxMode) {
+    for (let y = 0; y < gridH; y++) {
+      for (let x = 0; x < gridW; x++) {
+        const p = gridToScreen(x, y);
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, dotRadius * 1.2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+  } else {
+    allLevelCells.forEach(c => {
+      const p = gridToScreen(c.x, c.y);
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, dotRadius, 0, Math.PI * 2);
+      ctx.fill();
+    });
+  }
+
+  arrows.forEach(a => {
+    const isClearing = a.state === 'clearing';
+    if (!rulerActive && !isClearing) return;
+    const head = a.cells[a.cells.length - 1];
+    const startP = gridToScreen(head.x, head.y);
+    const endP = gridToScreen(head.x + DX[a.dir] * 25, head.y + DY[a.dir] * 25);
+
+    ctx.save();
+    ctx.strokeStyle = rayClearCol;
+    ctx.lineWidth = Math.max(4, cellSize * 0.14 * camScale);
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(startP.x, startP.y);
+    ctx.lineTo(endP.x, endP.y);
+    ctx.stroke();
+    ctx.restore();
+  });
+
+  arrows.forEach(a => {
+    let shift = 0;
+    if (a.state === 'clearing') {
+      a.slideSteps += 0.42;
+      shift = a.slideSteps;
+    } else if (a.state === 'bumping') {
+      a.bumpProgress += 0.2;
+      if (a.bumpProgress >= Math.PI) {
+        a.bumpProgress = 0;
+        a.state = 'idle';
+      } else {
+        shift = Math.sin(a.bumpProgress) * 0.36;
+      }
+    }
+
+    const ptsGrid = getArrowSnakePoints(a, shift);
+    const ptsScreen = ptsGrid.map(p => gridToScreen(p.x, p.y));
+
+    let strokeCol = idleCol;
+    if (a.state === 'clearing') strokeCol = activeCol;
+    else if (a.id === highlightedArrowId) strokeCol = goldCol;
+    else if (a.state === 'bumping') strokeCol = '#ef4444';
+    else if (a.frozen) strokeCol = '#06b6d4';
+    else if (a.lockCount > 0) strokeCol = '#64748b';
+    else if (a.bombTurns > 0) strokeCol = '#e11d48';
+
+    ctx.save();
+    ctx.strokeStyle = strokeCol;
+    ctx.fillStyle = strokeCol;
+    ctx.lineWidth = Math.max(3.5, cellSize * 0.135 * camScale);
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+
+    ctx.beginPath();
+    ctx.moveTo(ptsScreen[0].x, ptsScreen[0].y);
+    for (let i = 1; i < ptsScreen.length; i++) {
+      ctx.lineTo(ptsScreen[i].x, ptsScreen[i].y);
+    }
+    ctx.stroke();
+
+    const headPt = ptsScreen[ptsScreen.length - 1];
+    const prevPt = ptsScreen[ptsScreen.length - 2];
+    const angle = Math.atan2(headPt.y - prevPt.y, headPt.x - prevPt.x);
+    const headLen = Math.max(10, cellSize * 0.34 * camScale);
+    const headWidth = Math.max(7, cellSize * 0.24 * camScale);
+
+    ctx.beginPath();
+    ctx.moveTo(
+      headPt.x + Math.cos(angle) * (headLen * 0.35),
+      headPt.y + Math.sin(angle) * (headLen * 0.35)
+    );
+    ctx.lineTo(
+      headPt.x - Math.cos(angle) * (headLen * 0.65) + Math.cos(angle + Math.PI / 2) * headWidth,
+      headPt.y - Math.sin(angle) * (headLen * 0.65) + Math.sin(angle + Math.PI / 2) * headWidth
+    );
+    ctx.lineTo(
+      headPt.x - Math.cos(angle) * (headLen * 0.65) + Math.cos(angle - Math.PI / 2) * headWidth,
+      headPt.y - Math.sin(angle) * (headLen * 0.65) + Math.sin(angle - Math.PI / 2) * headWidth
+    );
+    ctx.closePath();
+    ctx.fill();
+
+    if (a.state === 'idle') {
+      const midCell = a.cells[Math.floor(a.cells.length / 2)];
+      const mp = gridToScreen(midCell.x, midCell.y);
+      let badgeText = '';
+      let badgeBg = '';
+
+      if (a.lockCount > 0) {
+        badgeText = '🔒' + a.lockCount;
+        badgeBg = '#334155';
+      } else if (a.bombTurns > 0) {
+        badgeText = '💣' + a.bombTurns;
+        badgeBg = '#be123c';
+      } else if (a.frozen) {
+        badgeText = '❄️';
+        badgeBg = '#0284c7';
+      } else if (adminConfig.xrayOrder && a.orderIdx) {
+        badgeText = '#' + a.orderIdx;
+        badgeBg = '#10b981';
+      }
+
+      if (badgeText) {
+        ctx.font = 'bold 10px sans-serif';
+        const tw = ctx.measureText(badgeText).width + 8;
+        ctx.fillStyle = badgeBg;
+        ctx.beginPath();
+        ctx.roundRect(mp.x - tw / 2, mp.y - 9, tw, 18, 6);
+        ctx.fill();
+        ctx.fillStyle = '#ffffff';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(badgeText, mp.x, mp.y);
+      }
+    }
+
+    ctx.restore();
+  });
+
+  if (sandboxMode && sandboxDragCells.length > 1) {
+    ctx.save();
+    ctx.strokeStyle = '#10b981';
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    sandboxDragCells.forEach((c, idx) => {
+      const p = gridToScreen(c.x, c.y);
+      if (idx === 0) ctx.moveTo(p.x, p.y);
+      else ctx.lineTo(p.x, p.y);
+    });
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  const beforeCount = arrows.length;
+  arrows = arrows.filter(a => a.slideSteps < Math.max(gridW, gridH) + a.cells.length + 2);
+  if (arrows.length < beforeCount) {
+    updateHUD();
+    if (arrows.length === 0 && !sandboxMode) {
+      onLevelWon();
+    }
+  }
+
+  requestAnimationFrame(renderBoard);
+}
+
+let sandboxDragCells = [];
+let isDraggingSandbox = false;
+
+function distToSegment(px, py, x1, y1, x2, y2) {
+  const l2 = (x2 - x1) ** 2 + (y2 - y1) ** 2;
+  if (l2 === 0) return Math.hypot(px - x1, py - y1);
+  let t = ((px - x1) * (x2 - x1) + (py - y1) * (y2 - y1)) / l2;
+  t = Math.max(0, Math.min(1, t));
+  return Math.hypot(px - (x1 + t * (x2 - x1)), py - (y1 + t * (y2 - y1)));
+}
+
+canvas.addEventListener('pointerdown', (e) => {
+  const rect = canvas.getBoundingClientRect();
+  const sx = e.clientX - rect.left;
+  const sy = e.clientY - rect.top;
+  const { gx, gy } = screenToGridFloat(sx, sy);
+
+  if (sandboxMode) {
+    const rx = Math.round(gx);
+    const ry = Math.round(gy);
+    if (rx >= 0 && rx < gridW && ry >= 0 && ry < gridH) {
+      isDraggingSandbox = true;
+      sandboxDragCells = [{x: rx, y: ry}];
+    }
+    return;
+  }
+
+  let bestArrow = null;
+  let bestDist = 0.68;
+
+  arrows.forEach(a => {
+    if (a.state !== 'idle') return;
+    for (let i = 0; i < a.cells.length - 1; i++) {
+      const c1 = a.cells[i];
+      const c2 = a.cells[i + 1];
+      const d = distToSegment(gx, gy, c1.x, c1.y, c2.x, c2.y);
+      if (d < bestDist) {
+        bestDist = d;
+        bestArrow = a;
+      }
+    }
+  });
+
+  if (bestArrow) {
+    tryClearArrow(bestArrow);
+  }
+});
+
+canvas.addEventListener('pointermove', (e) => {
+  if (!sandboxMode || !isDraggingSandbox) return;
+  const rect = canvas.getBoundingClientRect();
+  const { gx, gy } = screenToGridFloat(e.clientX - rect.left, e.clientY - rect.top);
+  const rx = Math.round(gx);
+  const ry = Math.round(gy);
+  if (rx < 0 || rx >= gridW || ry < 0 || ry >= gridH) return;
+
+  const last = sandboxDragCells[sandboxDragCells.length - 1];
+  if (Math.abs(rx - last.x) + Math.abs(ry - last.y) === 1) {
+    if (!sandboxDragCells.some(c => c.x === rx && c.y === ry)) {
+      sandboxDragCells.push({x: rx, y: ry});
+    }
+  }
+});
+
+window.addEventListener('pointerup', () => {
+  if (sandboxMode && isDraggingSandbox) {
+    isDraggingSandbox = false;
+    if (sandboxDragCells.length >= 2) {
+      const head = sandboxDragCells[sandboxDragCells.length - 1];
+      const prev = sandboxDragCells[sandboxDragCells.length - 2];
       let dir = 0;
-      if (head.x > neck.x) dir = 1;
-      else if (head.y > neck.y) dir = 2;
-      else if (head.x < neck.x) dir = 3;
+      if (head.x > prev.x) dir = 1;
+      else if (head.y > prev.y) dir = 2;
+      else if (head.x < prev.x) dir = 3;
 
-      arrowsList.push({
+      arrows.push({
         id: Date.now(),
-        solveOrder: arrowsList.length + 1,
-        cells: sandboxPath,
-        dir: dir,
+        orderIdx: arrows.length + 1,
+        cells: [...sandboxDragCells],
+        dir,
         state: 'idle',
-        slideDist: 0,
-        bumpPhase: 0,
+        slideSteps: 0,
+        bumpProgress: 0,
         lockCount: 0,
-        bombMoves: 0,
+        bombTurns: 0,
         frozen: false
       });
-      saveInitialTrackDots();
-      syncGameHUD();
-      playSynthTone(500, 750, 0.14);
+      recordInitialDots();
+      updateHUD();
     }
-    sandboxPath = [];
-  });
+    sandboxDragCells = [];
+  }
+});
 
-  function activateArrowTap(arrow) {
-    // 1. Check if EMP Virus Blast is armed (destroys ANY arrow immediately!)
-    if (empArmed) {
-      empArmed = false;
-      document.getElementById('emp-booster-btn').classList.remove('emp-active');
-      if (!adminCheats.infBoosters) empCount = Math.max(0, empCount - 1);
-      document.getElementById('emp-badge-num').textContent = adminCheats.infBoosters ? '∞' : empCount;
-
-      arrow.lockCount = 0;
-      arrow.frozen = false;
-      arrow.bombMoves = 0;
-      arrow.state = 'clearing';
-      playSynthTone(880, 220, 0.22, 'sawtooth', 0.18);
-      triggerHaptic([30, 20, 50]);
-      onValidArrowCleared(arrow);
-      return;
-    }
-
-    // 2. Check if Arrow is Locked or Frozen
-    if (arrow.lockCount > 0 || arrow.frozen) {
-      arrow.state = 'bumping';
-      arrow.bumpPhase = 0;
-      playSynthTone(190, 120, 0.18, 'square', 0.14);
-      triggerHaptic(35);
-      return;
-    }
-
-    const occGrid = buildBoardOccupancy();
-    const head = arrow.cells[arrow.cells.length - 1];
-    const isFree = hasClearRayToBorder(head, arrow.dir, occGrid, arrow.id);
-
-    if (isFree) {
-      level1FirstTapDone = true;
-      arrow.state = 'clearing';
-      if (hintedArrowId === arrow.id) hintedArrowId = null;
-
-      playSynthTone(480, 760, 0.16, 'sine', 0.14);
-      triggerHaptic(14);
-
-      onValidArrowCleared(arrow);
-    } else {
-      // Blocked path: bump animation + lose 1 heart (unless God Mode is enabled!)
-      arrow.state = 'bumping';
-      arrow.bumpPhase = 0;
-      playSynthTone(170, 95, 0.22, 'sawtooth', 0.15);
-      triggerHaptic([40, 30, 40]);
-
-      if (!adminCheats.godMode) {
-        livesCount = Math.max(0, livesCount - 1);
-        syncGameHUD();
-
-        if (livesCount === 0) {
-          setTimeout(() => {
-            openDialog(
-              '💔',
-              'Out of Hearts!',
-              'An arrow was blocking that exit path. Use the Purple Ruler (📏), EMP Blast (💣), or God Mode in the Virus Admin Panel!',
-              'Try Again',
-              () => startPuzzleSession(activeLevelNum, activeDailyDate)
-            );
-          }, 340);
-        }
-      }
-    }
+function tryClearArrow(arrow) {
+  if (empBombActive) {
+    empBombActive = false;
+    bombsLeft = Math.max(0, bombsLeft - 1);
+    document.getElementById('badge-bombs').textContent = bombsLeft;
+    document.getElementById('btn-emp').classList.remove('active-tool');
+    arrow.lockCount = 0;
+    arrow.frozen = false;
+    arrow.bombTurns = 0;
+    arrow.state = 'clearing';
+    playTone(760, 'sawtooth', 0.22, 0.18);
+    vibrate(35);
+    onSuccessfulArrowClear();
+    return;
   }
 
-  function onValidArrowCleared(clearedArrow) {
-    totalClearedCount++;
-    localStorage.setItem('virus_ap_cleared', totalClearedCount);
+  if (arrow.lockCount > 0 || arrow.frozen) {
+    arrow.state = 'bumping';
+    arrow.bumpProgress = 0;
+    playTone(140, 'sawtooth', 0.2, 0.14);
+    vibrate(40);
+    return;
+  }
 
-    // Update Hazard states on remaining idle arrows
-    let bombExploded = false;
-    arrowsList.forEach(other => {
-      if (other.id === clearedArrow.id || other.state !== 'idle') return;
+  const occMap = getOccupiedLookup();
+  const blockInfo = findBlockingCell(arrow, occMap);
 
-      // Decrement Lock chains
-      if (other.lockCount > 0) {
-        other.lockCount = Math.max(0, other.lockCount - 1);
-      }
+  if (!blockInfo.blocked) {
+    arrow.state = 'clearing';
+    if (highlightedArrowId === arrow.id) highlightedArrowId = null;
+    playTone(540, 'sine', 0.15, 0.14);
+    vibrate(15);
+    onSuccessfulArrowClear();
+  } else {
+    arrow.state = 'bumping';
+    arrow.bumpProgress = 0;
+    playTone(150, 'sawtooth', 0.22, 0.16);
+    vibrate([40, 30, 40]);
 
-      // Shatter Ice if cleared arrow was adjacent
-      if (other.frozen) {
-        const isAdj = other.cells.some(oc =>
-          clearedArrow.cells.some(cc => Math.abs(oc.x - cc.x) + Math.abs(oc.y - cc.y) <= 2)
-        );
-        if (isAdj) other.frozen = false;
-      }
-
-      // Tick Virus Bomb countdown
-      if (other.bombMoves > 0) {
-        other.bombMoves--;
-        if (other.bombMoves === 0 && !adminCheats.godMode) {
-          bombExploded = true;
-        }
-      }
-    });
-
-    if (bombExploded) {
-      livesCount = Math.max(0, livesCount - 1);
-      playSynthTone(140, 60, 0.35, 'sawtooth', 0.2);
-      triggerHaptic([60, 40, 80]);
-      if (livesCount === 0) {
+    if (!adminConfig.godMode) {
+      hearts = Math.max(0, hearts - 1);
+      updateHUD();
+      if (hearts === 0) {
         setTimeout(() => {
-          openDialog(
-            '💥',
-            'Virus Bomb Detonated!',
-            'A countdown bomb arrow reached 0 moves! Clear bomb arrows early or disarm them with EMP Blast (💣).',
-            'Retry Level',
-            () => startPuzzleSession(activeLevelNum, activeDailyDate)
+          showGameModal(
+            '💔',
+            'Out of Hearts!',
+            'Path was blocked! Use the Ruler (📏) or EMP Bomb (💣) to clear tight spots.',
+            'Try Again',
+            () => startLevel(currentLevel, activeDailyDay)
           );
         }, 320);
       }
     }
-
-    updateLevel1TutorialOverlay();
-    syncGameHUD();
   }
+}
 
-  /* =========================================================================
-     6. BOOSTERS & iTzVIRUS OWNER ADMIN PANEL FUNCTIONS
-     ========================================================================= */
-  function triggerHintBooster() {
-    if (!adminCheats.infBoosters && hintCount <= 0) {
-      openDialog('💡', 'No Hints Remaining', 'Enable Infinite Boosters in the ⚡ Virus Admin Panel or finish the level to recharge!');
-      return;
-    }
-    const occGrid = buildBoardOccupancy();
-    const candidate = arrowsList.find(a => {
-      if (a.state !== 'idle' || a.lockCount > 0 || a.frozen) return false;
-      const head = a.cells[a.cells.length - 1];
-      return hasClearRayToBorder(head, a.dir, occGrid, a.id);
-    });
+function onSuccessfulArrowClear() {
+  totalArrowsCleared++;
+  localStorage.setItem('virus_ap_cleared', totalArrowsCleared);
 
-    if (candidate) {
-      if (!adminCheats.infBoosters) hintCount--;
-      hintedArrowId = candidate.id;
-      document.getElementById('hint-badge-num').textContent = adminCheats.infBoosters ? '∞' : hintCount;
-      playSynthTone(620, 880, 0.18, 'triangle', 0.13);
-    }
-  }
-
-  function toggleRulerGuide() {
-    rulerMode = !rulerMode;
-    document.getElementById('ruler-booster-btn').classList.toggle('active-booster', rulerMode);
-    playSynthTone(420, 520, 0.1, 'sine', 0.09);
-  }
-
-  function toggleEmpBlaster() {
-    if (!adminCheats.infBoosters && empCount <= 0) {
-      openDialog('💣', 'Out of EMP Blasts', 'Open the ⚡ Virus Admin Panel to toggle Infinite Boosters!');
-      return;
-    }
-    empArmed = !empArmed;
-    document.getElementById('emp-booster-btn').classList.toggle('emp-active', empArmed);
-    playSynthTone(320, 640, 0.12, 'square', 0.1);
-  }
-
-  function triggerSingleAutoStep() {
-    const occGrid = buildBoardOccupancy();
-    // Find any unblocked idle arrow; if locked/frozen bloquear, unlock it first
-    let nextArrow = arrowsList.find(a => {
-      if (a.state !== 'idle') return false;
-      const head = a.cells[a.cells.length - 1];
-      return hasClearRayToBorder(head, a.dir, occGrid, a.id);
-    });
-
-    if (nextArrow) {
-      nextArrow.lockCount = 0;
-      nextArrow.frozen = false;
-      activateArrowTap(nextArrow);
-    }
-  }
-
-  // --- ADMIN PANEL CONTROLS ---
-  function toggleAdminCheat(key) {
-    adminCheats[key] = !adminCheats[key];
-    const mapId = {
-      godMode: 'sw-admin-god',
-      xrayOrder: 'sw-admin-xray',
-      infBoosters: 'sw-admin-inf'
-    };
-    const sw = document.getElementById(mapId[key]);
-    if (sw) sw.classList.toggle('checked', adminCheats[key]);
-
-    document.getElementById('hud-god-badge').style.display = adminCheats.godMode ? 'inline-block' : 'none';
-    document.getElementById('hint-badge-num').textContent = adminCheats.infBoosters ? '∞' : hintCount;
-    document.getElementById('emp-badge-num').textContent = adminCheats.infBoosters ? '∞' : empCount;
-  }
-
-  function adminAutoSolveAll() {
-    closeAllSubpages();
-    if (!document.getElementById('view-game').classList.contains('active')) {
-      startPuzzleSession(activeLevelNum, activeDailyDate);
-    }
-    let stepDelay = 0;
-    const maxSteps = arrowsList.length + 5;
-    for (let i = 0; i < maxSteps; i++) {
-      setTimeout(() => {
-        if (arrowsList.length > 0) triggerSingleAutoStep();
-      }, stepDelay);
-      stepDelay += 130;
-    }
-  }
-
-  function adminInstantClearWin() {
-    closeAllSubpages();
-    arrowsList = [];
-    syncGameHUD();
-    handleLevelVictory();
-  }
-
-  function adminClearAllHazards() {
-    arrowsList.forEach(a => {
-      a.lockCount = 0;
-      a.bombMoves = 0;
-      a.frozen = false;
-    });
-    closeAllSubpages();
-    playSynthTone(520, 880, 0.18);
-  }
-
-  function toggleSandboxDrawMode() {
-    adminCheats.sandboxDraw = !adminCheats.sandboxDraw;
-    closeAllSubpages();
-    if (adminCheats.sandboxDraw) {
-      if (!document.getElementById('view-game').classList.contains('active')) {
-        startPuzzleSession(activeLevelNum, null);
+  let bombExploded = false;
+  arrows.forEach(a => {
+    if (a.state !== 'idle') return;
+    if (a.lockCount > 0) a.lockCount--;
+    if (a.frozen) a.frozen = false;
+    if (a.bombTurns > 0) {
+      a.bombTurns--;
+      if (a.bombTurns === 0 && !adminConfig.godMode) {
+        bombExploded = true;
       }
-      arrowsList = [];
-      trackDotsList = [];
-      document.getElementById('sandbox-banner').style.display = 'flex';
-      syncGameHUD();
-    } else {
-      document.getElementById('sandbox-banner').style.display = 'none';
     }
-  }
+  });
 
-  function adminGenerateCustomBoard() {
-    const lvl = parseInt(document.getElementById('rng-admin-lvl').value, 10);
-    const c = parseInt(document.getElementById('rng-admin-grid').value, 10);
-    const d = parseInt(document.getElementById('rng-admin-density').value, 10);
-    const h = parseInt(document.getElementById('rng-admin-hazards').value, 10);
+  positionTutorialHand();
+  updateHUD();
 
-    unlockedLevel = Math.max(unlockedLevel, lvl);
-    localStorage.setItem('virus_ap_level', unlockedLevel);
-
-    closeAllSubpages();
-    startPuzzleSession(lvl, null, {
-      cols: c,
-      rows: c + 2,
-      density: d,
-      hazardRate: h
-    });
-  }
-
-  function adminUnlockAllOctober() {
-    completedDailies = Array.from({length: 31}, (_, i) => i + 1);
-    localStorage.setItem('virus_ap_dailies', JSON.stringify(completedDailies));
-    refreshMenuUI();
-    buildOctoberCalendar();
-    closeAllSubpages();
-    openDialog('🏆', 'All 31 October Stars Unlocked!', 'Your October 2026 Calendar and Golden Trophy are now 100% complete.');
-  }
-
-  function adminResetAllData() {
-    localStorage.removeItem('virus_ap_level');
-    localStorage.removeItem('virus_ap_cleared');
-    localStorage.removeItem('virus_ap_dailies');
-    unlockedLevel = 1;
-    totalClearedCount = 0;
-    completedDailies = [];
-    refreshMenuUI();
-    buildOctoberCalendar();
-    closeAllSubpages();
-    openDialog('🔄', 'Save Data Reset', 'All levels and daily stars have been reset back to Level 1.');
-  }
-
-  function syncGameHUD() {
-    const remaining = arrowsList.filter(a => a.state !== 'clearing').length;
-    document.getElementById('hud-remaining-count').textContent = remaining;
-
-    const heartSvgs = document.querySelectorAll('#hud-hearts-row .heart-svg');
-    heartSvgs.forEach((svg, i) => {
-      svg.classList.toggle('empty', i >= livesCount);
-    });
-  }
-
-  /* =========================================================================
-     7. SESSION LAUNCHERS & DIALOG SYSTEM
-     ========================================================================= */
-  function startPuzzleSession(levelNum, dailyDay = null, customOpts = null) {
-    closeAllSubpages();
-    activeLevelNum = levelNum;
-    activeDailyDate = dailyDay;
-    livesCount = 3;
-    hintCount = 3;
-    empCount = 2;
-    rulerMode = false;
-    empArmed = false;
-    hintedArrowId = null;
-
-    document.getElementById('ruler-booster-btn').classList.remove('active-booster');
-    document.getElementById('emp-booster-btn').classList.remove('emp-active');
-    document.getElementById('hint-badge-num').textContent = adminCheats.infBoosters ? '∞' : hintCount;
-    document.getElementById('emp-badge-num').textContent = adminCheats.infBoosters ? '∞' : empCount;
-
-    document.querySelectorAll('.view-screen').forEach(v => v.classList.remove('active'));
-    document.getElementById('view-game').classList.add('active');
-    document.getElementById('bottom-tab-bar').style.display = 'none';
-
-    if (dailyDay !== null) {
-      document.getElementById('game-title-label').textContent = 'Oct ' + dailyDay;
-      document.getElementById('hud-difficulty-pill').textContent = 'Daily ★';
-      generateSolvableBentMaze(5 + (dailyDay % 7), dailyDay * 91827, null);
-    } else {
-      document.getElementById('game-title-label').textContent = 'Level ' + levelNum;
-      document.getElementById('hud-difficulty-pill').textContent = getDifficultyLabel();
-      generateSolvableBentMaze(levelNum, null, customOpts);
-    }
-
+  if (bombExploded) {
     setTimeout(() => {
-      fitCanvasToStage();
-      syncGameHUD();
-    }, 20);
+      showGameModal(
+        '💥',
+        'Virus Bomb Detonated!',
+        'A countdown arrow reached 0 before escaping! Clear bomb arrows first or defuse them with EMP (💣).',
+        'Retry Level',
+        () => startLevel(currentLevel, activeDailyDay)
+      );
+    }, 250);
   }
+}
 
-  function handleLevelVictory() {
-    playSynthTone(523, 784, 0.14, 'sine', 0.15);
-    setTimeout(() => playSynthTone(784, 1046, 0.24, 'sine', 0.16), 130);
+function useHintBooster() {
+  if (hintsLeft <= 0) {
+    showInfoModal('💡 Out of Hints', 'Hints refill automatically on the next level!');
+    return;
+  }
+  const occMap = getOccupiedLookup();
+  const freeArrow = arrows.find(a => a.state === 'idle' && a.lockCount === 0 && !a.frozen && !findBlockingCell(a, occMap).blocked);
+  if (freeArrow) {
+    hintsLeft--;
+    highlightedArrowId = freeArrow.id;
+    document.getElementById('badge-hints').textContent = hintsLeft;
+    playTone(680, 'triangle', 0.2, 0.12);
+  }
+}
 
-    if (activeDailyDate !== null) {
-      if (!completedDailies.includes(activeDailyDate)) {
-        completedDailies.push(activeDailyDate);
-        localStorage.setItem('virus_ap_dailies', JSON.stringify(completedDailies));
+function toggleRulerBooster() {
+  rulerActive = !rulerActive;
+  document.getElementById('btn-ruler').classList.toggle('active-tool', rulerActive);
+  playTone(440, 'sine', 0.1, 0.08);
+}
+
+function toggleEmpBombMode() {
+  if (bombsLeft <= 0 && !adminConfig.godMode) {
+    showInfoModal('💣 Out of EMP Bombs', 'EMP Bombs refill as you progress!');
+    return;
+  }
+  empBombActive = !empBombActive;
+  document.getElementById('btn-emp').classList.toggle('active-tool', empBombActive);
+}
+
+function triggerSingleAiStep() {
+  const occMap = getOccupiedLookup();
+  const freeArrow = arrows.find(a => a.state === 'idle' && a.lockCount === 0 && !a.frozen && !findBlockingCell(a, occMap).blocked);
+  if (freeArrow) {
+    tryClearArrow(freeArrow);
+  } else if (arrows.length > 0) {
+    const anyIdle = arrows.find(a => a.state === 'idle');
+    if (anyIdle) {
+      anyIdle.lockCount = 0;
+      anyIdle.frozen = false;
+      anyIdle.state = 'clearing';
+      onSuccessfulArrowClear();
+    }
+  }
+}
+
+function toggleAdminFeature(key) {
+  adminConfig[key] = !adminConfig[key];
+  document.getElementById('adm-god-btn').textContent = '🛡️ God Mode: ' + (adminConfig.godMode ? 'ON' : 'OFF');
+  document.getElementById('adm-xray-btn').textContent = '👁️ X-Ray Order: ' + (adminConfig.xrayOrder ? 'ON' : 'OFF');
+  updateHUD();
+}
+
+function adminRefillBoosters() {
+  hintsLeft = 99;
+  bombsLeft = 99;
+  document.getElementById('badge-hints').textContent = hintsLeft;
+  document.getElementById('badge-bombs').textContent = bombsLeft;
+  showInfoModal('💎 Boosters Maxed!', 'Granted 99 Hints and 99 Virus EMP Bombs.');
+}
+
+function adminWarpToLevel() {
+  const val = parseInt(document.getElementById('adm-lvl-input').value || '1', 10);
+  savedLevel = Math.max(1, val);
+  localStorage.setItem('virus_ap_level', savedLevel);
+  startLevel(savedLevel, null);
+}
+
+function updateAdminGridOverride(val) {
+  const v = parseInt(val, 10);
+  adminConfig.gridOverride = v <= 5 ? 0 : v;
+  document.getElementById('adm-grid-val').textContent = adminConfig.gridOverride === 0 ? 'Auto' : (v + '×' + (v + 2));
+}
+
+function updateAdminHazardRate(val) {
+  adminConfig.hazardRate = parseInt(val, 10) / 100;
+  document.getElementById('adm-haz-val').textContent = val + '%';
+}
+
+function adminAutoSolveCurrent() {
+  startLevel(currentLevel, activeDailyDay);
+  setTimeout(() => {
+    const timer = setInterval(() => {
+      if (arrows.length === 0) {
+        clearInterval(timer);
+        return;
       }
-      openDialog(
-        '🏆',
-        'October ' + activeDailyDate + ' Complete!',
-        'You earned a Golden Daily Star toward your October 2026 Trophy!',
-        'Continue',
-        () => switchTab('daily')
-      );
-    } else {
-      unlockedLevel = Math.max(unlockedLevel, activeLevelNum + 1);
-      localStorage.setItem('virus_ap_level', unlockedLevel);
-      openDialog(
-        '⚡',
-        'Level ' + activeLevelNum + ' Cleared!',
-        'Every arrow escaped the Virus grid cleanly.',
-        'Next Level',
-        () => startPuzzleSession(activeLevelNum + 1, null)
-      );
+      triggerSingleAiStep();
+    }, 110);
+  }, 150);
+}
+
+function unlockAllOctoberDaily() {
+  completedDailyDays = Array.from({length: 31}, (_, i) => i + 1);
+  localStorage.setItem('virus_ap_daily', JSON.stringify(completedDailyDays));
+  updateHomeLabels();
+  showInfoModal('🏆 All 31 Stars Unlocked!', 'Every October 2026 Daily Challenge is now marked complete.');
+}
+
+function startSandboxEditor() {
+  sandboxMode = true;
+  gridW = 9;
+  gridH = 11;
+  arrows = [];
+  allLevelCells = [];
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-game').classList.add('active');
+  document.getElementById('bottom-nav').style.display = 'none';
+  document.getElementById('sandbox-bar').style.display = 'flex';
+  document.getElementById('hud-level-title').textContent = 'Sandbox Editor';
+  setTimeout(() => { resizeCanvas(); updateHUD(); }, 20);
+}
+
+function clearSandboxBoard() {
+  arrows = [];
+  allLevelCells = [];
+  updateHUD();
+}
+
+function finishSandboxAndPlay() {
+  if (arrows.length === 0) {
+    showInfoModal('✏️ Empty Board', 'Drag across the grid dots to draw at least 1 arrow first!');
+    return;
+  }
+  sandboxMode = false;
+  document.getElementById('sandbox-bar').style.display = 'none';
+  document.getElementById('hud-level-title').textContent = 'Custom Virus Level';
+  recordInitialDots();
+}
+
+function updateHUD() {
+  const activeCount = arrows.filter(a => a.state !== 'clearing').length;
+  document.getElementById('hud-arrows-left').textContent = activeCount;
+
+  const heartEls = document.querySelectorAll('#hud-hearts .heart');
+  heartEls.forEach((el, idx) => {
+    el.classList.toggle('god', adminConfig.godMode);
+    el.classList.toggle('lost', !adminConfig.godMode && idx >= hearts);
+  });
+}
+
+function startLevel(lvl, dailyDay = null) {
+  sandboxMode = false;
+  document.getElementById('sandbox-bar').style.display = 'none';
+  currentLevel = lvl;
+  activeDailyDay = dailyDay;
+  hearts = 3;
+  rulerActive = false;
+  empBombActive = false;
+  highlightedArrowId = null;
+
+  document.getElementById('btn-ruler').classList.remove('active-tool');
+  document.getElementById('btn-emp').classList.remove('active-tool');
+  document.getElementById('badge-hints').textContent = hintsLeft;
+  document.getElementById('badge-bombs').textContent = bombsLeft;
+
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-game').classList.add('active');
+  document.getElementById('bottom-nav').style.display = 'none';
+
+  const modeLabels = { normal: 'Normal', hard: 'Hard 🔥', virus: 'Virus 💀' };
+  document.getElementById('hud-diff-badge').textContent = modeLabels[gameDifficulty];
+
+  if (dailyDay !== null) {
+    document.getElementById('hud-level-title').textContent = 'Oct ' + dailyDay;
+    generateSolvableMazeLevel(5 + (dailyDay % 7), dailyDay * 88888);
+  } else {
+    document.getElementById('hud-level-title').textContent = 'Level ' + lvl;
+    generateSolvableMazeLevel(lvl);
+  }
+
+  setTimeout(() => {
+    resizeCanvas();
+    updateHUD();
+    positionTutorialHand();
+  }, 20);
+}
+
+function onLevelWon() {
+  playTone(587, 'sine', 0.12, 0.15);
+  setTimeout(() => playTone(880, 'sine', 0.25, 0.16), 120);
+
+  if (activeDailyDay !== null) {
+    if (!completedDailyDays.includes(activeDailyDay)) {
+      completedDailyDays.push(activeDailyDay);
+      localStorage.setItem('virus_ap_daily', JSON.stringify(completedDailyDays));
     }
+    showGameModal(
+      '🏆',
+      'October ' + activeDailyDay + ' Cleared!',
+      'Daily Star unlocked for your Virus Trophy!',
+      'Back to Calendar',
+      () => openTab('daily')
+    );
+  } else {
+    savedLevel = Math.max(savedLevel, currentLevel + 1);
+    localStorage.setItem('virus_ap_level', savedLevel);
+    showGameModal(
+      '🔥',
+      'Level ' + currentLevel + ' Crushed!',
+      'Zero arrows left standing. Ready for Level ' + (currentLevel + 1) + '?',
+      'Next Level',
+      () => startLevel(currentLevel + 1, null)
+    );
   }
+}
 
-  function continueMainLevel() {
-    startPuzzleSession(unlockedLevel, null);
+function continueSavedLevel() { startLevel(savedLevel, null); }
+function restartCurrentLevelFromHome() {
+  savedLevel = 1;
+  localStorage.setItem('virus_ap_level', '1');
+  startLevel(1, null);
+}
+function startDailyLevel(day) { selectedCalendarDay = day; startLevel(6, day); }
+function playSelectedDaily() { startLevel(6, selectedCalendarDay); }
+function exitToHome() { openTab('main'); }
+
+let modalCallback = null;
+function showGameModal(emoji, title, desc, btnText, cb) {
+  document.getElementById('modal-emoji').textContent = emoji;
+  document.getElementById('modal-title').textContent = title;
+  document.getElementById('modal-desc').textContent = desc;
+  document.getElementById('modal-btn').textContent = btnText;
+  modalCallback = cb;
+  document.getElementById('modal-overlay').classList.add('show');
+}
+function showInfoModal(title, desc) { showGameModal('⚡', title, desc, 'Got It', null); }
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('show');
+  if (modalCallback) {
+    const fn = modalCallback;
+    modalCallback = null;
+    fn();
   }
+}
 
-  function restartCurrentLevel() {
-    unlockedLevel = 1;
-    localStorage.setItem('virus_ap_level', '1');
-    startPuzzleSession(1, null);
-  }
-
-  function launchDailyChallenge(dayNumber) {
-    selectedDailyDate = dayNumber;
-    startPuzzleSession(5, dayNumber);
-  }
-
-  function returnToMainMenu() {
-    adminCheats.sandboxDraw = false;
-    document.getElementById('sandbox-banner').style.display = 'none';
-    switchTab('main');
-  }
-
-  let dialogConfirmAction = null;
-  function openDialog(icon, title, text, btnLabel = 'OK', onConfirm = null) {
-    document.getElementById('dialog-icon').textContent = icon;
-    document.getElementById('dialog-title').textContent = title;
-    document.getElementById('dialog-text').textContent = text;
-    document.getElementById('dialog-btn-label').textContent = btnLabel;
-    dialogConfirmAction = onConfirm;
-    document.getElementById('dialog-backdrop').classList.add('visible');
-  }
-
-  function handleDialogConfirm() {
-    document.getElementById('dialog-backdrop').classList.remove('visible');
-    if (dialogConfirmAction) {
-      const fn = dialogConfirmAction;
-      dialogConfirmAction = null;
-      fn();
-    }
-  }
-
-  window.onload = function () {
-    refreshMenuUI();
-    buildOctoberCalendar();
-    requestAnimationFrame(renderFrame);
-  };
+window.onload = function() {
+  renderAllAvatarSlots();
+  applyStealthUI();
+  updateHomeLabels();
+  renderCalendar();
+  requestAnimationFrame(renderBoard);
+};
 </script>
 </body>
 </html>
