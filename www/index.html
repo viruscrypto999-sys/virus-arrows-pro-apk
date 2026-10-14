@@ -1,29 +1,78 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>Arrow Escape — By Virus</title>
-<link rel="icon" type="image/png" href="icon-only.png">
-<link rel="apple-touch-icon" href="icon-only.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Virus Arrows Game — iTzVirus Cyber Pro Edition (v5.0)</title>
+<link rel="icon" type="image/jpeg" href="virus.jpg">
+<link rel="apple-touch-icon" href="virus.jpg">
 <style>
+  /* ================= THEME & SKIN COLOR VARIABLES ================= */
   :root {
-    --bg-deep: #070B12;
-    --bg-card: #111827;
-    --bg-elevated: #1E293B;
-    --text-main: #F8FAFC;
-    --text-muted: #94A3B8;
-    --accent-cyan: #38BDF8;
-    --accent-blue: #2563EB;
-    --accent-gold: #FACC15;
-    --danger-red: #F43F5E;
-    --success-green: #10B981;
-    --border-line: #1E293B;
-    --snake-idle: #FFFFFF;
-    --snake-clear: #38BDF8;
-    --snake-hint: #FACC15;
-    --snake-bump: #F43F5E;
-    --dot-empty: #1E293B;
+    /* Classic Theme: Deep Midnight Slate Canvas (#0b1120) + Pure Crisp WHITE Idle Arrows (#ffffff) */
+    --bg-main: #0f172a;
+    --bg-card: #1e293b;
+    --bg-canvas: #0b1120;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --accent-main: #38bdf8;
+    --accent-light: rgba(56, 189, 248, 0.16);
+    --arrow-idle: #ffffff;
+    --arrow-active: #38bdf8;
+    --arrow-gold: #facc15;
+    --dot-color: #334155;
+    --ruler-ray: rgba(56, 189, 248, 0.24);
+    --border-col: #334155;
+    --shadow-soft: 0 10px 28px rgba(0, 0, 0, 0.45);
+  }
+
+  /* Cyber Abyss Dark Mode */
+  body.dark-mode {
+    --bg-main: #05070d;
+    --bg-card: #0d1322;
+    --bg-canvas: #04060b;
+    --text-primary: #ffffff;
+    --text-secondary: #64748b;
+    --accent-main: #f43f5e;
+    --accent-light: rgba(244, 63, 94, 0.2);
+    --arrow-idle: #ffffff;
+    --arrow-active: #ff2a5f;
+    --arrow-gold: #fde047;
+    --dot-color: #1e293b;
+    --ruler-ray: rgba(255, 42, 95, 0.26);
+    --border-col: #1e293b;
+    --shadow-soft: 0 10px 32px rgba(244, 63, 94, 0.18);
+  }
+
+  /* Skin 1: Classic (Pure White Idle Arrows + Electric Cyan Escape) */
+  body.skin-default {
+    --arrow-idle: #ffffff;
+    --arrow-active: #38bdf8;
+    --ruler-ray: rgba(56, 189, 248, 0.26);
+  }
+
+  /* Skin 2: Virus Crimson */
+  body.skin-crimson {
+    --accent-main: #f43f5e;
+    --arrow-idle: #ffe4e6;
+    --arrow-active: #f43f5e;
+    --ruler-ray: rgba(244, 63, 94, 0.28);
+  }
+
+  /* Skin 3: Cyber Matrix */
+  body.skin-matrix {
+    --accent-main: #10b981;
+    --arrow-idle: #d1fae5;
+    --arrow-active: #10b981;
+    --ruler-ray: rgba(16, 185, 129, 0.28);
+  }
+
+  /* Skin 4: Royal Gold */
+  body.skin-gold {
+    --accent-main: #f59e0b;
+    --arrow-idle: #fef3c7;
+    --arrow-active: #fbbf24;
+    --ruler-ray: rgba(245, 158, 11, 0.28);
   }
 
   * {
@@ -33,2412 +82,2271 @@
     user-select: none;
     -webkit-user-select: none;
     -webkit-tap-highlight-color: transparent;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   }
 
-  html, body {
+  body, html {
     width: 100%;
     height: 100%;
     overflow: hidden;
-    background-color: var(--bg-deep);
-    color: var(--text-main);
+    background: #020408;
     display: flex;
     justify-content: center;
     align-items: center;
   }
 
-  #app-root {
+  #app-frame {
     width: 100%;
-    max-width: 480px;
+    max-width: 460px;
     height: 100%;
-    background-color: var(--bg-deep);
+    background: var(--bg-main);
+    color: var(--text-primary);
     display: flex;
     flex-direction: column;
     position: relative;
     overflow: hidden;
+    box-shadow: 0 0 60px rgba(0,0,0,0.85);
+    transition: background 0.25s, color 0.25s;
   }
 
-  /* ================= SPLASH SCREEN ================= */
-  #splash-overlay {
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(circle at 50% 40%, #111827 0%, #070B12 75%);
+  /* 1-Tap File Exporter Bar at Very Top */
+  #exporter-bar {
+    background: linear-gradient(90deg, #090d16 0%, #1e1b4b 50%, #090d16 100%);
+    border-bottom: 2px solid #f43f5e;
+    padding: 8px 10px;
     display: flex;
-    flex-direction: column;
+    justify-content: space-between;
     align-items: center;
-    justify-content: center;
-    z-index: 200;
-    transition: opacity 0.35s ease, visibility 0.35s ease;
+    gap: 6px;
+    z-index: 100;
+    box-shadow: 0 4px 16px rgba(244, 63, 94, 0.35);
   }
-  #splash-overlay.hidden {
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-  }
-  .splash-logo-box {
-    width: 104px;
-    height: 104px;
-    border-radius: 26px;
-    border: 2.5px solid var(--accent-cyan);
-    box-shadow: 0 0 32px rgba(56, 189, 248, 0.35);
-    overflow: hidden;
-    background: #ffffff;
-    margin-bottom: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .splash-logo-box img, .splash-logo-box svg {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  .splash-title {
-    font-size: 28px;
-    font-weight: 900;
-    letter-spacing: -0.5px;
-    color: var(--text-main);
-  }
-  .splash-sub {
-    font-size: 11px;
+  .exp-btn {
+    background: #e11d48;
+    color: #fff;
+    border: none;
+    padding: 7px 11px;
+    border-radius: 9px;
     font-weight: 800;
-    letter-spacing: 2px;
-    color: var(--accent-cyan);
-    margin-top: 4px;
+    font-size: 11.5px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+    box-shadow: 0 2px 8px rgba(225, 29, 72, 0.4);
+  }
+  .exp-btn.alt {
+    background: #2563eb;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.4);
+  }
+  .exp-btn:active {
+    transform: scale(0.95);
   }
 
-  /* ================= SCREENS ================= */
-  .view-screen {
+  .screen {
     flex: 1;
     display: none;
     flex-direction: column;
     overflow-y: auto;
-    padding: 16px;
     position: relative;
   }
-  .view-screen.active {
-    display: flex;
-  }
+  .screen.active { display: flex; }
 
-  /* ================= MAIN MENU SCREEN ================= */
-  .top-header-bar {
+  /* ================= TOP VIRUS HEADER & AVATAR ================= */
+  .virus-top-strip {
+    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 12px;
+    padding: 12px 18px 4px;
   }
-  .brand-chip {
+  .virus-profile-pill {
     display: flex;
     align-items: center;
     gap: 10px;
     background: var(--bg-card);
-    border: 1px solid var(--border-line);
     padding: 5px 14px 5px 6px;
     border-radius: 30px;
+    border: 1px solid var(--border-col);
+    box-shadow: var(--shadow-soft);
+    cursor: pointer;
   }
-  .brand-avatar {
-    width: 34px;
-    height: 34px;
+  .virus-avatar-wrap {
+    width: 38px;
+    height: 38px;
     border-radius: 50%;
     overflow: hidden;
-    border: 1.5px solid var(--accent-cyan);
+    border: 2px solid var(--accent-main);
     background: #fff;
-    flex-shrink: 0;
-  }
-  .brand-avatar img, .brand-avatar svg {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  .debug-pill-btn {
-    background: var(--danger-red);
-    color: #fff;
-    border: none;
-    border-radius: 16px;
-    padding: 7px 12px;
-    font-size: 11px;
-    font-weight: 900;
-    cursor: pointer;
-    letter-spacing: 0.4px;
-  }
-
-  .daily-promo-card {
-    align-self: center;
-    width: 184px;
-    background: linear-gradient(180deg, #38BDF8 0%, #0284C7 100%);
-    border-radius: 20px;
-    padding: 14px;
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    color: #ffffff;
-    box-shadow: 0 10px 24px rgba(2, 132, 199, 0.32);
-    cursor: pointer;
-    margin-top: 4px;
-  }
-  .daily-promo-card:active {
-    transform: scale(0.97);
-  }
-  .daily-promo-tag {
-    font-size: 10px;
-    font-weight: 900;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    opacity: 0.92;
-  }
-  .daily-promo-date {
-    font-size: 16px;
-    font-weight: 900;
-    margin: 4px 0 10px;
-  }
-  .daily-promo-btn {
-    background: rgba(255, 255, 255, 0.24);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    padding: 5px 22px;
-    border-radius: 18px;
-    font-size: 12px;
-    font-weight: 800;
-  }
-
-  .hero-block {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    text-align: center;
-    padding: 12px 0;
+    flex-shrink: 0;
   }
-  .hero-avatar-frame {
-    width: 88px;
-    height: 88px;
-    border-radius: 24px;
-    border: 2.5px solid var(--accent-cyan);
-    box-shadow: 0 8px 28px rgba(56, 189, 248, 0.25);
-    overflow: hidden;
-    background: #fff;
-    margin-bottom: 12px;
-  }
-  .hero-avatar-frame img, .hero-avatar-frame svg {
+  .virus-avatar-wrap img, .virus-avatar-wrap svg {
     width: 100%;
     height: 100%;
     object-fit: cover;
   }
-  .hero-game-title {
-    font-size: 32px;
-    font-weight: 900;
-    letter-spacing: -0.6px;
-  }
-  .hero-studio-sub {
+  .admin-quick-btn {
+    background: linear-gradient(135deg, #111827 0%, #e11d48 100%);
+    color: #fff;
+    border: 1px solid #f43f5e;
+    padding: 8px 14px;
+    border-radius: 20px;
     font-size: 11px;
-    font-weight: 800;
-    color: var(--accent-cyan);
-    letter-spacing: 1.6px;
-    margin-top: 3px;
+    font-weight: 900;
+    letter-spacing: 0.6px;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(225, 29, 72, 0.4);
+    display: flex;
+    align-items: center;
+    gap: 5px;
   }
-  .hero-tier-preview {
-    margin-top: 10px;
-    background: var(--bg-card);
-    border: 1px solid var(--border-line);
-    padding: 6px 14px;
-    border-radius: 16px;
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--text-muted);
+  .stealth-hidden { display: none !important; }
+
+  /* ================= MAIN TAB SCREEN ================= */
+  #screen-main {
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 18px;
+    background: radial-gradient(circle at 50% 35%, rgba(56, 189, 248, 0.08) 0%, transparent 70%);
   }
 
-  .cta-stack {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    width: 100%;
-  }
-  .btn-main-cta {
-    width: 100%;
-    background: linear-gradient(90deg, #0284C7 0%, #2563EB 100%);
-    color: #ffffff;
-    border: none;
-    border-radius: 28px;
-    padding: 14px 20px;
-    font-size: 17px;
-    font-weight: 900;
-    cursor: pointer;
+  .daily-card {
+    width: 168px;
+    background: linear-gradient(180deg, #38bdf8 0%, #0284c7 100%);
+    border-radius: 20px;
+    padding: 14px 14px 12px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    box-shadow: 0 8px 22px rgba(37, 99, 235, 0.38);
+    color: #fff;
+    box-shadow: 0 10px 25px rgba(2, 132, 199, 0.35);
+    cursor: pointer;
+    transition: transform 0.15s;
   }
-  .btn-main-cta:active {
-    transform: scale(0.98);
+  .daily-card:active { transform: scale(0.96); }
+  .daily-cal-icon {
+    width: 36px; height: 36px; background: #fff; border-radius: 10px;
+    border: 3px solid #f59e0b; display: flex; align-items: center;
+    justify-content: center; color: #0284c7; font-size: 17px; font-weight: 900;
+    margin-bottom: 6px;
   }
-  .btn-main-sub {
-    font-size: 12px;
-    font-weight: 700;
-    opacity: 0.9;
+  .daily-label { font-size: 9px; letter-spacing: 1px; text-transform: uppercase; font-weight: 800; opacity: 0.9; }
+  .daily-date-text { font-size: 14px; font-weight: 800; margin: 2px 0 8px; }
+  .daily-play-pill {
+    background: rgba(255, 255, 255, 0.25);
+    border: 1px solid rgba(255,255,255,0.5);
+    color: #fff; padding: 5px 22px; border-radius: 20px; font-weight: 800; font-size: 12px;
+  }
+
+  .brand-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 0 16px;
+  }
+  .hero-avatar-badge {
+    width: 84px;
+    height: 84px;
+    border-radius: 50%;
+    border: 3px solid var(--accent-main);
+    box-shadow: 0 0 28px rgba(56, 189, 248, 0.35);
+    overflow: hidden;
+    background: #fff;
+    margin-bottom: 8px;
+    cursor: pointer;
+    animation: heroPulse 3s infinite ease-in-out;
+  }
+  @keyframes heroPulse {
+    0%, 100% { transform: scale(1); box-shadow: 0 0 22px rgba(56, 189, 248, 0.35); }
+    50% { transform: scale(1.04); box-shadow: 0 0 34px rgba(244, 63, 94, 0.45); }
+  }
+  .hero-avatar-badge img, .hero-avatar-badge svg { width: 100%; height: 100%; object-fit: cover; }
+  .brand-title {
+    font-size: 30px;
+    font-weight: 900;
+    letter-spacing: -0.6px;
+    color: var(--text-primary);
+    cursor: pointer;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.5);
+  }
+  .brand-sub {
+    font-size: 10px;
+    font-weight: 900;
+    color: var(--accent-main);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
     margin-top: 2px;
   }
-  .btn-secondary-cta {
+
+  .mode-selector {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 5px;
+    margin-top: 10px;
+    background: var(--bg-card);
+    padding: 5px;
+    border-radius: 20px;
+    border: 1px solid var(--border-col);
+  }
+  .mode-pill {
+    padding: 6px 10px;
+    border-radius: 14px;
+    font-size: 11px;
+    font-weight: 800;
+    cursor: pointer;
+    color: var(--text-secondary);
+    transition: all 0.15s;
+  }
+  .mode-pill.active {
+    background: var(--accent-main);
+    color: #090d16;
+    box-shadow: 0 3px 12px rgba(56, 189, 248, 0.35);
+  }
+
+  .main-buttons {
+    width: 100%;
+    padding: 0 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+  }
+  .btn-primary {
+    width: 100%;
+    background: linear-gradient(90deg, #0284c7 0%, #2563eb 50%, #e11d48 100%);
+    color: #fff;
+    border: none;
+    border-radius: 30px;
+    padding: 13px 20px;
+    font-size: 16px;
+    font-weight: 900;
+    cursor: pointer;
+    box-shadow: 0 8px 24px rgba(37, 99, 235, 0.4);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .btn-primary:active { transform: scale(0.98); }
+  .btn-primary span.sub-lvl { font-size: 11px; font-weight: 700; opacity: 0.9; margin-top: 2px; }
+  .btn-secondary {
     width: 100%;
     background: var(--bg-card);
-    color: var(--text-main);
-    border: 1px solid var(--border-line);
-    border-radius: 28px;
-    padding: 13px 20px;
+    color: var(--text-primary);
+    border: 1px solid var(--border-col);
+    border-radius: 30px;
+    padding: 12px 20px;
     font-size: 15px;
     font-weight: 800;
     cursor: pointer;
   }
 
-  /* ================= DAILY CHALLENGE SCREEN ================= */
-  .daily-trophy-header {
-    background: radial-gradient(circle at 50% 60%, #1E3A8A 0%, #0F172A 80%);
-    border: 1px solid var(--border-line);
-    border-radius: 20px;
-    padding: 18px;
-    text-align: center;
-    margin-bottom: 14px;
-  }
-  .cal-header-row {
+  /* ================= DAILY TAB SCREEN ================= */
+  .trophy-banner {
+    background: radial-gradient(circle at 50% 60%, #38bdf8 0%, #0f172a 80%);
+    height: 200px;
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     align-items: center;
-    margin-bottom: 10px;
+    padding-top: 14px;
+    color: #fff;
   }
-  .cal-weekdays {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    text-align: center;
-    font-size: 11px;
-    color: var(--text-muted);
-    font-weight: 800;
-    margin-bottom: 6px;
-  }
-  .cal-days-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 6px;
-    margin-bottom: 18px;
-  }
-  .cal-cell {
-    height: 38px;
-    border-radius: 50%;
+  .trophy-banner h2 { font-size: 16px; font-weight: 800; margin-bottom: 8px; }
+  .trophy-svg { width: 105px; height: 125px; filter: drop-shadow(0 10px 16px rgba(0,0,0,0.4)); }
+  .cal-container {
+    flex: 1;
     background: var(--bg-card);
-    border: 1px solid var(--border-line);
-    color: var(--text-main);
-    font-size: 13px;
+    padding: 16px 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .cal-month { font-size: 16px; font-weight: 800; }
+  .cal-progress { display: flex; align-items: center; gap: 6px; font-weight: 800; font-size: 14px; }
+  .star-badge {
+    width: 20px; height: 20px; background: #f59e0b; color: #fff;
+    border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 11px;
+  }
+  .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; text-align: center; }
+  .cal-dow { font-size: 11px; color: var(--text-secondary); font-weight: 700; padding-bottom: 3px; }
+  .cal-day {
+    height: 32px; display: flex; align-items: center; justify-content: center;
+    border-radius: 50%; font-size: 12px; font-weight: 700; color: var(--text-primary);
+    cursor: pointer; position: relative;
+  }
+  .cal-day.selected { background: var(--accent-main); color: #090d16; font-weight: 900; }
+  .cal-day.completed { background: rgba(245, 158, 11, 0.2); color: #fbbf24; font-weight: 900; }
+  .cal-day.completed::after {
+    content: "★"; position: absolute; bottom: -3px; right: 2px; font-size: 9px; color: #f59e0b;
+  }
+
+  /* ================= ME & SETTINGS SCREEN ================= */
+  #screen-me { padding: 14px; gap: 10px; }
+  .top-bar-title { text-align: center; font-size: 17px; font-weight: 900; padding-bottom: 4px; }
+  .me-card {
+    background: var(--bg-card); border-radius: 16px; padding: 12px 14px;
+    display: flex; align-items: center; justify-content: space-between;
+    border: 1px solid var(--border-col); cursor: pointer;
+  }
+  .me-card-left { display: flex; align-items: center; gap: 12px; }
+  .me-list-group {
+    background: var(--bg-card); border-radius: 16px; overflow: hidden; border: 1px solid var(--border-col);
+  }
+  .me-list-item {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 14px; border-bottom: 1px solid var(--border-col);
+    font-size: 13px; font-weight: 700;
+  }
+  .me-list-item:last-child { border-bottom: none; }
+  .me-item-left { display: flex; align-items: center; gap: 10px; }
+  .sq-icon {
+    width: 26px; height: 26px; border-radius: 7px;
+    display: flex; align-items: center; justify-content: center; color: #fff; font-size: 13px;
+  }
+
+  .toggle-switch {
+    width: 44px; height: 24px; background: #475569; border-radius: 14px;
+    position: relative; cursor: pointer; transition: background 0.2s;
+  }
+  .toggle-switch.on { background: var(--accent-main); }
+  .toggle-knob {
+    width: 20px; height: 20px; background: #fff; border-radius: 50%;
+    position: absolute; top: 2px; left: 2px; transition: transform 0.2s;
+  }
+  .toggle-switch.on .toggle-knob { transform: translateX(20px); }
+
+  /* ================= VIRUS OWNER ADMIN PANEL SCREEN ================= */
+  #screen-admin {
+    padding: 14px;
+    gap: 10px;
+    background: #060911;
+    color: #f8fafc;
+  }
+  .admin-header-banner {
+    background: linear-gradient(135deg, #111827 0%, #881337 100%);
+    border: 1px solid #f43f5e;
+    border-radius: 14px;
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .admin-section {
+    background: #0f172a;
+    border: 1px solid #1e293b;
+    border-radius: 12px;
+    padding: 12px;
+  }
+  .admin-sec-title {
+    font-size: 10px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #38bdf8;
+    margin-bottom: 8px;
+  }
+  .admin-grid-btns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 7px;
+  }
+  .adm-btn {
+    background: #1e293b;
+    color: #f8fafc;
+    border: 1px solid #334155;
+    padding: 9px 10px;
+    border-radius: 9px;
+    font-size: 11px;
     font-weight: 800;
+    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
-    position: relative;
+    gap: 5px;
   }
-  .cal-cell.selected {
-    background: var(--accent-cyan);
-    color: #070B12;
-    border-color: var(--accent-cyan);
-  }
-  .cal-cell.completed {
-    border-color: var(--accent-gold);
-    color: var(--accent-gold);
-  }
-  .cal-cell.completed::after {
-    content: "★";
-    position: absolute;
-    bottom: -4px;
-    right: 1px;
-    font-size: 10px;
-    color: var(--accent-gold);
+  .adm-btn:active { transform: scale(0.96); }
+  .adm-btn.danger { background: #9f1239; border-color: #f43f5e; }
+  .adm-btn.success { background: #065f46; border-color: #10b981; }
+  .adm-input {
+    background: #060911;
+    border: 1px solid #334155;
+    color: #fff;
+    padding: 7px 10px;
+    border-radius: 8px;
+    width: 100%;
+    font-size: 12px;
+    font-weight: 800;
   }
 
-  /* ================= PROFILE & SETTINGS SCREEN ================= */
-  .profile-banner {
-    background: var(--bg-card);
-    border: 1px solid var(--border-line);
-    border-radius: 18px;
-    padding: 14px;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    margin-bottom: 14px;
+  /* ================= SECURITY GATE MODAL ================= */
+  .sec-gate-box {
+    width: 100%;
+    max-width: 340px;
+    background: #0b1120;
+    color: #f8fafc;
+    border: 2px solid #f43f5e;
+    border-radius: 22px;
+    padding: 20px 18px;
+    text-align: center;
+    box-shadow: 0 0 50px rgba(244, 63, 94, 0.5);
   }
-  .settings-group {
-    background: var(--bg-card);
-    border: 1px solid var(--border-line);
-    border-radius: 18px;
-    overflow: hidden;
-    margin-bottom: 14px;
+  .sec-input-display {
+    width: 100%;
+    background: #05070d;
+    border: 1px solid #334155;
+    color: #38bdf8;
+    font-size: 19px;
+    font-weight: 900;
+    letter-spacing: 4px;
+    text-align: center;
+    padding: 10px;
+    border-radius: 10px;
+    margin: 10px 0 6px;
+    outline: none;
   }
-  .settings-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 13px 16px;
-    border-bottom: 1px solid var(--border-line);
-    font-size: 14px;
-    font-weight: 700;
+  .sec-keypad {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 7px;
+    margin: 8px 0 12px;
   }
-  .settings-row:last-child {
-    border-bottom: none;
-  }
-  .switch-btn {
-    width: 46px;
-    height: 26px;
-    border-radius: 13px;
-    background: #334155;
-    border: none;
-    position: relative;
+  .sec-key {
+    background: #161f33;
+    border: 1px solid #26334d;
+    color: #fff;
+    padding: 10px 0;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 800;
     cursor: pointer;
-    transition: background 0.2s;
   }
-  .switch-btn.on {
-    background: var(--accent-cyan);
-  }
-  .switch-btn::after {
-    content: "";
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: #ffffff;
-    position: absolute;
-    top: 3px;
-    left: 3px;
-    transition: transform 0.2s;
-  }
-  .switch-btn.on::after {
-    transform: translateX(20px);
-  }
+  .sec-key:active { background: #e11d48; }
 
   /* ================= GAMEPLAY SCREEN ================= */
-  #screen-game {
-    padding: 0;
-    overflow: hidden;
-  }
-  .game-hud-top {
+  #screen-game { background: var(--bg-canvas); overflow: hidden; }
+  .game-top-bar {
+    padding: 8px 12px 4px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 14px 6px;
-    background: var(--bg-card);
+    z-index: 5;
   }
-  .round-icon-btn {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: var(--bg-elevated);
-    border: 1px solid var(--border-line);
-    color: var(--text-main);
-    font-size: 17px;
-    font-weight: 900;
+  .icon-btn {
+    background: var(--bg-card);
+    border: 1px solid var(--border-col);
+    color: var(--text-primary);
+    font-size: 18px;
     cursor: pointer;
+    width: 34px;
+    height: 34px;
     display: flex;
     align-items: center;
     justify-content: center;
+    border-radius: 50%;
   }
-  .game-hud-sub {
+  .game-lvl-title { font-size: 16px; font-weight: 900; letter-spacing: 0.3px; cursor: pointer; }
+  .game-sub-hud {
+    padding: 4px 12px 6px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 6px 14px 8px;
-    background: var(--bg-card);
-    border-bottom: 1px solid var(--border-line);
+    z-index: 5;
   }
-  .stat-pill {
-    background: var(--bg-elevated);
-    border: 1px solid var(--border-line);
-    padding: 4px 11px;
+  .hud-pill {
+    background: var(--bg-card);
+    padding: 5px 11px;
     border-radius: 14px;
     font-size: 12px;
     font-weight: 800;
+    color: var(--text-primary);
     display: flex;
     align-items: center;
     gap: 5px;
+    border: 1px solid var(--border-col);
   }
-  .tier-Easy { color: #34D399; }
-  .tier-Normal { color: #38BDF8; }
-  .tier-Hard { color: #FBBF24; }
-  .tier-Expert { color: #F97316; }
-  .tier-Insane { color: #F43F5E; }
+  .hearts-row { display: flex; gap: 5px; font-size: 19px; }
+  .heart { color: #f43f5e; transition: transform 0.2s; }
+  .heart.lost { color: #334155; transform: scale(0.8); }
+  .heart.god { color: #facc15; text-shadow: 0 0 10px rgba(250, 204, 21, 0.8); }
 
-  .hearts-box {
-    display: flex;
-    gap: 5px;
-    font-size: 19px;
-  }
-  .heart-icon {
-    color: var(--danger-red);
-    transition: transform 0.2s, color 0.2s;
-  }
-  .heart-icon.lost {
-    color: #334155;
-    transform: scale(0.82);
-  }
-
-  #board-viewport {
+  #canvas-wrap {
     flex: 1;
     position: relative;
     width: 100%;
     overflow: hidden;
     touch-action: none;
-    background: var(--bg-deep);
   }
-  #board-canvas {
-    width: 100%;
-    height: 100%;
-    display: block;
-  }
+  canvas { width: 100%; height: 100%; display: block; }
 
-  #tutorial-banner {
+  /* Floating Combo Streak Toast */
+  #combo-toast {
     position: absolute;
-    bottom: 14px;
+    top: 10px;
     left: 50%;
     transform: translateX(-50%);
-    background: rgba(2, 132, 199, 0.92);
+    background: linear-gradient(90deg, #f59e0b, #e11d48);
     color: #fff;
-    padding: 8px 16px;
+    padding: 4px 14px;
     border-radius: 20px;
     font-size: 12px;
-    font-weight: 800;
+    font-weight: 900;
+    letter-spacing: 0.8px;
     pointer-events: none;
-    display: none;
-    z-index: 10;
-    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.2s, transform 0.2s;
+    z-index: 12;
+    box-shadow: 0 4px 14px rgba(225, 29, 72, 0.5);
+  }
+  #combo-toast.show {
+    opacity: 1;
+    transform: translateX(-50%) scale(1.08);
   }
 
-  .game-bottom-bar {
-    height: 74px;
-    background: var(--bg-card);
-    border-top: 1px solid var(--border-line);
+  /* Bottom Boosters Dock */
+  .game-bottom-dock {
+    height: 76px;
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 24px;
+    gap: 14px;
+    padding-bottom: 8px;
+    z-index: 5;
   }
-  .tool-circle-btn {
-    width: 52px;
-    height: 52px;
+  .booster-btn {
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
-    background: var(--bg-elevated);
-    border: 1.5px solid #334155;
-    color: var(--text-main);
-    font-size: 21px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-col);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
     cursor: pointer;
     position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    color: var(--text-primary);
   }
-  .tool-circle-btn.active-tool {
-    border-color: var(--accent-cyan);
-    box-shadow: 0 0 14px rgba(56, 189, 248, 0.45);
+  .booster-btn:active { transform: scale(0.92); }
+  .booster-btn.active-tool {
+    background: var(--accent-light);
+    border: 2px solid var(--accent-main);
+    box-shadow: 0 0 16px var(--accent-main);
   }
-  .tool-badge {
+  .badge-count {
     position: absolute;
     top: -4px;
     right: -4px;
-    background: var(--accent-cyan);
-    color: #070B12;
+    background: var(--accent-main);
+    color: #090d16;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
     font-size: 11px;
     font-weight: 900;
-    width: 21px;
-    height: 21px;
-    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     border: 2px solid var(--bg-card);
   }
 
-  /* ================= BOTTOM NAVIGATION ================= */
-  .bottom-tabs {
-    height: 60px;
+  .bottom-nav {
+    height: 58px;
     background: var(--bg-card);
-    border-top: 1px solid var(--border-line);
+    border-top: 1px solid var(--border-col);
     display: flex;
     justify-content: space-around;
     align-items: center;
+    z-index: 10;
   }
-  .tab-btn {
+  .nav-tab {
     flex: 1;
-    height: 100%;
-    background: none;
-    border: none;
-    color: var(--text-muted);
-    font-size: 11px;
-    font-weight: 800;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 3px;
+    color: #64748b;
+    font-size: 10px;
+    font-weight: 800;
     cursor: pointer;
+    height: 100%;
   }
-  .tab-btn.active {
-    color: var(--accent-cyan);
-  }
-  .tab-btn svg {
-    width: 21px;
-    height: 21px;
-    fill: currentColor;
-  }
+  .nav-tab.active { color: var(--accent-main); }
+  .nav-tab svg { width: 20px; height: 20px; fill: currentColor; }
 
-  /* ================= MODALS & DEBUG TEST RUNNER ================= */
-  .modal-backdrop {
+  .modal-overlay {
     position: absolute;
     inset: 0;
-    background: rgba(4, 7, 14, 0.82);
-    backdrop-filter: blur(4px);
+    background: rgba(4, 6, 12, 0.75);
+    backdrop-filter: blur(5px);
     display: none;
     align-items: center;
     justify-content: center;
     padding: 20px;
-    z-index: 150;
+    z-index: 60;
   }
-  .modal-backdrop.open {
-    display: flex;
-  }
-  .modal-panel {
+  .modal-overlay.show { display: flex; }
+  .modal-box {
     width: 100%;
-    max-width: 350px;
+    max-width: 330px;
     background: var(--bg-card);
-    border: 1px solid #334155;
+    border: 1px solid var(--border-col);
     border-radius: 22px;
     padding: 22px 18px;
     text-align: center;
-    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.65);
+    box-shadow: 0 20px 45px rgba(0,0,0,0.6);
   }
-  .modal-icon {
-    font-size: 40px;
-    margin-bottom: 8px;
-  }
-  .modal-heading {
-    font-size: 21px;
-    font-weight: 900;
-    margin-bottom: 6px;
-  }
-  .modal-body {
-    font-size: 13px;
-    color: var(--text-muted);
-    line-height: 1.45;
-    margin-bottom: 18px;
-    white-space: pre-line;
-  }
-  .debug-log-box {
-    background: #05080f;
-    border: 1px solid #1e293b;
-    border-radius: 10px;
-    padding: 8px;
-    font-family: monospace;
-    font-size: 10px;
-    text-align: left;
-    color: #38bdf8;
-    max-height: 180px;
-    overflow-y: auto;
-    margin-bottom: 12px;
-    white-space: pre;
-  }
+  .modal-emoji { font-size: 42px; margin-bottom: 6px; }
+  .modal-title { font-size: 20px; font-weight: 900; margin-bottom: 6px; }
+  .modal-desc { font-size: 13px; color: var(--text-secondary); margin-bottom: 16px; line-height: 1.45; white-space: pre-line; }
 </style>
 </head>
-<body>
+<body class="skin-default">
 
-<!-- Inline Vector Fallback for Virus Avatar (Used automatically if icon-only.png is absent) -->
+<!-- Built-in Vector Fallback for the "VIRUS" Anime Boy Avatar -->
 <svg style="display:none;">
-  <symbol id="virus-avatar-svg" viewBox="0 0 200 200">
+  <symbol id="virus-anime-avatar" viewBox="0 0 200 200">
     <rect width="200" height="200" fill="#ffffff"/>
     <path d="M15,200 C18,152 48,136 100,136 C152,136 182,152 185,200 Z" fill="#111318"/>
+    <path d="M45,142 L65,200 M155,142 L135,200" stroke="#ffffff" stroke-width="2.5" opacity="0.5"/>
     <rect x="77" y="112" width="46" height="36" rx="8" fill="#f8fafc" stroke="#111318" stroke-width="3.5"/>
-    <text x="100" y="139" font-family="Impact, sans-serif" font-size="18" font-weight="900" letter-spacing="1.2" text-anchor="middle" fill="#090d16">VIRUS</text>
+    <text x="100" y="139" font-family="Impact, 'Arial Black', sans-serif" font-size="18" font-weight="900" letter-spacing="1.2" text-anchor="middle" fill="#090d16">VIRUS</text>
+    <path d="M76,144 Q100,168 124,144" fill="none" stroke="#cbd5e1" stroke-width="3.5" stroke-dasharray="4,3"/>
     <circle cx="52" cy="95" r="11" fill="#f8fafc" stroke="#111318" stroke-width="3.5"/>
     <circle cx="148" cy="95" r="11" fill="#f8fafc" stroke="#111318" stroke-width="3.5"/>
     <path d="M56,66 C56,108 76,125 100,125 C124,125 144,108 144,66 Z" fill="#ffffff" stroke="#111318" stroke-width="3.5"/>
-    <path d="M65,82 L92,89 M135,82 L108,89" stroke="#090d16" stroke-width="5" stroke-linecap="round"/>
+    <path d="M57,66 C75,78 125,78 143,66 L143,84 C120,78 80,78 57,84 Z" fill="#cbd5e1"/>
+    <path d="M65,82 L92,89" stroke="#090d16" stroke-width="5" stroke-linecap="round"/>
+    <path d="M135,82 L108,89" stroke="#090d16" stroke-width="5" stroke-linecap="round"/>
     <ellipse cx="79" cy="94" rx="9" ry="8" fill="#090d16"/>
     <ellipse cx="121" cy="94" rx="9" ry="8" fill="#090d16"/>
     <circle cx="76" cy="91" r="2.5" fill="#ffffff"/>
     <circle cx="118" cy="91" r="2.5" fill="#ffffff"/>
+    <path d="M99,103 L101,106" stroke="#090d16" stroke-width="2.5" stroke-linecap="round"/>
     <path d="M92,114 Q100,111 108,114" fill="none" stroke="#090d16" stroke-width="2.8" stroke-linecap="round"/>
     <path d="M46,66 L36,78 L52,75 L48,92 L63,76 L72,90 L82,73 L98,90 L108,73 L122,89 L132,74 L148,90 L147,75 L164,78 L154,64 Z" fill="#090d16"/>
     <path d="M50,62 C50,22 150,22 150,62 Z" fill="#111318" stroke="#090d16" stroke-width="3.5"/>
     <path d="M44,60 C72,43 128,43 156,60 C142,72 58,72 44,60 Z" fill="#1e293b" stroke="#090d16" stroke-width="3.5"/>
+    <circle cx="100" cy="27" r="4" fill="#090d16"/>
   </symbol>
 </svg>
 
-<div id="app-root">
+<div id="app-frame">
 
-  <!-- SPLASH OVERLAY -->
-  <div id="splash-overlay" role="dialog" aria-label="Loading Arrow Escape">
-    <div class="splash-logo-box" data-avatar-slot>
-      <img src="icon-only.png" alt="Virus Logo" onerror="window.replaceWithFallbackSvg(this)">
+  <!-- 1-Tap File Exporter Bar at Very Top -->
+  <div id="exporter-bar">
+    <span style="color:#38bdf8; font-weight:900; font-size:11px;">⚡ 1-TAP SAVE:</span>
+    <div style="display:flex; gap:6px; align-items:center;">
+      <button class="exp-btn" onclick="exportCleanGameFile('index.html')">📥 Download index.html</button>
+      <button class="exp-btn alt" onclick="exportCleanGameFile('virus_arrows_code.txt')">📄 Download .txt</button>
+      <button onclick="document.getElementById('exporter-bar').style.display='none'" style="background:none; border:none; color:#94a3b8; font-weight:900; cursor:pointer; padding:0 4px;">✕</button>
     </div>
-    <div class="splash-title">Arrow Escape</div>
-    <div class="splash-sub">VIRUS</div>
   </div>
 
-  <!-- 1. MAIN MENU SCREEN -->
-  <main id="screen-main" class="view-screen active">
-    <div class="top-header-bar">
-      <div class="brand-chip">
-        <div class="brand-avatar" data-avatar-slot>
-          <img src="icon-only.png" alt="Virus" onerror="window.replaceWithFallbackSvg(this)">
+  <!-- ==================== 1. MAIN SCREEN ==================== -->
+  <div id="screen-main" class="screen active">
+    <div class="virus-top-strip">
+      <div class="virus-profile-pill" onclick="handleSecretTriggerTap()">
+        <div class="virus-avatar-wrap" id="top-avatar-slot">
+          <svg><use href="#virus-anime-avatar"/></svg>
         </div>
         <div>
-          <div style="font-size:13px; font-weight:900;">Virus</div>
-          <div style="font-size:10px; color:var(--accent-cyan); font-weight:700;">ARROW ESCAPE</div>
+          <div style="font-size:12px; font-weight:900; letter-spacing:0.4px;">iTzVirus</div>
+          <div style="font-size:9px; color:var(--accent-main); font-weight:800;" id="admin-status-tag">CYBER PRO EDITION</div>
         </div>
       </div>
-      <!-- Populated ONLY in Debug build / ?debug=1 -->
-      <div id="debug-header-slot"></div>
-    </div>
 
-    <div class="daily-promo-card" id="card-daily-shortcut" role="button" tabindex="0" aria-label="Play Daily Challenge">
-      <div class="daily-promo-tag" data-i18n="dailyChallenge">DAILY CHALLENGE</div>
-      <div class="daily-promo-date" id="home-daily-date">Oct 14</div>
-      <div class="daily-promo-btn" data-i18n="play">Play</div>
-    </div>
-
-    <div class="hero-block">
-      <div class="hero-avatar-frame" data-avatar-slot>
-        <img src="icon-only.png" alt="Arrow Escape Icon" onerror="window.replaceWithFallbackSvg(this)">
-      </div>
-      <h1 class="hero-game-title" data-i18n="appTitle">Arrow Escape</h1>
-      <div class="hero-studio-sub" data-i18n="studioSub">BY VIRUS</div>
-      <div class="hero-tier-preview" id="home-tier-preview">Tier: Easy • Grid 6×8</div>
-    </div>
-
-    <div class="cta-stack">
-      <button id="btn-home-continue" class="btn-main-cta" aria-label="Continue Saved Level">
-        <span data-i18n="continueGame">Continue Game</span>
-        <span class="btn-main-sub" id="home-continue-sub">Level 1</span>
-      </button>
-      <button id="btn-home-restart" class="btn-secondary-cta" data-i18n="restartLevel" aria-label="Restart Current Level">
-        Restart Level
+      <button class="admin-quick-btn stealth-hidden" id="btn-top-admin" onclick="requestAdminAccess()">
+        <span>⚡ ADMIN</span>
+        <span id="lock-indicator">🔒</span>
       </button>
     </div>
-  </main>
 
-  <!-- 2. DAILY CHALLENGE SCREEN -->
-  <section id="screen-daily" class="view-screen" aria-label="Daily Challenges">
-    <div class="daily-trophy-header">
-      <div style="font-size:36px; margin-bottom:4px;">🏆</div>
-      <h2 style="font-size:18px; font-weight:900;" data-i18n="dailyChallenge">DAILY CHALLENGE</h2>
-      <p style="font-size:12px; color:var(--text-muted); margin-top:4px;" data-i18n="dailySub">
-        Clear daily high-density grids to earn stars and bonus hints.
-      </p>
+    <div class="daily-card" onclick="startDailyLevel(14)">
+      <div class="daily-cal-icon">✪</div>
+      <div class="daily-label">DAILY CHALLENGE</div>
+      <div class="daily-date-text" id="main-daily-label">October 14</div>
+      <div class="daily-play-pill">Play</div>
     </div>
 
-    <div class="cal-header-row">
-      <span style="font-size:16px; font-weight:900;">October 2026</span>
-      <span id="cal-stars-count" style="color:var(--accent-gold); font-weight:900; font-size:15px;">0 / 31 ★</span>
-    </div>
-
-    <div class="cal-weekdays">
-      <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
-    </div>
-    <div id="cal-grid-box" class="cal-days-grid"></div>
-
-    <button id="btn-daily-start" class="btn-main-cta" style="margin-top:auto;" aria-label="Start Selected Daily Challenge">
-      <span data-i18n="play">Play</span>
-    </button>
-  </section>
-
-  <!-- 3. PROFILE & SETTINGS SCREEN -->
-  <section id="screen-profile" class="view-screen" aria-label="Profile and Settings">
-    <h2 style="font-size:18px; font-weight:900; margin-bottom:12px;" data-i18n="settingsTitle">Profile & Settings</h2>
-
-    <div class="profile-banner">
-      <div class="brand-avatar" style="width:52px; height:52px;" data-avatar-slot>
-        <img src="icon-only.png" alt="Virus Profile" onerror="window.replaceWithFallbackSvg(this)">
+    <div class="brand-center">
+      <div class="hero-avatar-badge" id="hero-avatar-slot" onclick="handleSecretTriggerTap()">
+        <svg><use href="#virus-anime-avatar"/></svg>
       </div>
-      <div>
-        <div style="font-size:16px; font-weight:900;">Virus Player</div>
-        <div id="profile-stats-line" style="font-size:12px; color:var(--text-muted); margin-top:2px;">
-          Highest Level: 1 • Arrows Cleared: 0
-        </div>
+      <div class="brand-title" onclick="handleSecretTriggerTap()">Virus Arrows</div>
+      <div class="brand-sub">BY TALIB HUSSAIN (iTzVirus)</div>
+
+      <!-- 4 Hardcore Difficulty Modes -->
+      <div class="mode-selector">
+        <div class="mode-pill" id="mode-normal" onclick="setGameDifficulty('normal')">Hard 🔥</div>
+        <div class="mode-pill active" id="mode-hard" onclick="setGameDifficulty('hard')">Extreme 💀</div>
+        <div class="mode-pill" id="mode-virus" onclick="setGameDifficulty('virus')">Nightmare ⚡</div>
+        <div class="mode-pill" id="mode-impossible" onclick="setGameDifficulty('impossible')">Impossible 🩸</div>
       </div>
     </div>
 
-    <div class="settings-group">
-      <div class="settings-row">
-        <span data-i18n="sound">Sound Effects</span>
-        <button id="sw-sound" class="switch-btn on" role="switch" aria-checked="true" aria-label="Toggle Sound Effects"></button>
-      </div>
-      <div class="settings-row">
-        <span data-i18n="vibration">Haptic Vibration</span>
-        <button id="sw-vib" class="switch-btn on" role="switch" aria-checked="true" aria-label="Toggle Haptic Vibration"></button>
-      </div>
-      <div class="settings-row">
-        <span data-i18n="reducedMotion">Reduced Motion</span>
-        <button id="sw-motion" class="switch-btn" role="switch" aria-checked="false" aria-label="Toggle Reduced Motion"></button>
-      </div>
-      <div class="settings-row">
-        <span data-i18n="colorBlindMode">Color-Blind Safe Symbols</span>
-        <button id="sw-colorblind" class="switch-btn" role="switch" aria-checked="false" aria-label="Toggle Color-Blind Safe Symbols"></button>
-      </div>
-      <div class="settings-row">
-        <span data-i18n="language">Language (زبان)</span>
-        <select id="select-lang" aria-label="Select Language" style="background:var(--bg-deep); color:var(--text-main); border:1px solid #334155; border-radius:8px; padding:6px 10px; font-weight:800;">
-          <option value="en">English</option>
-          <option value="ur">اردو (Urdu)</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="settings-group">
-      <div class="settings-row" style="cursor:pointer;" id="row-privacy-info" role="button" tabindex="0" aria-label="View Privacy Policy Summary">
-        <span data-i18n="privacyPolicy">Privacy & Data Safety</span>
-        <span style="color:var(--text-muted);">›</span>
-      </div>
-      <div class="settings-row">
-        <span>Version</span>
-        <span style="color:var(--text-muted);">1.0.0 (API 36 Ready)</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- 4. GAMEPLAY SCREEN -->
-  <section id="screen-game" class="view-screen" aria-label="Puzzle Board">
-    <div class="game-hud-top">
-      <button id="btn-game-back" class="round-icon-btn" aria-label="Back to Menu">‹</button>
-      <div id="hud-level-label" style="font-size:17px; font-weight:900;">Level 1</div>
-      <button id="btn-game-fit" class="round-icon-btn" aria-label="Fit Board to Screen" title="Fit to Screen">⛶</button>
-    </div>
-
-    <div class="game-hud-sub">
-      <div class="stat-pill" aria-label="Remaining Arrows">
-        <span style="color:var(--accent-cyan);">↗</span>
-        <span id="hud-arrow-remaining">0</span>
-      </div>
-
-      <div class="hearts-box" id="hud-hearts-box" aria-label="Hearts Remaining">
-        <span class="heart-icon">♥</span>
-        <span class="heart-icon">♥</span>
-        <span class="heart-icon">♥</span>
-      </div>
-
-      <div id="hud-tier-badge" class="stat-pill tier-Easy" aria-label="Difficulty Tier">Easy</div>
-    </div>
-
-    <div id="board-viewport">
-      <canvas id="board-canvas"></canvas>
-      <div id="tutorial-banner" data-i18n="tutorialBanner">Tap an unblocked arrow to slide it off the grid!</div>
-    </div>
-
-    <div class="game-bottom-bar">
-      <button id="btn-tool-hint" class="tool-circle-btn" aria-label="Use Hint to Highlight Unblocked Arrow">
-        💡
-        <span id="badge-hint-count" class="tool-badge">3</span>
+    <div class="main-buttons">
+      <button class="btn-primary" onclick="continueSavedLevel()">
+        <span>Continue Game</span>
+        <span class="sub-lvl" id="continue-lvl-text">Level 1</span>
       </button>
-      <button id="btn-tool-ruler" class="tool-circle-btn" aria-label="Toggle Exit Path Laser Guide">
-        📏
+      <button class="btn-secondary" onclick="restartCurrentLevelFromHome()">
+        Restart Level 1
       </button>
-    </div>
-  </section>
-
-  <!-- BOTTOM NAVIGATION BAR -->
-  <nav id="bottom-nav-bar" class="bottom-tabs" aria-label="Primary Navigation">
-    <button id="tab-btn-main" class="tab-btn active" aria-label="Main Menu Tab">
-      <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-      <span data-i18n="tabMain">Main</span>
-    </button>
-    <button id="tab-btn-daily" class="tab-btn" aria-label="Daily Challenge Tab">
-      <svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10z"/></svg>
-      <span data-i18n="tabDaily">Daily</span>
-    </button>
-    <button id="tab-btn-profile" class="tab-btn" aria-label="Profile and Settings Tab">
-      <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-      <span data-i18n="tabMe">Profile</span>
-    </button>
-  </nav>
-
-  <!-- WIN / LOSE / INFO MODAL -->
-  <div id="modal-common" class="modal-backdrop" role="dialog" aria-modal="true">
-    <div class="modal-panel">
-      <div id="modal-icon" class="modal-icon">🎉</div>
-      <h3 id="modal-title" class="modal-heading">Level Complete!</h3>
-      <p id="modal-desc" class="modal-body"></p>
-      <button id="modal-primary-btn" class="btn-main-cta" style="margin-bottom:8px;">Continue</button>
-      <button id="modal-secondary-btn" class="btn-secondary-cta" style="display:none;">Restart</button>
     </div>
   </div>
 
-  <!-- DEBUG-ONLY ADMIN & AUTOMATED VERIFIER MODAL (Never shown in Release builds) -->
-  <div id="modal-debug-admin" class="modal-backdrop" role="dialog" aria-modal="true">
-    <div class="modal-panel" style="max-width:410px;">
-      <h3 class="modal-heading" style="color:var(--danger-red);">⚡ Debug Admin & Solver Suite</h3>
-      <p style="font-size:11px; color:var(--text-muted); margin-bottom:10px;">
-        Debug flavor only. Stripped in Production Release AAB.
-      </p>
-      <div style="display:flex; gap:6px; margin-bottom:10px;">
-        <input id="dbg-level-input" type="number" min="1" max="1000" value="155" style="flex:1; background:#070B12; color:#fff; border:1px solid #334155; border-radius:8px; padding:8px; font-weight:800;">
-        <button id="dbg-jump-btn" class="debug-pill-btn" style="border-radius:8px;">Warp Level</button>
-        <button id="dbg-win-btn" class="debug-pill-btn" style="background:var(--success-green); border-radius:8px;">Instant Win</button>
+  <!-- ==================== 2. DAILY CHALLENGES SCREEN ==================== -->
+  <div id="screen-daily" class="screen">
+    <div class="trophy-banner">
+      <h2>Virus Daily Challenges</h2>
+      <svg class="trophy-svg" viewBox="0 0 120 140">
+        <defs>
+          <linearGradient id="cupGrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#0d253f"/>
+            <stop offset="35%" stop-color="#38bdf8"/>
+            <stop offset="55%" stop-color="#e0f2fe"/>
+            <stop offset="80%" stop-color="#0284c7"/>
+            <stop offset="100%" stop-color="#082f49"/>
+          </linearGradient>
+        </defs>
+        <path d="M22,22 H98 V35 C98,55 82,62 78,62 H42 C38,62 22,55 22,35 Z" fill="none" stroke="url(#cupGrad)" stroke-width="5" rx="8"/>
+        <path d="M34,18 H86 C86,56 74,74 60,74 C46,74 34,56 34,18 Z" fill="url(#cupGrad)"/>
+        <rect x="54" y="72" width="12" height="28" rx="4" fill="url(#cupGrad)"/>
+        <path d="M40,100 H80 L86,115 H34 Z" fill="url(#cupGrad)"/>
+        <rect x="28" y="115" width="64" height="12" rx="4" fill="#0f172a"/>
+      </svg>
+    </div>
+
+    <div class="cal-container">
+      <div>
+        <div class="cal-header">
+          <div class="cal-month">October 2026</div>
+          <div class="cal-progress">
+            <span class="star-badge">★</span>
+            <span id="daily-star-count">0/31</span>
+          </div>
+        </div>
+        <div class="cal-grid" id="calendar-grid"></div>
       </div>
-      <div style="display:flex; gap:6px; margin-bottom:10px;">
-        <button id="dbg-run-suite-btn" class="btn-secondary-cta" style="padding:9px; font-size:12px;">
-          ▶ Run Solver Suite (Levels 1–1000 + 100 Daily)
-        </button>
+      <button class="btn-primary" onclick="playSelectedDaily()">Play Daily</button>
+    </div>
+  </div>
+
+  <!-- ==================== 3. ME / OPTIONS & CUSTOM SKINS SCREEN ==================== -->
+  <div id="screen-me" class="screen">
+    <div class="top-bar-title">Me & Virus Profile</div>
+
+    <div class="me-card" onclick="handleSecretTriggerTap()">
+      <div class="me-card-left">
+        <div class="virus-avatar-wrap" id="me-avatar-slot" style="width:48px; height:48px;">
+          <svg><use href="#virus-anime-avatar"/></svg>
+        </div>
+        <div>
+          <div style="font-weight:900; font-size:15px;">iTzVirus</div>
+          <div style="font-size:11px; color:var(--text-secondary);" id="achieve-sub">0 Levels Cleared</div>
+        </div>
       </div>
-      <div id="dbg-suite-output" class="debug-log-box">Click "Run Solver Suite" to verify levels and print tier metrics...</div>
-      <button id="dbg-close-btn" class="btn-secondary-cta" style="padding:10px;">Close Debug Panel</button>
+      <span style="color:var(--accent-main); font-weight:900; font-size:18px;">⚡</span>
+    </div>
+
+    <div class="me-list-group">
+      <div class="me-list-item">
+        <div class="me-item-left">
+          <div class="sq-icon" style="background:#0284c7;">🎨</div>
+          <span>Arrow Theme Skin</span>
+        </div>
+        <select id="skin-select" onchange="changeSkin(this.value)" style="padding:6px 10px; border-radius:8px; font-weight:800; border:1px solid var(--border-col); background:var(--bg-main); color:var(--text-primary);">
+          <option value="default">Classic (White Arrows) ⚪</option>
+          <option value="crimson">Virus Crimson 🩸</option>
+          <option value="matrix">Cyber Matrix 🟢</option>
+          <option value="gold">Royal Gold 👑</option>
+        </select>
+      </div>
+
+      <div class="me-list-item">
+        <div class="me-item-left">
+          <div class="sq-icon" style="background:#e11d48;">🌑</div>
+          <span>Cyber Abyss Mode</span>
+        </div>
+        <div id="tog-dark" class="toggle-switch" onclick="toggleSetting('dark')">
+          <div class="toggle-knob"></div>
+        </div>
+      </div>
+
+      <div class="me-list-item">
+        <div class="me-item-left">
+          <div class="sq-icon" style="background:#2563eb;">🔊</div>
+          <span>Sounds</span>
+        </div>
+        <div id="tog-sound" class="toggle-switch on" onclick="toggleSetting('sound')">
+          <div class="toggle-knob"></div>
+        </div>
+      </div>
+
+      <div class="me-list-item">
+        <div class="me-item-left">
+          <div class="sq-icon" style="background:#0ea5e9;">📳</div>
+          <span>Vibration</span>
+        </div>
+        <div id="tog-vib" class="toggle-switch on" onclick="toggleSetting('vib')">
+          <div class="toggle-knob"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="me-list-group">
+      <div class="me-list-item stealth-hidden" id="me-admin-row" style="cursor:pointer;" onclick="requestAdminAccess()">
+        <div class="me-item-left">
+          <div class="sq-icon" style="background:#dc2626;">⚡</div>
+          <span style="font-weight:900; color:#f43f5e;">Open Virus Admin Panel 🔒</span>
+        </div>
+        <span style="color:#94a3b8; font-size:20px;">›</span>
+      </div>
+
+      <div class="me-list-item" style="cursor:pointer;" onclick="showInfoModal('❓ Hazard Guide', '• Classic White Arrows: Escape along clear paths.\n• 🛡️2 Shielded Arrows: Tap twice when unblocked!\n• 🔒 Locked Arrows: Clear other arrows first.\n• 💣 Bomb Arrows: Clear before timer hits 0!\n• ❄️ Frozen Arrows: Thaw by clearing adjacent arrows.')">
+        <div class="me-item-left">
+          <div class="sq-icon" style="background:#10b981;">?</div>
+          <span>Help & Hazard Guide</span>
+        </div>
+        <span style="color:#94a3b8; font-size:20px;">›</span>
+      </div>
+
+      <div class="me-list-item" style="cursor:pointer;" onclick="handleSecretTriggerTap(); showInfoModal('ℹ️ About Game', 'Virus Arrows Game\nVersion 5.0 (Hyper-Dense White Arrow Edition)\nCreated by iTzVirus')">
+        <div class="me-item-left">
+          <div class="sq-icon" style="background:#3b82f6;">i</div>
+          <span>About Game (v5.0)</span>
+        </div>
+        <span style="color:#94a3b8; font-size:20px;">›</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 4. VIRUS OWNER ADMIN PANEL SCREEN ==================== -->
+  <div id="screen-admin" class="screen">
+    <div class="admin-header-banner">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <div class="virus-avatar-wrap" id="admin-avatar-slot" style="width:42px; height:42px; border-color:#f43f5e;">
+          <svg><use href="#virus-anime-avatar"/></svg>
+        </div>
+        <div>
+          <div style="font-size:15px; font-weight:900;">⚡ iTzVIRUS ADMIN OS</div>
+          <div style="font-size:10px; color:#fda4af;">Root Control • Unsolvable Troll Mode Ready</div>
+        </div>
+      </div>
+      <div style="display:flex; gap:6px;">
+        <button class="adm-btn danger" onclick="lockAdminSession()" style="width:auto; padding:6px 10px;">🔒 Lock</button>
+        <button class="adm-btn" onclick="openTab('main')" style="width:auto; padding:6px 12px;">✕</button>
+      </div>
+    </div>
+
+    <!-- Brother Troll: Impossible Unsolvable Deadlock Injector -->
+    <div class="admin-section" style="border-color:#f43f5e; background:#1a0913;">
+      <div class="admin-sec-title" style="color:#f43f5e;">💀 BROTHER TROLL: IMPOSSIBLE / UNSOLVABLE MODE</div>
+      <div class="admin-grid-btns">
+        <button class="adm-btn danger" id="adm-unsolvable-btn" onclick="toggleAdminFeature('unsolvableMode')">💀 Unsolvable: OFF</button>
+        <button class="adm-btn danger" id="adm-nobomb-btn" onclick="toggleAdminFeature('disableBoosters')">🚫 Lock Boosters: OFF</button>
+        <button class="adm-btn" onclick="adminInjectDeadlockNow()">🌀 Inject Deadlock Now</button>
+        <button class="adm-btn" onclick="adminSpawnMegaWall()">🧱 20×24 Mega Wall</button>
+      </div>
+    </div>
+
+    <!-- Owner Cheats -->
+    <div class="admin-section">
+      <div class="admin-sec-title">🛡️ Owner Cheats & X-Ray</div>
+      <div class="admin-grid-btns">
+        <button class="adm-btn" id="adm-god-btn" onclick="toggleAdminFeature('godMode')">🛡️ God Mode: OFF</button>
+        <button class="adm-btn" id="adm-xray-btn" onclick="toggleAdminFeature('xrayOrder')">👁️ X-Ray Order: OFF</button>
+        <button class="adm-btn success" onclick="adminAutoSolveCurrent()">🤖 AI Auto-Win Level</button>
+        <button class="adm-btn" onclick="adminRefillBoosters()">💎 +99 Hints & EMP</button>
+      </div>
+    </div>
+
+    <!-- Level Warper & Density -->
+    <div class="admin-section">
+      <div class="admin-sec-title">🚀 Level Warper & Density</div>
+      <div style="display:flex; gap:8px; margin-bottom:8px;">
+        <input type="number" id="adm-lvl-input" class="adm-input" value="50" min="1" max="9999">
+        <button class="adm-btn danger" style="width:auto; white-space:nowrap;" onclick="adminWarpToLevel()">🚀 Warp Level</button>
+      </div>
+      <div style="font-size:11px; margin-bottom:4px; display:flex; justify-content:space-between;">
+        <span>Force Grid Size Override:</span>
+        <span id="adm-grid-val" style="color:#38bdf8; font-weight:800;">Auto</span>
+      </div>
+      <input type="range" id="adm-grid-slider" min="5" max="20" value="5" style="width:100%;" oninput="updateAdminGridOverride(this.value)">
+    </div>
+
+    <!-- Security & Stealth Settings -->
+    <div class="admin-section">
+      <div class="admin-sec-title">🔐 Security & Stealth</div>
+      <div style="display:flex; gap:8px; margin-bottom:8px;">
+        <input type="text" id="adm-new-pass" class="adm-input" placeholder="New Passcode / PIN">
+        <button class="adm-btn success" style="width:auto; white-space:nowrap;" onclick="adminChangePassword()">💾 Save</button>
+      </div>
+      <div style="display:flex; justify-content:space-between; align-items:center; font-size:11px;">
+        <span>🕵️ Stealth Mode (Hide Admin Buttons)</span>
+        <div id="tog-stealth" class="toggle-switch on" onclick="toggleStealthMode()">
+          <div class="toggle-knob"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 5. GAMEPLAY SCREEN ==================== -->
+  <div id="screen-game" class="screen">
+    <div class="game-top-bar">
+      <button class="icon-btn" onclick="exitToHome()" title="Back">‹</button>
+      <div class="game-lvl-title" id="hud-level-title" onclick="handleSecretTriggerTap()">Level 1</div>
+      <div style="display:flex; gap:5px;">
+        <button class="icon-btn" onclick="resetCameraZoom()" title="Reset Zoom" style="font-size:14px;">🔍</button>
+        <button class="icon-btn stealth-hidden" id="btn-hud-admin" onclick="requestAdminAccess()" style="font-size:15px;">⚡</button>
+        <button class="icon-btn" onclick="openTab('me')" style="font-size:15px;">⚙️</button>
+      </div>
+    </div>
+
+    <div class="game-sub-hud">
+      <div class="hud-pill">
+        <span style="color:var(--accent-main);">↗</span>
+        <span id="hud-arrows-left">0</span>
+      </div>
+
+      <div class="hearts-row" id="hud-hearts">
+        <span class="heart">♥</span>
+        <span class="heart">♥</span>
+        <span class="heart">♥</span>
+      </div>
+
+      <div class="hud-pill" id="hud-diff-badge" onclick="cycleDifficultyInGame()" style="cursor:pointer;">Extreme 💀</div>
+    </div>
+
+    <div id="canvas-wrap">
+      <div id="combo-toast">🔥 x3 COMBO!</div>
+      <canvas id="game-canvas"></canvas>
+    </div>
+
+    <!-- Bottom Boosters Dock -->
+    <div class="game-bottom-dock">
+      <button class="booster-btn" onclick="useHintBooster()" title="Highlight Free Arrow">
+        💡
+        <span class="badge-count" id="badge-hints">3</span>
+      </button>
+
+      <button class="booster-btn" id="btn-ruler" onclick="toggleRulerBooster()" title="Toggle Laser Trajectory">
+        📏
+      </button>
+
+      <button class="booster-btn" id="btn-emp" onclick="toggleEmpBombMode()" title="EMP Blast: Vaporize Any Arrow">
+        💣
+        <span class="badge-count" id="badge-bombs">2</span>
+      </button>
+
+      <button class="booster-btn" onclick="triggerSingleAiStep()" title="AI Smart Step">
+        🤖
+      </button>
+    </div>
+  </div>
+
+  <!-- ==================== BOTTOM NAVIGATION BAR ==================== -->
+  <div class="bottom-nav" id="bottom-nav">
+    <div class="nav-tab active" id="tab-main" onclick="openTab('main')">
+      <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+      <span>Main</span>
+    </div>
+    <div class="nav-tab" id="tab-daily" onclick="openTab('daily')">
+      <svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm-7-8l-1.45 3.15L7 15.6l2.6 2.35-.65 3.45L12 19.65l3.05 1.75-.65-3.45L17 15.6l-3.55-.45z"/></svg>
+      <span>Daily</span>
+    </div>
+    <div class="nav-tab" id="tab-me" onclick="openTab('me')">
+      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
+      <span>Me</span>
+    </div>
+  </div>
+
+  <!-- ==================== SECURITY GATE PASSWORD MODAL ==================== -->
+  <div class="modal-overlay" id="security-modal">
+    <div class="sec-gate-box" id="sec-gate-box">
+      <div style="display:flex; justify-content:center; margin-bottom:6px;">
+        <div class="virus-avatar-wrap" id="gate-avatar-slot" style="width:54px; height:54px; border:2px solid #f43f5e;">
+          <svg><use href="#virus-anime-avatar"/></svg>
+        </div>
+      </div>
+      <div style="font-size:17px; font-weight:900; color:#fff;">🔒 VIRUS SECURITY GATE</div>
+      <div style="font-size:10px; color:#94a3b8;">OWNER AUTHENTICATION REQUIRED</div>
+
+      <input type="password" id="sec-pass-input" class="sec-input-display" placeholder="PASSCODE / PIN" autocomplete="off" onkeydown="if(event.key==='Enter') verifyAdminPassword()">
+      <div id="sec-error-msg" style="font-size:11px; color:#f43f5e; font-weight:800; min-height:15px;"></div>
+
+      <div class="sec-keypad">
+        <button class="sec-key" onclick="appendPinDigit('1')">1</button>
+        <button class="sec-key" onclick="appendPinDigit('2')">2</button>
+        <button class="sec-key" onclick="appendPinDigit('3')">3</button>
+        <button class="sec-key" onclick="appendPinDigit('4')">4</button>
+        <button class="sec-key" onclick="appendPinDigit('5')">5</button>
+        <button class="sec-key" onclick="appendPinDigit('6')">6</button>
+        <button class="sec-key" onclick="appendPinDigit('7')">7</button>
+        <button class="sec-key" onclick="appendPinDigit('8')">8</button>
+        <button class="sec-key" onclick="appendPinDigit('9')">9</button>
+        <button class="sec-key" onclick="clearPinInput()" style="color:#f43f5e; font-size:12px;">CLR</button>
+        <button class="sec-key" onclick="appendPinDigit('0')">0</button>
+        <button class="sec-key" onclick="verifyAdminPassword()" style="background:#e11d48; font-size:13px;">OK</button>
+      </div>
+
+      <div style="display:flex; gap:8px;">
+        <button class="adm-btn" style="flex:1;" onclick="closeSecurityModal()">Cancel</button>
+        <button class="adm-btn danger" style="flex:1;" onclick="verifyAdminPassword()">⚡ Unlock</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== STANDARD GAME MODAL OVERLAY ==================== -->
+  <div class="modal-overlay" id="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-emoji" id="modal-emoji">🎉</div>
+      <div class="modal-title" id="modal-title">Level Complete!</div>
+      <div class="modal-desc" id="modal-desc">Every arrow escaped cleanly.</div>
+      <button class="btn-primary" id="modal-btn" onclick="closeModal()">Continue</button>
     </div>
   </div>
 
 </div>
 
 <script>
-"use strict";
+/* ============================================================================
+   0. 1-TAP CLEAN FILE EXPORTER
+   ============================================================================ */
+function exportCleanGameFile(filename) {
+  const clone = document.documentElement.cloneNode(true);
+  const expBar = clone.querySelector('#exporter-bar');
+  if (expBar) expBar.remove();
+  const fullHtml = '<!DOCTYPE html>\n' + clone.outerHTML;
+  const blob = new Blob([fullHtml], { type: 'text/plain;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
 
 /* ============================================================================
-   SECTION 1: AVATAR FALLBACK & ENVIRONMENT FLAGS
+   1. STATE, SECURITY GATE & OWNER SETTINGS
    ============================================================================ */
-window.replaceWithFallbackSvg = function (imgElement) {
-  if (!imgElement || !imgElement.parentElement) return;
-  imgElement.parentElement.innerHTML = '<svg viewBox="0 0 200 200"><use href="#virus-avatar-svg"/></svg>';
+let savedLevel = parseInt(localStorage.getItem('virus_ap_level') || '1', 10);
+let totalArrowsCleared = parseInt(localStorage.getItem('virus_ap_cleared') || '0', 10);
+let completedDailyDays = JSON.parse(localStorage.getItem('virus_ap_daily') || '[]');
+let customAvatarData = localStorage.getItem('virus_custom_avatar') || 'virus.jpg';
+
+let savedCustomPassword = localStorage.getItem('virus_admin_pass') || '';
+let isAdminAuthenticated = false;
+let stealthMode = localStorage.getItem('virus_stealth_mode') !== 'false';
+
+let currentLevel = savedLevel;
+let activeDailyDay = null;
+let selectedCalendarDay = 14;
+let gameDifficulty = 'hard'; // 'normal' (Hard), 'hard' (Extreme), 'virus' (Nightmare), 'impossible' (Unsolvable)
+
+let settings = { sound: true, vib: true, dark: false };
+
+let adminConfig = {
+  godMode: false,
+  xrayOrder: false,
+  unsolvableMode: false,
+  disableBoosters: false,
+  gridOverride: 0,
+  hazardRate: 0.48
 };
 
-const APP_CONFIG = {
-  ENABLE_ADS: false,
-  INTERSTITIAL_INTERVAL: 5,
-  SAVE_STORAGE_KEY: "com.virus.arrowescape.save_v3",
-  SAVE_SCHEMA_VERSION: 3
-};
+let secretTapCount = 0;
+let secretTapTimer = null;
 
-function isDebugEnvironment() {
-  try {
-    if (window.AndroidBridge && typeof window.AndroidBridge.isDebugBuild === "function") {
-      return Boolean(window.AndroidBridge.isDebugBuild());
-    }
-    const params = new URLSearchParams(window.location.search);
-    return params.get("debug") === "1";
-  } catch (_) {
-    return false;
+function handleSecretTriggerTap() {
+  secretTapCount++;
+  clearTimeout(secretTapTimer);
+  if (secretTapCount >= 5) {
+    secretTapCount = 0;
+    playTone(740, 'sine', 0.12, 0.15);
+    requestAdminAccess();
+  } else {
+    secretTapTimer = setTimeout(() => { secretTapCount = 0; }, 1400);
   }
 }
 
-/* ============================================================================
-   SECTION 2: LOCALIZATION DICTIONARY (ENGLISH + URDU)
-   ============================================================================ */
-const I18N_DICT = {
-  en: {
-    appTitle: "Arrow Escape",
-    studioSub: "BY VIRUS",
-    dailyChallenge: "DAILY CHALLENGE",
-    dailySub: "Clear daily high-density grids to earn stars and bonus hints.",
-    play: "Play",
-    continueGame: "Continue Game",
-    restartLevel: "Restart Level",
-    level: "Level",
-    tabMain: "Main",
-    tabDaily: "Daily",
-    tabMe: "Profile",
-    settingsTitle: "Profile & Settings",
-    sound: "Sound Effects",
-    vibration: "Haptic Vibration",
-    reducedMotion: "Reduced Motion",
-    colorBlindMode: "Color-Blind Safe Symbols",
-    language: "Language (زبان)",
-    privacyPolicy: "Privacy & Data Safety",
-    tutorialBanner: "Tap an unblocked arrow to slide it off the grid!",
-    outOfHeartsTitle: "Out of Hearts!",
-    outOfHeartsBody: "Mistakes cost hearts on tight grids. Get +1 heart to continue from here or restart the level.",
-    reviveBtn: "Get +1 Heart (Revive)",
-    retryBtn: "Restart Level",
-    winTitle: "Level Cleared!",
-    nextLevelBtn: "Next Level",
-    exitConfirmTitle: "Exit Arrow Escape?",
-    exitConfirmBody: "Your current board progress is saved automatically.",
-    stayBtn: "Stay",
-    exitBtn: "Exit",
-    Easy: "Easy",
-    Normal: "Normal",
-    Hard: "Hard",
-    Expert: "Expert",
-    Insane: "Insane"
-  },
-  ur: {
-    appTitle: "ایرو اسکیپ",
-    studioSub: "وائرس اسٹوڈیو",
-    dailyChallenge: "روزانہ چیلنج",
-    dailySub: "ستارے اور اضافی ہنٹس حاصل کرنے کے لیے روزانہ کے چیلنجز مکمل کریں۔",
-    play: "کھیلیں",
-    continueGame: "گیم جاری رکھیں",
-    restartLevel: "دوبارہ شروع کریں",
-    level: "لیول",
-    tabMain: "ہوم",
-    tabDaily: "روزانہ",
-    tabMe: "پروفائل",
-    settingsTitle: "پروفائل اور ترتیبات",
-    sound: "آوازیں (Sounds)",
-    vibration: "وائبریشن (Haptics)",
-    reducedMotion: "کم اینیمیشن",
-    colorBlindMode: "کلر بلائنڈ موڈ",
-    language: "زبان (Language)",
-    privacyPolicy: "پرائیویسی اور ڈیٹا سیفٹی",
-    tutorialBanner: "راستہ صاف ہونے پر تیر کو ٹیپ کرکے باہر نکالیں!",
-    outOfHeartsTitle: "دل ختم ہو گئے!",
-    outOfHeartsBody: "جاری رکھنے کے لیے +1 اضافی دل حاصل کریں یا لیول دوبارہ شروع کریں۔",
-    reviveBtn: "اضافی دل حاصل کریں (+1 ♥)",
-    retryBtn: "لیول دوبارہ شروع کریں",
-    winTitle: "لیول مکمل!",
-    nextLevelBtn: "اگلا لیول",
-    exitConfirmTitle: "گیم سے باہر نکلیں؟",
-    exitConfirmBody: "آپ کی موجودہ پیشرفت محفوظ ہے۔",
-    stayBtn: "رہیں",
-    exitBtn: "باہر نکلیں",
-    Easy: "آسان",
-    Normal: "نارمل",
-    Hard: "مشکل",
-    Expert: "ماہر",
-    Insane: "انتہائی مشکل"
-  }
-};
-
-/* ============================================================================
-   SECTION 3: VERSIONED SAVE STATE & AUTOMATIC MIGRATION
-   ============================================================================ */
-function getDefaultSaveState() {
-  return {
-    version: APP_CONFIG.SAVE_SCHEMA_VERSION,
-    level: 1,
-    highestLevel: 1,
-    hearts: 3,
-    hints: 3,
-    totalArrowsCleared: 0,
-    selectedDailyDay: 14,
-    completedDailyDays: [],
-    activeBoardState: {
-      levelNum: 1,
-      isDaily: false,
-      dailyDay: null,
-      clearedArrowIds: []
-    },
-    settings: {
-      sound: true,
-      vib: true,
-      reducedMotion: false,
-      colorBlind: false,
-      lang: "en"
-    }
-  };
+function requestAdminAccess() {
+  if (isAdminAuthenticated) { openTab('admin'); return; }
+  document.getElementById('sec-pass-input').value = '';
+  document.getElementById('sec-error-msg').textContent = '';
+  document.getElementById('security-modal').classList.add('show');
 }
+function closeSecurityModal() { document.getElementById('security-modal').classList.remove('show'); }
+function appendPinDigit(d) { document.getElementById('sec-pass-input').value += d; playTone(620, 'sine', 0.05, 0.08); }
+function clearPinInput() { document.getElementById('sec-pass-input').value = ''; document.getElementById('sec-error-msg').textContent = ''; }
 
-function loadAndMigrateSaveState() {
-  const defaults = getDefaultSaveState();
-  try {
-    const raw = localStorage.getItem(APP_CONFIG.SAVE_STORAGE_KEY);
-    if (!raw) return defaults;
-    const parsed = JSON.parse(raw);
-    if (!parsed || typeof parsed !== "object") return defaults;
+function verifyAdminPassword() {
+  const raw = document.getElementById('sec-pass-input').value.trim();
+  const upper = raw.toUpperCase();
+  const isValid = savedCustomPassword
+    ? (raw === savedCustomPassword || upper === 'ITZVIRUS')
+    : (upper === 'VIRUS' || upper === 'ITZVIRUS' || raw === '7860');
 
-    const migrated = {
-      ...defaults,
-      ...parsed,
-      version: APP_CONFIG.SAVE_SCHEMA_VERSION,
-      settings: {
-        ...defaults.settings,
-        ...(parsed.settings || {})
-      },
-      activeBoardState: {
-        ...defaults.activeBoardState,
-        ...(parsed.activeBoardState || {})
-      }
-    };
-
-    if (!Array.isArray(migrated.completedDailyDays)) migrated.completedDailyDays = [];
-    if (!Array.isArray(migrated.activeBoardState.clearedArrowIds)) {
-      migrated.activeBoardState.clearedArrowIds = [];
-    }
-    migrated.level = Math.max(1, parseInt(migrated.level, 10) || 1);
-    migrated.highestLevel = Math.max(migrated.level, parseInt(migrated.highestLevel, 10) || 1);
-    migrated.hearts = Math.max(1, Math.min(3, parseInt(migrated.hearts, 10) || 3));
-    migrated.hints = Math.max(0, parseInt(migrated.hints, 10) || 0);
-    return migrated;
-  } catch (_) {
-    return defaults;
+  if (isValid) {
+    isAdminAuthenticated = true;
+    document.getElementById('lock-indicator').textContent = '🔓';
+    document.getElementById('admin-status-tag').textContent = 'ROOT UNLOCKED';
+    closeSecurityModal();
+    playTone(880, 'sine', 0.18, 0.18);
+    openTab('admin');
+  } else {
+    document.getElementById('sec-error-msg').textContent = '❌ ACCESS DENIED — WRONG CODE';
+    playTone(140, 'sawtooth', 0.25, 0.2);
+    vibrate([60, 40, 60]);
   }
 }
 
-let saveState = loadAndMigrateSaveState();
-
-function persistSaveState() {
-  try {
-    localStorage.setItem(APP_CONFIG.SAVE_STORAGE_KEY, JSON.stringify(saveState));
-  } catch (_) {}
+function lockAdminSession() {
+  isAdminAuthenticated = false;
+  document.getElementById('lock-indicator').textContent = '🔒';
+  document.getElementById('admin-status-tag').textContent = 'CYBER PRO EDITION';
+  openTab('main');
 }
 
-/* ============================================================================
-   SECTION 4: PRELOADED PCM WEB AUDIO SYNTHESIZER & HAPTICS
-   ============================================================================ */
+function adminChangePassword() {
+  const np = document.getElementById('adm-new-pass').value.trim();
+  if (!np) return;
+  savedCustomPassword = np;
+  localStorage.setItem('virus_admin_pass', np);
+  document.getElementById('adm-new-pass').value = '';
+  showInfoModal('🔐 Saved!', 'New Admin Passcode: ' + np);
+}
+
+function toggleStealthMode() {
+  stealthMode = !stealthMode;
+  localStorage.setItem('virus_stealth_mode', stealthMode ? 'true' : 'false');
+  applyStealthUI();
+}
+function applyStealthUI() {
+  const tog = document.getElementById('tog-stealth');
+  if (tog) tog.classList.toggle('on', stealthMode);
+  document.getElementById('btn-top-admin').classList.toggle('stealth-hidden', stealthMode);
+  document.getElementById('btn-hud-admin').classList.toggle('stealth-hidden', stealthMode);
+  document.getElementById('me-admin-row').classList.toggle('stealth-hidden', stealthMode);
+}
+
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
 let audioCtx = null;
-const pcmBuffers = {};
-
-function initPreloadedAudio() {
-  if (audioCtx) return;
-  const AudioCtxClass = window.AudioContext || window.webkitAudioContext;
-  if (!AudioCtxClass) return;
+function playTone(freq, type, duration, vol = 0.12) {
+  if (!settings.sound) return;
   try {
-    audioCtx = new AudioCtxClass();
-    const sr = audioCtx.sampleRate;
+    if (!audioCtx) audioCtx = new AudioCtx();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(freq * 1.4, audioCtx.currentTime + duration);
+    gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + duration);
+  } catch (e) {}
+}
+function vibrate(ms) { if (settings.vib && navigator.vibrate) navigator.vibrate(ms); }
 
-    function createWaveformBuffer(durationSec, generatorFn) {
-      const length = Math.floor(sr * durationSec);
-      const buffer = audioCtx.createBuffer(1, length, sr);
-      const data = buffer.getChannelData(0);
-      for (let i = 0; i < length; i++) {
-        const t = i / sr;
-        const env = Math.exp(-t * (4.2 / durationSec));
-        data[i] = generatorFn(t) * env;
-      }
-      return buffer;
+/* ============================================================================
+   2. AVATAR BRANDING & THEME-ALIGNED ARROW SKINS
+   ============================================================================ */
+function fallbackToSvgAvatar(imgEl) {
+  const p = imgEl.parentElement;
+  if (p) p.innerHTML = `<svg><use href="#virus-anime-avatar"/></svg>`;
+}
+function renderAllAvatarSlots() {
+  ['top-avatar-slot', 'hero-avatar-slot', 'me-avatar-slot', 'admin-avatar-slot', 'gate-avatar-slot'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (customAvatarData) {
+      el.innerHTML = `<img src="${customAvatarData}" alt="Virus Avatar" onerror="fallbackToSvgAvatar(this)">`;
+    } else {
+      el.innerHTML = `<svg><use href="#virus-anime-avatar"/></svg>`;
     }
-
-    pcmBuffers.slide = createWaveformBuffer(0.13, (t) => Math.sin(2 * Math.PI * (490 + t * 1350) * t) * 0.25);
-    pcmBuffers.bump = createWaveformBuffer(0.21, (t) => (Math.sin(2 * Math.PI * 135 * t) >= 0 ? 0.22 : -0.22));
-    pcmBuffers.hint = createWaveformBuffer(0.18, (t) => Math.sin(2 * Math.PI * 740 * t) * 0.22);
-    pcmBuffers.win = createWaveformBuffer(0.34, (t) => {
-      const freq = t < 0.14 ? 587.33 : 880.0;
-      return Math.sin(2 * Math.PI * freq * t) * 0.28;
-    });
-  } catch (_) {}
+  });
 }
 
-function playSoundEffect(name) {
-  if (!saveState.settings.sound) return;
-  initPreloadedAudio();
-  if (!audioCtx || !pcmBuffers[name]) return;
-  try {
-    if (audioCtx.state === "suspended") audioCtx.resume();
-    const src = audioCtx.createBufferSource();
-    src.buffer = pcmBuffers[name];
-    src.connect(audioCtx.destination);
-    src.start(0);
-  } catch (_) {}
+function changeSkin(skinName) {
+  document.body.classList.remove('skin-default', 'skin-crimson', 'skin-matrix', 'skin-gold');
+  document.body.classList.add('skin-' + skinName);
 }
 
-function triggerHapticFeedback(durationMs) {
-  if (!saveState.settings.vib) return;
-  try {
-    if (window.AndroidBridge && typeof window.AndroidBridge.vibrate === "function") {
-      window.AndroidBridge.vibrate(durationMs);
-    } else if (navigator.vibrate) {
-      navigator.vibrate(durationMs);
-    }
-  } catch (_) {}
+function setGameDifficulty(mode) {
+  gameDifficulty = mode;
+  document.querySelectorAll('.mode-pill').forEach(p => p.classList.remove('active'));
+  const btn = document.getElementById('mode-' + mode);
+  if (btn) btn.classList.add('active');
+}
+
+function cycleDifficultyInGame() {
+  const order = ['normal', 'hard', 'virus', 'impossible'];
+  const next = order[(order.indexOf(gameDifficulty) + 1) % order.length];
+  setGameDifficulty(next);
+  startLevel(currentLevel, activeDailyDay);
+}
+
+function openTab(tabName) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('bottom-nav').style.display = (tabName === 'admin') ? 'none' : 'flex';
+  document.getElementById('screen-' + tabName).classList.add('active');
+  const navTab = document.getElementById('tab-' + tabName);
+  if (navTab) navTab.classList.add('active');
+  updateHomeLabels();
+  if (tabName === 'daily') renderCalendar();
+}
+
+function updateHomeLabels() {
+  document.getElementById('continue-lvl-text').textContent = 'Level ' + savedLevel;
+  document.getElementById('daily-star-count').textContent = completedDailyDays.length + '/31';
+  document.getElementById('achieve-sub').textContent = (savedLevel - 1) + ' Levels Cleared • ' + totalArrowsCleared + ' Arrows';
+}
+
+function renderCalendar() {
+  const grid = document.getElementById('calendar-grid');
+  grid.innerHTML = '';
+  ['S', 'M', 'T', 'W', 'T', 'F', 'S'].forEach(d => {
+    const el = document.createElement('div');
+    el.className = 'cal-dow';
+    el.textContent = d;
+    grid.appendChild(el);
+  });
+  for (let i = 0; i < 4; i++) grid.appendChild(document.createElement('div'));
+  for (let day = 1; day <= 31; day++) {
+    const cell = document.createElement('div');
+    cell.className = 'cal-day';
+    if (completedDailyDays.includes(day)) cell.classList.add('completed');
+    if (day === selectedCalendarDay) cell.classList.add('selected');
+    cell.textContent = day;
+    cell.onclick = () => {
+      selectedCalendarDay = day;
+      document.getElementById('main-daily-label').textContent = 'October ' + day;
+      renderCalendar();
+    };
+    grid.appendChild(cell);
+  }
+}
+
+function toggleSetting(key) {
+  settings[key] = !settings[key];
+  const el = document.getElementById('tog-' + key);
+  if (el) el.classList.toggle('on', settings[key]);
+  if (key === 'dark') document.body.classList.toggle('dark-mode', settings.dark);
 }
 
 /* ============================================================================
-   SECTION 5: DETERMINISTIC DIFFICULTY CURVE & SOLVABLE LEVEL GENERATOR
+   3. HYPER-DENSE 98% PACKED LEVEL GENERATOR (ZERO BORDER WASTE + MICRO ARROWS)
    ============================================================================ */
-// Directions: 0 = UP, 1 = RIGHT, 2 = DOWN, 3 = LEFT
+let gridW = 11;
+let gridH = 14;
+let arrows = [];
+let allLevelCells = [];
+let particles = [];
+let comboCount = 0;
+let lastClearTime = 0;
+let hearts = 3;
+let hintsLeft = 3;
+let bombsLeft = 2;
+let rulerActive = false;
+let empBombActive = false;
+let highlightedArrowId = null;
+
+// 0:UP, 1:RIGHT, 2:DOWN, 3:LEFT
 const DX = [0, 1, 0, -1];
 const DY = [-1, 0, 1, 0];
 
-function createSeededPrng(seed) {
-  let state = (seed >>> 0) + 0x6D2B79F5;
-  return function nextFloat() {
-    state = Math.imul(state ^ (state >>> 15), state | 1);
-    state ^= state + Math.imul(state ^ (state >>> 7), state | 61);
-    return ((state ^ (state >>> 14)) >>> 0) / 4294967296;
-  };
+let rngState = 1337;
+function seedRng(seed) {
+  rngState = seed % 2147483647;
+  if (rngState <= 0) rngState += 2147483646;
+}
+function nextRand() {
+  rngState = (rngState * 16807) % 2147483647;
+  return (rngState - 1) / 2147483646;
 }
 
-function getDifficultySpecForLevel(levelNum) {
-  if (levelNum <= 3) {
-    return {
-      tier: "Easy",
-      gridW: 6,
-      gridH: 8,
-      minArrows: 3 + (levelNum - 1),
-      maxArrows: 4 + levelNum * 2,
-      minSnakeLen: 3,
-      maxSnakeLen: 6,
-      maxFreeAtStart: 2,
-      targetCoverage: 0.45
-    };
-  }
-  if (levelNum <= 10) {
-    const p = (levelNum - 4) / 6;
-    return {
-      tier: "Easy",
-      gridW: Math.round(7 + p * 2),
-      gridH: Math.round(9 + p * 3),
-      minArrows: Math.round(8 + p * 5),
-      maxArrows: Math.round(10 + p * 5),
-      minSnakeLen: 4,
-      maxSnakeLen: 9,
-      maxFreeAtStart: 3,
-      targetCoverage: 0.72
-    };
-  }
-  if (levelNum <= 50) {
-    const p = (levelNum - 11) / 39;
-    return {
-      tier: "Normal",
-      gridW: Math.round(10 + p * 3),
-      gridH: Math.round(14 + p * 4),
-      minArrows: Math.round(16 + p * 20),
-      maxArrows: Math.round(20 + p * 20),
-      minSnakeLen: 5,
-      maxSnakeLen: 15,
-      maxFreeAtStart: 3,
-      targetCoverage: 0.86
-    };
-  }
-  if (levelNum <= 150) {
-    const p = (levelNum - 51) / 99;
-    return {
-      tier: "Hard",
-      gridW: Math.round(14 + p * 3),
-      gridH: Math.round(20 + p * 6),
-      minArrows: Math.round(40 + p * 34),
-      maxArrows: Math.round(46 + p * 34),
-      minSnakeLen: 8,
-      maxSnakeLen: 25,
-      maxFreeAtStart: 2,
-      targetCoverage: 0.95
-    };
-  }
-  if (levelNum <= 500) {
-    const p = (levelNum - 151) / 349;
-    return {
-      tier: "Expert",
-      gridW: Math.round(18 + p * 2),
-      gridH: Math.round(28 + p * 2),
-      minArrows: Math.round(80 + p * 35),
-      maxArrows: Math.round(90 + p * 40),
-      minSnakeLen: 15,
-      maxSnakeLen: 34,
-      maxFreeAtStart: 2,
-      targetCoverage: 0.96
-    };
-  }
-  return {
-    tier: "Insane",
-    gridW: 20,
-    gridH: 32,
-    minArrows: 105,
-    maxArrows: 155,
-    minSnakeLen: 15,
-    maxSnakeLen: 40,
-    maxFreeAtStart: 2,
-    targetCoverage: 0.97
-  };
-}
-
-function isRayUnblocked(headX, headY, dir, gridW, gridH, occupiedGrid, ignoreId) {
-  let cx = headX + DX[dir];
-  let cy = headY + DY[dir];
+function isPathClearOnBoard(headCell, dir, occupiedMap, ignoreId = -1) {
+  let cx = headCell.x + DX[dir];
+  let cy = headCell.y + DY[dir];
   while (cx >= 0 && cx < gridW && cy >= 0 && cy < gridH) {
-    const cellOwner = occupiedGrid[cy * gridW + cx];
-    if (cellOwner !== 0 && cellOwner !== ignoreId) return false;
+    const occ = occupiedMap[cy][cx];
+    if (occ !== 0 && occ !== ignoreId) return false;
     cx += DX[dir];
     cy += DY[dir];
   }
   return true;
 }
 
-function doesCellCrossLaterExitRay(cellX, cellY, placedArrows, startIdx) {
-  for (let j = startIdx; j < placedArrows.length; j++) {
-    const later = placedArrows[j];
-    const h = later.cells[later.cells.length - 1];
-    if (later.dir === 0 && h.x === cellX && cellY < h.y) return true;
-    if (later.dir === 2 && h.x === cellX && cellY > h.y) return true;
-    if (later.dir === 1 && h.y === cellY && cellX > h.x) return true;
-    if (later.dir === 3 && h.y === cellY && cellX < h.x) return true;
+// Injects unsolvable circular 3x3 pinwheels so the final arrows block each other in an infinite loop!
+function injectImpossiblePinwheelBlock(occupied, placed, startId, cx, cy) {
+  if (cx < 0 || cx + 2 >= gridW || cy < 0 || cy + 2 >= gridH) return startId;
+  for (let yy = cy; yy <= cy + 2; yy++) {
+    for (let xx = cx; xx <= cx + 2; xx++) {
+      if (occupied[yy][xx] !== 0) return startId;
+    }
   }
-  return false;
+
+  const ring = [
+    { cells: [{x: cx, y: cy}, {x: cx+1, y: cy}], dir: 1 },         // points into (cx+2, cy)
+    { cells: [{x: cx+2, y: cy}, {x: cx+2, y: cy+1}], dir: 2 },     // points into (cx+2, cy+2)
+    { cells: [{x: cx+2, y: cy+2}, {x: cx+1, y: cy+2}], dir: 3 },   // points into (cx, cy+2)
+    { cells: [{x: cx, y: cy+2}, {x: cx, y: cy+1}], dir: 0 }        // points into (cx, cy)
+  ];
+  ring.forEach(r => {
+    const id = startId++;
+    r.cells.forEach(c => { occupied[c.y][c.x] = id; });
+    placed.push({
+      id, orderIdx: 999, cells: r.cells, dir: r.dir,
+      state: 'idle', slideSteps: 0, bumpProgress: 0,
+      lockCount: 0, bombTurns: 0, frozen: false, shieldHits: 1
+    });
+  });
+  return startId;
 }
 
-function constructCandidateBoard(spec, rand) {
-  const { gridW, gridH, maxArrows, maxSnakeLen } = spec;
-  const totalCells = gridW * gridH;
-  const occupied = new Int32Array(totalCells);
+function generateSolvableMazeLevel(levelNum, seedOverride = null) {
+  seedRng(seedOverride || (levelNum * 15485863 + (gameDifficulty === 'virus' ? 999 : 31)));
+
+  // Continuous scaling from Level 1 to 100+ with HUGE arrow counts
+  const lvlScale = Math.min(8, Math.floor(levelNum / 3));
+  if (adminConfig.gridOverride >= 6) {
+    gridW = adminConfig.gridOverride;
+    gridH = adminConfig.gridOverride + 3;
+  } else if (gameDifficulty === 'normal') {
+    gridW = Math.min(15, 10 + lvlScale);
+    gridH = Math.min(18, 12 + lvlScale);
+  } else if (gameDifficulty === 'hard') {
+    gridW = Math.min(17, 11 + lvlScale);
+    gridH = Math.min(21, 14 + lvlScale);
+  } else {
+    gridW = Math.min(19, 13 + lvlScale);
+    gridH = Math.min(23, 16 + lvlScale);
+  }
+
+  const occupied = Array.from({ length: gridH }, () => Array(gridW).fill(0));
   const placed = [];
   let nextId = 1;
 
-  function getUnoccupiedRayCells(arrow) {
-    const head = arrow.cells[arrow.cells.length - 1];
-    const cells = [];
-    let cx = head.x + DX[arrow.dir];
-    let cy = head.y + DY[arrow.dir];
-    while (cx >= 0 && cx < gridW && cy >= 0 && cy < gridH) {
-      if (occupied[cy * gridW + cx] === 0) {
-        cells.push({ x: cx, y: cy });
-      }
-      cx += DX[arrow.dir];
-      cy += DY[arrow.dir];
-    }
-    return cells;
+  // 1. If Impossible Mode or Admin Unsolvable Troll Mode is active, plant 2 circular deadlock rings first!
+  const forceImpossible = adminConfig.unsolvableMode || gameDifficulty === 'impossible';
+  if (forceImpossible) {
+    nextId = injectImpossiblePinwheelBlock(occupied, placed, nextId, Math.floor(gridW / 2) - 1, Math.floor(gridH / 2) - 1);
+    nextId = injectImpossiblePinwheelBlock(occupied, placed, nextId, 2, 2);
   }
 
-  // PASS 1: Deep Dependency Chain Placement
-  // Places arrows in reverse removal order. Each new arrow starts on the exit ray of the previous arrow
-  // so that removing them in forward gameplay requires a 20+ step sequential chain with only 1-3 free at start.
-  const maxAttempts = totalCells * 7;
-  let attempts = 0;
-
-  while (placed.length < maxArrows && attempts < maxAttempts) {
-    attempts++;
-    let hx = -1;
-    let hy = -1;
-
-    if (placed.length > 0 && rand() < 0.94) {
-      const lookback = Math.min(placed.length, 1 + Math.floor(rand() * 2));
-      const prevArrow = placed[placed.length - lookback];
-      const rayCandidates = getUnoccupiedRayCells(prevArrow);
-      if (rayCandidates.length > 0) {
-        // Pick a cell along the corridor (often far away to create long-corridor decoys)
-        const idx = rand() < 0.65
-          ? rayCandidates.length - 1 - Math.floor(rand() * Math.min(3, rayCandidates.length))
-          : Math.floor(rand() * rayCandidates.length);
-        hx = rayCandidates[idx].x;
-        hy = rayCandidates[idx].y;
+  // 2. Smart dependency targeting: deliberately start in front of existing arrows' exit rays
+  function pickSmartStartCell() {
+    if (placed.length > 0 && nextRand() < 0.85) {
+      const ref = placed[Math.floor(nextRand() * placed.length)];
+      const head = ref.cells[ref.cells.length - 1];
+      const dist = 1 + Math.floor(nextRand() * 4);
+      const tx = head.x + DX[ref.dir] * dist;
+      const ty = head.y + DY[ref.dir] * dist;
+      if (tx >= 0 && tx < gridW && ty >= 0 && ty < gridH && occupied[ty][tx] === 0) {
+        return { x: tx, y: ty };
       }
     }
+    return {
+      x: Math.floor(nextRand() * gridW),
+      y: Math.floor(nextRand() * gridH)
+    };
+  }
 
-    if (hx === -1) {
-      hx = Math.floor(rand() * gridW);
-      hy = Math.floor(rand() * gridH);
-    }
-    if (occupied[hy * gridW + hx] !== 0) continue;
+  // PASS 1: Coiled Multi-Bend Snakes (8,500 attempts across 0..gridW-1 with zero wasted border!)
+  let attempts = 0;
+  const maxAttempts = 8500;
+  while (attempts < maxAttempts) {
+    attempts++;
+    const { x: hx, y: hy } = pickSmartStartCell();
+    if (occupied[hy][hx] !== 0) continue;
 
-    const startDir = Math.floor(rand() * 4);
+    const dirs = [0, 1, 2, 3].sort(() => nextRand() - 0.5);
     let chosenDir = -1;
-    for (let i = 0; i < 4; i++) {
-      const d = (startDir + i) & 3;
-      if (isRayUnblocked(hx, hy, d, gridW, gridH, occupied, 0)) {
+    for (const d of dirs) {
+      if (isPathClearOnBoard({x: hx, y: hy}, d, occupied)) {
         chosenDir = d;
         break;
       }
     }
     if (chosenDir === -1) continue;
 
-    const neckX = hx - DX[chosenDir];
-    const neckY = hy - DY[chosenDir];
-    if (neckX < 0 || neckX >= gridW || neckY < 0 || neckY >= gridH) continue;
-    if (occupied[neckY * gridW + neckX] !== 0) continue;
+    const maxLen = 3 + Math.floor(nextRand() * 5);
+    const chain = [{x: hx, y: hy}];
+    occupied[hy][hx] = nextId;
 
-    const id = nextId++;
-    occupied[hy * gridW + hx] = id;
-    occupied[neckY * gridW + neckX] = id;
-    const chain = [{ x: hx, y: hy }, { x: neckX, y: neckY }];
+    let curX = hx - DX[chosenDir];
+    let curY = hy - DY[chosenDir];
+    let prevDir = (chosenDir + 2) % 4;
 
-    let curX = neckX;
-    let curY = neckY;
-    let prevDir = (chosenDir + 2) & 3;
-    const targetLen = spec.minSnakeLen + Math.floor(rand() * (maxSnakeLen - spec.minSnakeLen + 1));
+    if (curX >= 0 && curX < gridW && curY >= 0 && curY < gridH && occupied[curY][curX] === 0) {
+      chain.push({x: curX, y: curY});
+      occupied[curY][curX] = nextId;
 
-    for (let step = 2; step < targetLen; step++) {
-      const turnL = (prevDir + 1) & 3;
-      const turnR = (prevDir + 3) & 3;
-      const dirs = rand() < 0.70 ? [turnL, turnR, prevDir] : [prevDir, turnL, turnR];
-      let grew = false;
-      for (let k = 0; k < 3; k++) {
-        const d = dirs[k];
-        const nx = curX + DX[d];
-        const ny = curY + DY[d];
-        if (nx >= 0 && nx < gridW && ny >= 0 && ny < gridH && occupied[ny * gridW + nx] === 0) {
-          curX = nx;
-          curY = ny;
-          prevDir = d;
-          occupied[ny * gridW + nx] = id;
-          chain.push({ x: curX, y: curY });
-          grew = true;
-          break;
+      for (let step = 2; step < maxLen; step++) {
+        const t1 = (prevDir + 1) % 4;
+        const t2 = (prevDir + 3) % 4;
+        const candDirs = [t1, t2, prevDir];
+        let grew = false;
+        for (const cd of candDirs) {
+          const nx = curX + DX[cd];
+          const ny = curY + DY[cd];
+          if (nx >= 0 && nx < gridW && ny >= 0 && ny < gridH && occupied[ny][nx] === 0) {
+            curX = nx;
+            curY = ny;
+            prevDir = cd;
+            chain.push({x: curX, y: curY});
+            occupied[curY][curX] = nextId;
+            grew = true;
+            break;
+          }
         }
+        if (!grew) break;
       }
-      if (!grew) break;
     }
 
-    chain.reverse(); // index 0 = tail, last index = head
-    placed.push({ id, cells: chain, dir: chosenDir });
+    if (chain.length < 2) {
+      occupied[hy][hx] = 0;
+      continue;
+    }
+
+    chain.reverse();
+    placed.push({
+      id: nextId++,
+      cells: chain,
+      dir: chosenDir,
+      state: 'idle',
+      slideSteps: 0,
+      bumpProgress: 0,
+      lockCount: 0,
+      bombTurns: 0,
+      frozen: false,
+      shieldHits: 0
+    });
   }
 
-  // PASS 2: Corridor & Pocket Backfill
-  for (let pass = 0; pass < 2; pass++) {
+  // PASS 2: 3-Pass Cell-by-Cell Micro-Dagger Backfill (Packs every remaining 2-cell gap up to 98%!)
+  for (let pass = 0; pass < 3; pass++) {
     for (let y = 0; y < gridH; y++) {
       for (let x = 0; x < gridW; x++) {
-        if (placed.length >= maxArrows) break;
-        if (occupied[y * gridW + x] !== 0) continue;
-
-        for (let d = 0; d < 4; d++) {
-          const nx = x - DX[d];
-          const ny = y - DY[d];
-          if (nx < 0 || nx >= gridW || ny < 0 || ny >= gridH) continue;
-          if (occupied[ny * gridW + nx] !== 0) continue;
-
-          if (isRayUnblocked(x, y, d, gridW, gridH, occupied, 0)) {
-            const id = nextId++;
-            occupied[y * gridW + x] = id;
-            occupied[ny * gridW + nx] = id;
-            const chain = [{ x, y }, { x: nx, y: ny }];
-            let cx = nx;
-            let cy = ny;
-            for (let s = 0; s < 8; s++) {
-              let stepped = false;
-              for (let td = 0; td < 4; td++) {
-                const tx = cx + DX[td];
-                const ty = cy + DY[td];
-                if (tx >= 0 && tx < gridW && ty >= 0 && ty < gridH && occupied[ty * gridW + tx] === 0) {
-                  occupied[ty * gridW + tx] = id;
-                  chain.push({ x: tx, y: ty });
-                  cx = tx;
-                  cy = ty;
-                  stepped = true;
-                  break;
-                }
-              }
-              if (!stepped) break;
+        if (occupied[y][x] !== 0) continue;
+        const dirs = [0, 1, 2, 3].sort(() => nextRand() - 0.5);
+        for (const d of dirs) {
+          const tx = x - DX[d];
+          const ty = y - DY[d];
+          if (tx >= 0 && tx < gridW && ty >= 0 && ty < gridH && occupied[ty][tx] === 0) {
+            if (isPathClearOnBoard({x, y}, d, occupied)) {
+              const id = nextId++;
+              occupied[ty][tx] = id;
+              occupied[y][x] = id;
+              placed.push({
+                id,
+                cells: [{x: tx, y: ty}, {x, y}],
+                dir: d,
+                state: 'idle',
+                slideSteps: 0,
+                bumpProgress: 0,
+                lockCount: 0,
+                bombTurns: 0,
+                frozen: false,
+                shieldHits: 0
+              });
+              break;
             }
-            chain.reverse();
-            placed.push({ id, cells: chain, dir: d });
-            break;
           }
         }
       }
     }
   }
 
-  // PASS 3: Tail-Extension Pass (Extends snakes to 15-40 cells and minimizes empty dots on high levels)
-  const maxTailPasses = spec.targetCoverage >= 0.90 ? 14 : 4;
-  for (let ep = 0; ep < maxTailPasses; ep++) {
-    let anyExtended = false;
-    for (let i = 0; i < placed.length; i++) {
-      const arr = placed[i];
-      if (arr.cells.length >= maxSnakeLen) continue;
-      const tail = arr.cells[0];
-      for (let d = 0; d < 4; d++) {
-        const tx = tail.x + DX[d];
-        const ty = tail.y + DY[d];
-        if (tx >= 0 && tx < gridW && ty >= 0 && ty < gridH && occupied[ty * gridW + tx] === 0) {
-          if (!doesCellCrossLaterExitRay(tx, ty, placed, i + 1)) {
-            occupied[ty * gridW + tx] = arr.id;
-            arr.cells.unshift({ x: tx, y: ty });
-            anyExtended = true;
-            break;
-          }
-        }
-      }
-    }
-    if (!anyExtended) break;
-  }
+  // Assign solution order & hardcore hazards
+  const total = placed.length;
+  const hazChance = Math.min(0.82, adminConfig.hazardRate + (levelNum * 0.01));
 
-  return { gridW, gridH, arrows: placed };
-}
+  placed.forEach((arr, idx) => {
+    if (arr.orderIdx === 999) return;
+    const solveOrder = total - idx;
+    arr.orderIdx = solveOrder;
 
-function solveAndMeasureBoard(board) {
-  const { gridW, gridH, arrows } = board;
-  const totalCells = gridW * gridH;
-  const occ = new Int32Array(totalCells);
-  let coveredCells = 0;
-
-  const remaining = new Map();
-  for (let i = 0; i < arrows.length; i++) {
-    const a = arrows[i];
-    remaining.set(a.id, a);
-    for (let c = 0; c < a.cells.length; c++) {
-      const pt = a.cells[c];
-      occ[pt.y * gridW + pt.x] = a.id;
-      coveredCells++;
-    }
-  }
-
-  let waveDepth = 0;
-  let freeAtStart = 0;
-  let clearedCount = 0;
-
-  while (remaining.size > 0) {
-    const freeWave = [];
-    for (const a of remaining.values()) {
-      const head = a.cells[a.cells.length - 1];
-      if (isRayUnblocked(head.x, head.y, a.dir, gridW, gridH, occ, a.id)) {
-        freeWave.push(a);
-      }
-    }
-    if (freeWave.length === 0) {
-      return {
-        solvable: false,
-        freeAtStart,
-        chainDepth: waveDepth,
-        coverage: coveredCells / totalCells,
-        avgSnakeLen: arrows.length ? coveredCells / arrows.length : 0,
-        arrowCount: arrows.length
-      };
-    }
-    if (waveDepth === 0) {
-      freeAtStart = freeWave.length;
-    }
-    waveDepth++;
-    for (let i = 0; i < freeWave.length; i++) {
-      const a = freeWave[i];
-      for (let c = 0; c < a.cells.length; c++) {
-        const pt = a.cells[c];
-        occ[pt.y * gridW + pt.x] = 0;
-      }
-      remaining.delete(a.id);
-      clearedCount++;
-    }
-  }
-
-  return {
-    solvable: clearedCount === arrows.length,
-    freeAtStart,
-    chainDepth: waveDepth,
-    coverage: coveredCells / totalCells,
-    avgSnakeLen: arrows.length ? coveredCells / arrows.length : 0,
-    arrowCount: arrows.length
-  };
-}
-
-function generateVerifiedLevel(levelNum, seedOverride = null) {
-  const spec = getDifficultySpecForLevel(levelNum);
-  const baseSeed = seedOverride !== null ? seedOverride : (levelNum * 15485863 + 31);
-
-  let bestBoard = null;
-  let bestMetrics = null;
-  let bestScore = -1e9;
-
-  const candidateCount = levelNum <= 10 ? 2 : 4;
-  for (let c = 0; c < candidateCount; c++) {
-    const rand = createSeededPrng(baseSeed + c * 104729);
-    const candidate = constructCandidateBoard(spec, rand);
-    const metrics = solveAndMeasureBoard(candidate);
-    if (!metrics.solvable) continue;
-
-    const score =
-      metrics.chainDepth * 16 +
-      metrics.coverage * 220 -
-      Math.max(0, metrics.freeAtStart - spec.maxFreeAtStart) * 95;
-
-    if (score > bestScore) {
-      bestScore = score;
-      bestBoard = candidate;
-      bestMetrics = metrics;
-    }
-
-    if (metrics.freeAtStart <= spec.maxFreeAtStart && metrics.coverage >= spec.targetCoverage * 0.93) {
-      break;
-    }
-  }
-
-  return {
-    levelNum,
-    tier: spec.tier,
-    gridW: bestBoard.gridW,
-    gridH: bestBoard.gridH,
-    arrows: bestBoard.arrows,
-    metrics: bestMetrics
-  };
-}
-
-/* ============================================================================
-   SECTION 6: ASYNC PRECOMPUTATION & AUTOMATED VERIFICATION SUITE
-   ============================================================================ */
-let precomputedLevelCache = null;
-
-function precomputeNextLevelAsync(nextLevelNum) {
-  setTimeout(() => {
-    try {
-      precomputedLevelCache = generateVerifiedLevel(nextLevelNum, null);
-    } catch (_) {}
-  }, 16);
-}
-
-async function runAutomatedTestSuite(logElement) {
-  const tiers = [
-    { label: "Easy (1-10)", start: 1, end: 10 },
-    { label: "Normal (11-50)", start: 11, end: 50 },
-    { label: "Hard (51-150)", start: 51, end: 150 },
-    { label: "Expert (151-500)", start: 151, end: 500 },
-    { label: "Insane (501-1000)", start: 501, end: 1000 }
-  ];
-
-  logElement.textContent = "Running Greedy Solver on Levels 1..1000 + 100 Daily Seeds...\n\n";
-  let totalFailures = 0;
-
-  for (const t of tiers) {
-    let sumArrows = 0;
-    let sumCov = 0;
-    let sumFree = 0;
-    let sumChain = 0;
-    let solved = 0;
-    const count = t.end - t.start + 1;
-
-    for (let lvl = t.start; lvl <= t.end; lvl++) {
-      const generated = generateVerifiedLevel(lvl, null);
-      const m = generated.metrics;
-      if (m.solvable && m.arrowCount >= 2) {
-        solved++;
+    if (solveOrder > 3 && nextRand() < hazChance) {
+      const roll = nextRand();
+      if (roll < 0.30) {
+        arr.lockCount = Math.min(solveOrder - 1, 3 + Math.floor(nextRand() * 7));
+      } else if (roll < 0.55) {
+        arr.bombTurns = solveOrder + 2 + Math.floor(nextRand() * 3);
+      } else if (roll < 0.80) {
+        arr.shieldHits = 1; // Purple Armor Arrow (Requires 2 taps!)
       } else {
-        totalFailures++;
-      }
-      sumArrows += m.arrowCount;
-      sumCov += m.coverage * 100;
-      sumFree += m.freeAtStart;
-      sumChain += m.chainDepth;
-
-      if (lvl % 25 === 0) {
-        await new Promise((r) => setTimeout(r, 0));
+        arr.frozen = true;
       }
     }
+  });
 
-    logElement.textContent +=
-      `${t.label.padEnd(18)} | Arrows:${(sumArrows / count).toFixed(1).padStart(6)} | ` +
-      `Cov:${(sumCov / count).toFixed(1).padStart(5)}% | ` +
-      `Free:${(sumFree / count).toFixed(2)} | ` +
-      `Chain:${(sumChain / count).toFixed(1).padStart(5)} | ` +
-      `${solved}/${count}\n`;
-  }
+  arrows = placed;
+  recordInitialDots();
+}
 
-  let dailySolved = 0;
-  for (let d = 1; d <= 100; d++) {
-    const res = generateVerifiedLevel(75, d * 99991);
-    if (res.metrics.solvable) dailySolved++;
-    else totalFailures++;
-    if (d % 25 === 0) await new Promise((r) => setTimeout(r, 0));
-  }
-
-  logElement.textContent += `Daily (D1-D100)    | Solved: ${dailySolved}/100\n`;
-  logElement.textContent += totalFailures === 0
-    ? "\n[PASS] 1,100 / 1,100 Levels Verified 100% Solvable!"
-    : `\n[FAIL] ${totalFailures} unsolvable boards detected!`;
+function recordInitialDots() {
+  allLevelCells = [];
+  const seen = new Set();
+  arrows.forEach(a => {
+    a.cells.forEach(c => {
+      const k = c.x + ',' + c.y;
+      if (!seen.has(k)) {
+        seen.add(k);
+        allLevelCells.push({x: c.x, y: c.y});
+      }
+    });
+  });
 }
 
 /* ============================================================================
-   SECTION 7: 60FPS OFFSCREEN-CACHED CANVAS ENGINE & PINCH-ZOOM / PAN
+   4. CANVAS RENDERING, PARTICLES, COMBO FX & PINCH/PAN CAMERA
    ============================================================================ */
-const canvas = document.getElementById("board-canvas");
-const ctx = canvas.getContext("2d", { alpha: false });
-const staticCanvas = document.createElement("canvas");
-const staticCtx = staticCanvas.getContext("2d");
-
-let activeBoard = null;
-let isStaticCacheDirty = true;
-let isRenderLoopPaused = false;
-let isRulerEnabled = false;
-let activeHintArrowId = null;
-
-let dpr = 1;
-let cellSize = 24;
+const canvas = document.getElementById('game-canvas');
+const ctx = canvas.getContext('2d');
+let cellSize = 28;
 let boardOriginX = 0;
 let boardOriginY = 0;
-let zoomScale = 1.0;
-let panOffsetX = 0;
-let panOffsetY = 0;
+let camScale = 1;
+let camOffsetX = 0;
+let camOffsetY = 0;
 
-function computeViewportLayout() {
-  if (!activeBoard) return;
-  const viewport = document.getElementById("board-viewport");
-  dpr = Math.min(window.devicePixelRatio || 1, 2.5);
-  const vw = viewport.clientWidth || 360;
-  const vh = viewport.clientHeight || 520;
+function resizeCanvas() {
+  const wrap = document.getElementById('canvas-wrap');
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = wrap.clientWidth * dpr;
+  canvas.height = wrap.clientHeight * dpr;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-  canvas.width = Math.floor(vw * dpr);
-  canvas.height = Math.floor(vh * dpr);
-  staticCanvas.width = canvas.width;
-  staticCanvas.height = canvas.height;
+  const availW = wrap.clientWidth - 18;
+  const availH = wrap.clientHeight - 18;
+  cellSize = Math.max(15, Math.min(Math.floor(availW / gridW), Math.floor(availH / gridH), 40));
+  boardOriginX = (wrap.clientWidth - gridW * cellSize) / 2;
+  boardOriginY = (wrap.clientHeight - gridH * cellSize) / 2;
+}
+window.addEventListener('resize', resizeCanvas);
 
-  const pad = 14;
-  cellSize = Math.max(9, Math.min((vw - pad * 2) / activeBoard.gridW, (vh - pad * 2) / activeBoard.gridH));
-  boardOriginX = (vw - activeBoard.gridW * cellSize) / 2;
-  boardOriginY = (vh - activeBoard.gridH * cellSize) / 2;
-  isStaticCacheDirty = true;
+function resetCameraZoom() {
+  camScale = 1;
+  camOffsetX = 0;
+  camOffsetY = 0;
 }
 
-window.addEventListener("resize", computeViewportLayout);
-
-function gridCellToPx(gx, gy) {
-  return {
-    x: boardOriginX + (gx + 0.5) * cellSize,
-    y: boardOriginY + (gy + 0.5) * cellSize
-  };
-}
-
-function screenPxToGrid(sx, sy) {
+function gridToScreen(gx, gy) {
+  const rawX = boardOriginX + (gx + 0.5) * cellSize;
+  const rawY = boardOriginY + (gy + 0.5) * cellSize;
   const cx = canvas.clientWidth / 2;
   const cy = canvas.clientHeight / 2;
-  const boardX = (sx - cx) / zoomScale + cx - panOffsetX;
-  const boardY = (sy - cy) / zoomScale + cy - panOffsetY;
   return {
-    gx: (boardX - boardOriginX) / cellSize - 0.5,
-    gy: (boardY - boardOriginY) / cellSize - 0.5
+    x: cx + (rawX - cx + camOffsetX) * camScale,
+    y: cy + (rawY - cy + camOffsetY) * camScale
   };
 }
 
-function drawSnakePath(targetCtx, arrow, slideShift, colorHex, strokeW) {
-  const cells = arrow.cells;
-  const len = cells.length;
-  const head = cells[len - 1];
-  const baseIdx = Math.floor(slideShift);
-  const frac = slideShift - baseIdx;
+function screenToGridFloat(sx, sy) {
+  const cx = canvas.clientWidth / 2;
+  const cy = canvas.clientHeight / 2;
+  const rawX = (sx - cx) / camScale + cx - camOffsetX;
+  const rawY = (sy - cy) / camScale + cy - camOffsetY;
+  return {
+    gx: (rawX - boardOriginX) / cellSize - 0.5,
+    gy: (rawY - boardOriginY) / cellSize - 0.5
+  };
+}
 
-  function getCellAt(index) {
-    if (index < len) return cells[index];
-    const ext = index - (len - 1);
-    return {
-      x: head.x + DX[arrow.dir] * ext,
-      y: head.y + DY[arrow.dir] * ext
-    };
-  }
-
-  targetCtx.strokeStyle = colorHex;
-  targetCtx.fillStyle = colorHex;
-  targetCtx.lineWidth = strokeW;
-  targetCtx.lineCap = "round";
-  targetCtx.lineJoin = "round";
-
-  const tailA = getCellAt(baseIdx);
-  const tailB = getCellAt(baseIdx + 1);
-  const startPt = gridCellToPx(
-    tailA.x + (tailB.x - tailA.x) * frac,
-    tailA.y + (tailB.y - tailA.y) * frac
-  );
-
-  targetCtx.beginPath();
-  targetCtx.moveTo(startPt.x, startPt.y);
-
-  for (let k = baseIdx + 1; k < baseIdx + len - 1; k++) {
-    const c = getCellAt(k);
-    const p = gridCellToPx(c.x, c.y);
-    targetCtx.lineTo(p.x, p.y);
-  }
-
-  const headA = getCellAt(baseIdx + len - 1);
-  const headB = getCellAt(baseIdx + len);
-  const endPt = gridCellToPx(
-    headA.x + (headB.x - headA.x) * frac,
-    headA.y + (headB.y - headA.y) * frac
-  );
-  targetCtx.lineTo(endPt.x, endPt.y);
-  targetCtx.stroke();
-
-  // Arrowhead triangle
-  const prevCell = getCellAt(baseIdx + len - 2);
-  const prevPt = gridCellToPx(prevCell.x, prevCell.y);
-  const angle = Math.atan2(endPt.y - prevPt.y, endPt.x - prevPt.x);
-  const headLen = Math.max(4.5, cellSize * 0.36);
-  const headWid = Math.max(3.4, cellSize * 0.25);
-
-  targetCtx.beginPath();
-  targetCtx.moveTo(
-    endPt.x + Math.cos(angle) * (headLen * 0.35),
-    endPt.y + Math.sin(angle) * (headLen * 0.35)
-  );
-  targetCtx.lineTo(
-    endPt.x - Math.cos(angle) * (headLen * 0.65) + Math.cos(angle + Math.PI / 2) * headWid,
-    endPt.y - Math.sin(angle) * (headLen * 0.65) + Math.sin(angle + Math.PI / 2) * headWid
-  );
-  targetCtx.lineTo(
-    endPt.x - Math.cos(angle) * (headLen * 0.65) + Math.cos(angle - Math.PI / 2) * headWid,
-    endPt.y - Math.sin(angle) * (headLen * 0.65) + Math.sin(angle - Math.PI / 2) * headWid
-  );
-  targetCtx.closePath();
-  targetCtx.fill();
-
-  // Color-blind safe symbol on blocked/bumping arrows (Not red only)
-  if (saveState.settings.colorBlind && arrow.state === "bumping") {
-    targetCtx.strokeStyle = "#FACC15";
-    targetCtx.lineWidth = Math.max(1.5, strokeW * 0.45);
-    targetCtx.beginPath();
-    targetCtx.arc(endPt.x, endPt.y, headLen * 0.85, 0, Math.PI * 2);
-    targetCtx.stroke();
-
-    targetCtx.fillStyle = "#FACC15";
-    targetCtx.font = `bold ${Math.max(10, Math.floor(cellSize * 0.55))}px sans-serif`;
-    targetCtx.textAlign = "center";
-    targetCtx.textBaseline = "middle";
-    targetCtx.fillText("✖", endPt.x, endPt.y - cellSize * 0.42);
+function spawnParticles(sx, sy, color, count = 12) {
+  for (let i = 0; i < count; i++) {
+    const ang = Math.random() * Math.PI * 2;
+    const spd = 1.5 + Math.random() * 4.5;
+    particles.push({
+      x: sx,
+      y: sy,
+      vx: Math.cos(ang) * spd,
+      vy: Math.sin(ang) * spd,
+      life: 1.0,
+      color
+    });
   }
 }
 
-function rebuildStaticCache() {
-  staticCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  staticCtx.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
-  if (!activeBoard) return;
-
-  // Minimal subtle dots on grid coordinates
-  staticCtx.fillStyle = "#1E293B";
-  const dotRadius = Math.max(1.0, cellSize * 0.06);
-  for (let y = 0; y < activeBoard.gridH; y++) {
-    for (let x = 0; x < activeBoard.gridW; x++) {
-      const p = gridCellToPx(x, y);
-      staticCtx.beginPath();
-      staticCtx.arc(p.x, p.y, dotRadius, 0, Math.PI * 2);
-      staticCtx.fill();
+function getOccupiedLookup() {
+  const map = Array.from({ length: gridH }, () => Array(gridW).fill(0));
+  arrows.forEach(a => {
+    if (a.state === 'idle' || a.state === 'bumping') {
+      a.cells.forEach(c => {
+        if (c.x >= 0 && c.x < gridW && c.y >= 0 && c.y < gridH) {
+          map[c.y][c.x] = a.id;
+        }
+      });
     }
-  }
-
-  const lineW = Math.max(2.0, cellSize * 0.22);
-  const arrows = activeBoard.arrows;
-  for (let i = 0; i < arrows.length; i++) {
-    const a = arrows[i];
-    if (a.state !== "idle" || a.id === activeHintArrowId) continue;
-    drawSnakePath(staticCtx, a, 0, "#FFFFFF", lineW);
-  }
-  isStaticCacheDirty = false;
+  });
+  return map;
 }
 
-function renderAnimationFrame() {
-  if (!isRenderLoopPaused && activeBoard) {
-    if (isStaticCacheDirty) rebuildStaticCache();
+function findBlockingCell(arrow, map) {
+  const head = arrow.cells[arrow.cells.length - 1];
+  let cx = head.x + DX[arrow.dir];
+  let cy = head.y + DY[arrow.dir];
+  while (cx >= 0 && cx < gridW && cy >= 0 && cy < gridH) {
+    if (map[cy][cx] !== 0 && map[cy][cx] !== arrow.id) {
+      return { blocked: true, x: cx, y: cy };
+    }
+    cx += DX[arrow.dir];
+    cy += DY[arrow.dir];
+  }
+  return { blocked: false };
+}
 
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.fillStyle = "#070B12";
-    ctx.fillRect(0, 0, canvas.clientWidth, canvas.clientHeight);
+function getArrowSnakePoints(arrow, shiftAmount) {
+  const base = arrow.cells;
+  const head = base[base.length - 1];
+  const extCount = Math.ceil(shiftAmount) + 2;
+  const track = [...base];
+  for (let i = 1; i <= extCount; i++) {
+    track.push({
+      x: head.x + DX[arrow.dir] * i,
+      y: head.y + DY[arrow.dir] * i
+    });
+  }
+  const L = base.length - 1;
+  const i0 = Math.floor(shiftAmount);
+  const frac = shiftAmount - i0;
 
-    const cx = canvas.clientWidth / 2;
-    const cy = canvas.clientHeight / 2;
+  const pts = [];
+  const tA = track[i0];
+  const tB = track[i0 + 1];
+  pts.push({
+    x: tA.x + (tB.x - tA.x) * frac,
+    y: tA.y + (tB.y - tA.y) * frac
+  });
+  for (let k = i0 + 1; k <= i0 + L - 1; k++) {
+    pts.push({ x: track[k].x, y: track[k].y });
+  }
+  const hA = track[i0 + L];
+  const hB = track[i0 + L + 1];
+  pts.push({
+    x: hA.x + (hB.x - hA.x) * frac,
+    y: hA.y + (hB.y - hA.y) * frac
+  });
+  return pts;
+}
+
+function renderBoard() {
+  ctx.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
+
+  const style = getComputedStyle(document.body);
+  const dotCol = style.getPropertyValue('--dot-color').trim();
+  const idleCol = style.getPropertyValue('--arrow-idle').trim();
+  const activeCol = style.getPropertyValue('--arrow-active').trim();
+  const goldCol = style.getPropertyValue('--arrow-gold').trim();
+  const rayClearCol = style.getPropertyValue('--ruler-ray').trim();
+
+  // 1. Draw Track Dots
+  ctx.fillStyle = dotCol;
+  const dotRadius = Math.max(1.8, cellSize * 0.08 * camScale);
+  allLevelCells.forEach(c => {
+    const p = gridToScreen(c.x, c.y);
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, dotRadius, 0, Math.PI * 2);
+    ctx.fill();
+  });
+
+  // 2. Draw Ruler Laser Sight
+  arrows.forEach(a => {
+    const isClearing = a.state === 'clearing';
+    if (!rulerActive && !isClearing) return;
+    const head = a.cells[a.cells.length - 1];
+    const startP = gridToScreen(head.x, head.y);
+    const endP = gridToScreen(head.x + DX[a.dir] * 28, head.y + DY[a.dir] * 28);
+
     ctx.save();
-    ctx.translate(cx, cy);
-    ctx.scale(zoomScale, zoomScale);
-    ctx.translate(-cx + panOffsetX, -cy + panOffsetY);
-
-    // Blit pre-rendered static snakes in one fast GPU operation
-    ctx.drawImage(staticCanvas, 0, 0, canvas.clientWidth, canvas.clientHeight);
-
-    const lineW = Math.max(2.0, cellSize * 0.22);
-    const arrows = activeBoard.arrows;
-
-    if (isRulerEnabled) {
-      ctx.strokeStyle = "rgba(56, 189, 248, 0.24)";
-      ctx.lineWidth = lineW * 0.75;
-      for (let i = 0; i < arrows.length; i++) {
-        const a = arrows[i];
-        if (a.state !== "idle") continue;
-        const head = a.cells[a.cells.length - 1];
-        const p1 = gridCellToPx(head.x, head.y);
-        const p2 = gridCellToPx(head.x + DX[a.dir] * 36, head.y + DY[a.dir] * 36);
-        ctx.beginPath();
-        ctx.moveTo(p1.x, p1.y);
-        ctx.lineTo(p2.x, p2.y);
-        ctx.stroke();
-      }
-    }
-
-    let anyFinishedSliding = false;
-    for (let i = arrows.length - 1; i >= 0; i--) {
-      const a = arrows[i];
-      if (a.state === "idle" && a.id !== activeHintArrowId) continue;
-
-      if (a.state === "clearing") {
-        a.slideSteps += saveState.settings.reducedMotion ? 12.0 : 0.72;
-        drawSnakePath(ctx, a, a.slideSteps, "#38BDF8", lineW);
-        if (a.slideSteps > Math.max(activeBoard.gridW, activeBoard.gridH) + a.cells.length) {
-          arrows.splice(i, 1);
-          anyFinishedSliding = true;
-        }
-      } else if (a.state === "bumping") {
-        a.bumpPhase += saveState.settings.reducedMotion ? 0.6 : 0.26;
-        if (a.bumpPhase >= Math.PI) {
-          a.bumpPhase = 0;
-          a.state = "idle";
-          isStaticCacheDirty = true;
-        } else {
-          const offset = Math.sin(a.bumpPhase) * 0.35;
-          drawSnakePath(ctx, a, offset, "#F43F5E", lineW);
-        }
-      } else if (a.id === activeHintArrowId) {
-        drawSnakePath(ctx, a, 0, "#FACC15", lineW * 1.18);
-      }
-    }
-
+    ctx.strokeStyle = rayClearCol;
+    ctx.lineWidth = Math.max(3, cellSize * 0.14 * camScale);
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(startP.x, startP.y);
+    ctx.lineTo(endP.x, endP.y);
+    ctx.stroke();
     ctx.restore();
+  });
 
-    if (anyFinishedSliding) {
-      updateGameHudNumbers();
-      if (arrows.length === 0) {
-        handleLevelCompleted();
+  // 3. Draw Arrows (Default = Crisp WHITE in Classic Theme!)
+  arrows.forEach(a => {
+    let shift = 0;
+    if (a.state === 'clearing') {
+      a.slideSteps += 0.48;
+      shift = a.slideSteps;
+    } else if (a.state === 'bumping') {
+      a.bumpProgress += 0.22;
+      if (a.bumpProgress >= Math.PI) {
+        a.bumpProgress = 0;
+        a.state = 'idle';
+      } else {
+        shift = Math.sin(a.bumpProgress) * 0.35;
       }
     }
+
+    const ptsGrid = getArrowSnakePoints(a, shift);
+    const ptsScreen = ptsGrid.map(p => gridToScreen(p.x, p.y));
+
+    let strokeCol = idleCol; // Crisp WHITE in Classic Theme!
+    if (a.state === 'clearing') strokeCol = activeCol;
+    else if (a.id === highlightedArrowId) strokeCol = goldCol;
+    else if (a.state === 'bumping') strokeCol = '#f43f5e';
+    else if (a.shieldHits > 0) strokeCol = '#c084fc';
+    else if (a.frozen) strokeCol = '#38bdf8';
+    else if (a.lockCount > 0) strokeCol = '#94a3b8';
+    else if (a.bombTurns > 0) strokeCol = '#fb7185';
+
+    ctx.save();
+    ctx.strokeStyle = strokeCol;
+    ctx.fillStyle = strokeCol;
+    ctx.lineWidth = Math.max(3, cellSize * 0.15 * camScale);
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+
+    if (a.state === 'clearing' || a.id === highlightedArrowId) {
+      ctx.shadowColor = strokeCol;
+      ctx.shadowBlur = 10;
+    }
+
+    ctx.beginPath();
+    ctx.moveTo(ptsScreen[0].x, ptsScreen[0].y);
+    for (let i = 1; i < ptsScreen.length; i++) {
+      ctx.lineTo(ptsScreen[i].x, ptsScreen[i].y);
+    }
+    ctx.stroke();
+
+    // Arrowhead
+    const headPt = ptsScreen[ptsScreen.length - 1];
+    const prevPt = ptsScreen[ptsScreen.length - 2];
+    const angle = Math.atan2(headPt.y - prevPt.y, headPt.x - prevPt.x);
+    const headLen = Math.max(8, cellSize * 0.35 * camScale);
+    const headWidth = Math.max(5.5, cellSize * 0.25 * camScale);
+
+    ctx.beginPath();
+    ctx.moveTo(
+      headPt.x + Math.cos(angle) * (headLen * 0.35),
+      headPt.y + Math.sin(angle) * (headLen * 0.35)
+    );
+    ctx.lineTo(
+      headPt.x - Math.cos(angle) * (headLen * 0.65) + Math.cos(angle + Math.PI / 2) * headWidth,
+      headPt.y - Math.sin(angle) * (headLen * 0.65) + Math.sin(angle + Math.PI / 2) * headWidth
+    );
+    ctx.lineTo(
+      headPt.x - Math.cos(angle) * (headLen * 0.65) + Math.cos(angle - Math.PI / 2) * headWidth,
+      headPt.y - Math.sin(angle) * (headLen * 0.65) + Math.sin(angle - Math.PI / 2) * headWidth
+    );
+    ctx.closePath();
+    ctx.fill();
+
+    // Draw Hazard or Admin X-Ray Badge
+    if (a.state === 'idle') {
+      const midCell = a.cells[Math.floor(a.cells.length / 2)];
+      const mp = gridToScreen(midCell.x, midCell.y);
+      let badgeText = '';
+      let badgeBg = '';
+
+      if (a.lockCount > 0) { badgeText = '🔒' + a.lockCount; badgeBg = '#334155'; }
+      else if (a.bombTurns > 0) { badgeText = '💣' + a.bombTurns; badgeBg = '#be123c'; }
+      else if (a.shieldHits > 0) { badgeText = '🛡️2'; badgeBg = '#6d28d9'; }
+      else if (a.frozen) { badgeText = '❄️'; badgeBg = '#0284c7'; }
+      else if (adminConfig.xrayOrder && a.orderIdx) { badgeText = '#' + a.orderIdx; badgeBg = '#059669'; }
+
+      if (badgeText) {
+        ctx.font = 'bold 9px sans-serif';
+        const tw = ctx.measureText(badgeText).width + 6;
+        ctx.fillStyle = badgeBg;
+        ctx.beginPath();
+        ctx.roundRect(mp.x - tw / 2, mp.y - 7, tw, 14, 4);
+        ctx.fill();
+        ctx.fillStyle = '#ffffff';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(badgeText, mp.x, mp.y);
+      }
+    }
+    ctx.restore();
+  });
+
+  // 4. Render Cyber Particles
+  for (let i = particles.length - 1; i >= 0; i--) {
+    const pt = particles[i];
+    pt.x += pt.vx;
+    pt.y += pt.vy;
+    pt.life -= 0.04;
+    if (pt.life <= 0) {
+      particles.splice(i, 1);
+      continue;
+    }
+    ctx.save();
+    ctx.globalAlpha = pt.life;
+    ctx.fillStyle = pt.color;
+    ctx.beginPath();
+    ctx.arc(pt.x, pt.y, 3, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
   }
-  requestAnimationFrame(renderAnimationFrame);
+
+  const beforeCount = arrows.length;
+  arrows = arrows.filter(a => a.slideSteps < Math.max(gridW, gridH) + a.cells.length + 2);
+  if (arrows.length < beforeCount) {
+    updateHUD();
+    if (arrows.length === 0) onLevelWon();
+  }
+
+  requestAnimationFrame(renderBoard);
 }
 
 /* ============================================================================
-   SECTION 8: TOUCH GESTURES (PINCH-ZOOM, PAN) & NEAREST-LINE HIT DETECTION
+   5. TAP & DRAG-PAN CONTROLS
    ============================================================================ */
-const activeTouches = new Map();
-let initialPinchDistance = null;
-let initialZoomScale = 1.0;
-let singleTouchStart = null;
-let gestureWasPanOrZoom = false;
+let pointerDownPos = null;
+let isPanningBoard = false;
 
-canvas.addEventListener("pointerdown", (e) => {
-  activeTouches.set(e.pointerId, { x: e.clientX, y: e.clientY });
-  if (activeTouches.size === 2) {
-    const pts = Array.from(activeTouches.values());
-    initialPinchDistance = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
-    initialZoomScale = zoomScale;
-    gestureWasPanOrZoom = true;
-  } else if (activeTouches.size === 1) {
-    singleTouchStart = {
-      x: e.clientX,
-      y: e.clientY,
-      panX: panOffsetX,
-      panY: panOffsetY
-    };
-    gestureWasPanOrZoom = false;
-  }
-});
-
-canvas.addEventListener("pointermove", (e) => {
-  if (!activeTouches.has(e.pointerId)) return;
-  activeTouches.set(e.pointerId, { x: e.clientX, y: e.clientY });
-
-  if (activeTouches.size === 2 && initialPinchDistance) {
-    const pts = Array.from(activeTouches.values());
-    const dist = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
-    zoomScale = Math.max(1.0, Math.min(3.8, initialZoomScale * (dist / initialPinchDistance)));
-  } else if (activeTouches.size === 1 && singleTouchStart) {
-    const dx = e.clientX - singleTouchStart.x;
-    const dy = e.clientY - singleTouchStart.y;
-    if (Math.hypot(dx, dy) > 9 && zoomScale > 1.01) {
-      gestureWasPanOrZoom = true;
-      panOffsetX = singleTouchStart.panX + dx / zoomScale;
-      panOffsetY = singleTouchStart.panY + dy / zoomScale;
-    }
-  }
-});
-
-canvas.addEventListener("pointerup", (e) => {
-  activeTouches.delete(e.pointerId);
-  if (activeTouches.size < 2) initialPinchDistance = null;
-  if (!gestureWasPanOrZoom && singleTouchStart && activeBoard) {
-    const rect = canvas.getBoundingClientRect();
-    processBoardTap(e.clientX - rect.left, e.clientY - rect.top);
-  }
-  if (activeTouches.size === 0) singleTouchStart = null;
-});
-
-canvas.addEventListener("wheel", (e) => {
-  e.preventDefault();
-  const factor = e.deltaY < 0 ? 1.15 : 0.87;
-  zoomScale = Math.max(1.0, Math.min(3.8, zoomScale * factor));
-}, { passive: false });
-
-function pointToSegmentDistanceSq(px, py, x1, y1, x2, y2) {
-  const l2 = (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1);
-  if (l2 === 0) return (px - x1) * (px - x1) + (py - y1) * (py - y1);
+function distToSegment(px, py, x1, y1, x2, y2) {
+  const l2 = (x2 - x1) ** 2 + (y2 - y1) ** 2;
+  if (l2 === 0) return Math.hypot(px - x1, py - y1);
   let t = ((px - x1) * (x2 - x1) + (py - y1) * (y2 - y1)) / l2;
   t = Math.max(0, Math.min(1, t));
-  const projX = x1 + t * (x2 - x1);
-  const projY = y1 + t * (y2 - y1);
-  return (px - projX) * (px - projX) + (py - projY) * (py - projY);
+  return Math.hypot(px - (x1 + t * (x2 - x1)), py - (y1 + t * (y2 - y1)));
 }
 
-function findNearestIdleArrow(gx, gy) {
-  let bestArrow = null;
-  // Generous 0.75 cell tolerance so tapping while zoomed out on 20x32 grids is fair and accurate
-  let bestDistSq = 0.75 * 0.75;
-  const arrows = activeBoard.arrows;
+canvas.addEventListener('pointerdown', (e) => {
+  const rect = canvas.getBoundingClientRect();
+  pointerDownPos = { x: e.clientX - rect.left, y: e.clientY - rect.top, camX: camOffsetX, camY: camOffsetY };
+  isPanningBoard = false;
+});
 
-  for (let i = 0; i < arrows.length; i++) {
-    const a = arrows[i];
-    if (a.state !== "idle") continue;
-    for (let c = 0; c < a.cells.length - 1; c++) {
-      const p1 = a.cells[c];
-      const p2 = a.cells[c + 1];
-      const dSq = pointToSegmentDistanceSq(gx, gy, p1.x, p1.y, p2.x, p2.y);
-      if (dSq < bestDistSq) {
-        bestDistSq = dSq;
+canvas.addEventListener('pointermove', (e) => {
+  if (!pointerDownPos) return;
+  const rect = canvas.getBoundingClientRect();
+  const dx = (e.clientX - rect.left) - pointerDownPos.x;
+  const dy = (e.clientY - rect.top) - pointerDownPos.y;
+  if (Math.hypot(dx, dy) > 9 && camScale > 1.02) {
+    isPanningBoard = true;
+    camOffsetX = pointerDownPos.camX + dx / camScale;
+    camOffsetY = pointerDownPos.camY + dy / camScale;
+  }
+});
+
+canvas.addEventListener('pointerup', () => {
+  if (!pointerDownPos) return;
+  const wasPan = isPanningBoard;
+  const sx = pointerDownPos.x;
+  const sy = pointerDownPos.y;
+  pointerDownPos = null;
+  isPanningBoard = false;
+  if (wasPan) return;
+
+  const { gx, gy } = screenToGridFloat(sx, sy);
+  let bestArrow = null;
+  let bestDist = 0.65;
+
+  arrows.forEach(a => {
+    if (a.state !== 'idle') return;
+    for (let i = 0; i < a.cells.length - 1; i++) {
+      const c1 = a.cells[i];
+      const c2 = a.cells[i + 1];
+      const d = distToSegment(gx, gy, c1.x, c1.y, c2.x, c2.y);
+      if (d < bestDist) {
+        bestDist = d;
         bestArrow = a;
       }
     }
-  }
-  return bestArrow;
-}
-
-function buildCurrentOccupancyGrid() {
-  const occ = new Int32Array(activeBoard.gridW * activeBoard.gridH);
-  const arrows = activeBoard.arrows;
-  for (let i = 0; i < arrows.length; i++) {
-    const a = arrows[i];
-    if (a.state !== "idle" && a.state !== "bumping") continue;
-    for (let c = 0; c < a.cells.length; c++) {
-      const pt = a.cells[c];
-      occ[pt.y * activeBoard.gridW + pt.x] = a.id;
-    }
-  }
-  return occ;
-}
-
-function processBoardTap(screenX, screenY) {
-  const { gx, gy } = screenPxToGrid(screenX, screenY);
-  const targetArrow = findNearestIdleArrow(gx, gy);
-  if (!targetArrow) return;
-
-  const occ = buildCurrentOccupancyGrid();
-  const head = targetArrow.cells[targetArrow.cells.length - 1];
-
-  if (isRayUnblocked(head.x, head.y, targetArrow.dir, activeBoard.gridW, activeBoard.gridH, occ, targetArrow.id)) {
-    targetArrow.state = "clearing";
-    targetArrow.slideSteps = 0;
-    if (activeHintArrowId === targetArrow.id) activeHintArrowId = null;
-    isStaticCacheDirty = true;
-
-    saveState.activeBoardState.clearedArrowIds.push(targetArrow.id);
-    saveState.totalArrowsCleared++;
-    persistSaveState();
-
-    playSoundEffect("slide");
-    triggerHapticFeedback(14);
-  } else {
-    targetArrow.state = "bumping";
-    targetArrow.bumpPhase = 0;
-    isStaticCacheDirty = true;
-
-    saveState.hearts = Math.max(0, saveState.hearts - 1);
-    persistSaveState();
-    updateGameHudNumbers();
-
-    playSoundEffect("bump");
-    triggerHapticFeedback(45);
-
-    if (saveState.hearts === 0) {
-      openOutOfHeartsModal();
-    }
-  }
-}
-
-/* ============================================================================
-   SECTION 9: LEVEL FLOW, REVIVE / HINTS, DAILY CALENDAR & LIFECYCLE
-   ============================================================================ */
-function launchLevel(levelNum, dailyDay = null, forceFreshBoard = false) {
-  const isDaily = dailyDay !== null;
-  const savedBoard = saveState.activeBoardState;
-
-  const isSameInProgress =
-    !forceFreshBoard &&
-    savedBoard.levelNum === levelNum &&
-    savedBoard.isDaily === isDaily &&
-    savedBoard.dailyDay === dailyDay;
-
-  if (!isSameInProgress) {
-    saveState.activeBoardState = {
-      levelNum,
-      isDaily,
-      dailyDay,
-      clearedArrowIds: []
-    };
-    saveState.hearts = 3;
-  }
-
-  if (!isDaily) {
-    saveState.level = levelNum;
-    saveState.highestLevel = Math.max(saveState.highestLevel, levelNum);
-  }
-  persistSaveState();
-
-  let generated;
-  if (!isDaily && precomputedLevelCache && precomputedLevelCache.levelNum === levelNum) {
-    generated = precomputedLevelCache;
-    precomputedLevelCache = null;
-  } else {
-    const seedOverride = isDaily ? dailyDay * 99991 : null;
-    generated = generateVerifiedLevel(levelNum, seedOverride);
-  }
-
-  const clearedSet = new Set(saveState.activeBoardState.clearedArrowIds);
-  generated.arrows = generated.arrows
-    .filter((a) => !clearedSet.has(a.id))
-    .map((a) => ({ ...a, state: "idle", slideSteps: 0, bumpPhase: 0 }));
-
-  // If all arrows were somehow already cleared in storage, regenerate fresh
-  if (generated.arrows.length === 0) {
-    saveState.activeBoardState.clearedArrowIds = [];
-    persistSaveState();
-    return launchLevel(levelNum, dailyDay, true);
-  }
-
-  activeBoard = generated;
-  zoomScale = 1.0;
-  panOffsetX = 0;
-  panOffsetY = 0;
-  activeHintArrowId = null;
-
-  document.getElementById("tutorial-banner").style.display =
-    (!isDaily && levelNum <= 3) ? "block" : "none";
-
-  navigateToScreen("game");
-  computeViewportLayout();
-  updateGameHudNumbers();
-
-  if (!isDaily) {
-    precomputeNextLevelAsync(levelNum + 1);
-  }
-}
-
-function updateGameHudNumbers() {
-  if (!activeBoard) return;
-  const dict = I18N_DICT[saveState.settings.lang] || I18N_DICT.en;
-  const isDaily = saveState.activeBoardState.isDaily;
-  const dailyDay = saveState.activeBoardState.dailyDay;
-
-  document.getElementById("hud-level-label").textContent = isDaily
-    ? `Oct ${dailyDay}`
-    : `${dict.level} ${activeBoard.levelNum}`;
-
-  const tierBadge = document.getElementById("hud-tier-badge");
-  tierBadge.textContent = dict[activeBoard.tier] || activeBoard.tier;
-  tierBadge.className = `stat-pill tier-${activeBoard.tier}`;
-
-  const remCount = activeBoard.arrows.filter((a) => a.state !== "clearing").length;
-  document.getElementById("hud-arrow-remaining").textContent = String(remCount);
-  document.getElementById("badge-hint-count").textContent = String(saveState.hints);
-
-  const heartNodes = document.querySelectorAll("#hud-hearts-box .heart-icon");
-  heartNodes.forEach((node, idx) => {
-    node.classList.toggle("lost", idx >= saveState.hearts);
   });
-}
 
-function handleLevelCompleted() {
-  playSoundEffect("win");
-  triggerHapticFeedback(30);
+  if (bestArrow) tryClearArrow(bestArrow);
+});
 
-  const isDaily = saveState.activeBoardState.isDaily;
-  const dailyDay = saveState.activeBoardState.dailyDay;
-  saveState.activeBoardState.clearedArrowIds = [];
+canvas.addEventListener('wheel', (e) => {
+  e.preventDefault();
+  const factor = e.deltaY < 0 ? 1.14 : 0.88;
+  camScale = Math.max(0.75, Math.min(2.8, camScale * factor));
+}, { passive: false });
 
-  if (isDaily) {
-    if (!saveState.completedDailyDays.includes(dailyDay)) {
-      saveState.completedDailyDays.push(dailyDay);
-      saveState.hints += 1; // Earned daily hint reward
-    }
-  } else {
-    saveState.level += 1;
-    saveState.highestLevel = Math.max(saveState.highestLevel, saveState.level);
-    saveState.hearts = 3;
-    if (saveState.level % 5 === 0) {
-      saveState.hints += 1;
-      if (APP_CONFIG.ENABLE_ADS && window.AndroidBridge && typeof window.AndroidBridge.showInterstitialIfReady === "function") {
-        window.AndroidBridge.showInterstitialIfReady();
-      }
-    }
-  }
-  persistSaveState();
+function tryClearArrow(arrow) {
+  const headCell = arrow.cells[arrow.cells.length - 1];
+  const headScreen = gridToScreen(headCell.x, headCell.y);
 
-  const dict = I18N_DICT[saveState.settings.lang] || I18N_DICT.en;
-  openCommonModal({
-    icon: "🏆",
-    title: dict.winTitle,
-    body: `${dict[activeBoard.tier] || activeBoard.tier} • ${activeBoard.metrics.arrowCount} Arrows (${Math.round(activeBoard.metrics.coverage * 100)}% Grid Coverage)`,
-    primaryText: dict.nextLevelBtn,
-    onPrimary: () => {
-      if (isDaily) {
-        navigateToScreen("daily");
-      } else {
-        launchLevel(saveState.level, null, true);
-      }
-    },
-    secondaryText: null
-  });
-}
-
-function openOutOfHeartsModal() {
-  const dict = I18N_DICT[saveState.settings.lang] || I18N_DICT.en;
-  openCommonModal({
-    icon: "💔",
-    title: dict.outOfHeartsTitle,
-    body: dict.outOfHeartsBody,
-    primaryText: dict.reviveBtn,
-    onPrimary: () => {
-      if (APP_CONFIG.ENABLE_ADS && window.AndroidBridge && typeof window.AndroidBridge.showRewardedAd === "function") {
-        window.AndroidBridge.showRewardedAd("REVIVE");
-      } else {
-        window.onRewardGranted("REVIVE");
-      }
-    },
-    secondaryText: dict.retryBtn,
-    onSecondary: () => {
-      launchLevel(
-        saveState.activeBoardState.levelNum,
-        saveState.activeBoardState.dailyDay,
-        true
-      );
-    }
-  });
-}
-
-window.onRewardGranted = function (rewardType) {
-  if (rewardType === "REVIVE") {
-    saveState.hearts = 1;
-    persistSaveState();
-    updateGameHudNumbers();
-  } else if (rewardType === "HINT") {
-    saveState.hints += 2;
-    persistSaveState();
-    updateGameHudNumbers();
-  }
-};
-
-function useHintTool() {
-  if (!activeBoard) return;
-  if (saveState.hints <= 0) {
-    if (APP_CONFIG.ENABLE_ADS && window.AndroidBridge && typeof window.AndroidBridge.showRewardedAd === "function") {
-      window.AndroidBridge.showRewardedAd("HINT");
-    } else {
-      window.onRewardGranted("HINT");
-    }
+  if (empBombActive) {
+    empBombActive = false;
+    bombsLeft = Math.max(0, bombsLeft - 1);
+    document.getElementById('badge-bombs').textContent = bombsLeft;
+    document.getElementById('btn-emp').classList.remove('active-tool');
+    arrow.lockCount = 0;
+    arrow.frozen = false;
+    arrow.bombTurns = 0;
+    arrow.shieldHits = 0;
+    arrow.state = 'clearing';
+    spawnParticles(headScreen.x, headScreen.y, '#f43f5e', 18);
+    playTone(760, 'sawtooth', 0.22, 0.18);
+    vibrate(35);
+    onSuccessfulArrowClear();
     return;
   }
 
-  const occ = buildCurrentOccupancyGrid();
-  const freeArrow = activeBoard.arrows.find((a) => {
-    if (a.state !== "idle") return false;
-    const h = a.cells[a.cells.length - 1];
-    return isRayUnblocked(h.x, h.y, a.dir, activeBoard.gridW, activeBoard.gridH, occ, a.id);
-  });
-
-  if (freeArrow) {
-    saveState.hints = Math.max(0, saveState.hints - 1);
-    activeHintArrowId = freeArrow.id;
-    isStaticCacheDirty = true;
-    persistSaveState();
-    updateGameHudNumbers();
-    playSoundEffect("hint");
+  if (arrow.lockCount > 0 || arrow.frozen) {
+    arrow.state = 'bumping';
+    arrow.bumpProgress = 0;
+    playTone(140, 'sawtooth', 0.2, 0.14);
+    vibrate(40);
+    return;
   }
-}
 
-/* ============================================================================
-   SECTION 10: UI NAVIGATION, LOCALIZATION & ANDROID BACK/LIFECYCLE HOOKS
-   ============================================================================ */
-function navigateToScreen(screenName) {
-  document.querySelectorAll(".view-screen").forEach((s) => s.classList.remove("active"));
-  document.getElementById("screen-" + screenName).classList.add("active");
+  const occMap = getOccupiedLookup();
+  const blockInfo = findBlockingCell(arrow, occMap);
 
-  document.querySelectorAll(".tab-btn").forEach((b) => b.classList.remove("active"));
-  const activeTabBtn = document.getElementById("tab-btn-" + screenName);
-  if (activeTabBtn) activeTabBtn.classList.add("active");
+  if (!blockInfo.blocked) {
+    if (arrow.shieldHits > 0) {
+      arrow.shieldHits--;
+      arrow.state = 'bumping';
+      arrow.bumpProgress = 0;
+      spawnParticles(headScreen.x, headScreen.y, '#c084fc', 12);
+      playTone(420, 'triangle', 0.14, 0.15);
+      vibrate(20);
+      return;
+    }
 
-  document.getElementById("bottom-nav-bar").style.display =
-    screenName === "game" ? "none" : "flex";
-
-  if (screenName === "daily") renderDailyCalendarGrid();
-  refreshLocalizedTextAndHomeStats();
-}
-
-function renderDailyCalendarGrid() {
-  const container = document.getElementById("cal-grid-box");
-  container.innerHTML = "";
-  // October 1, 2026 starts on Thursday (4 empty offset cells)
-  for (let i = 0; i < 4; i++) {
-    container.appendChild(document.createElement("div"));
-  }
-  for (let day = 1; day <= 31; day++) {
-    const btn = document.createElement("button");
-    btn.className = "cal-cell";
-    if (saveState.completedDailyDays.includes(day)) btn.classList.add("completed");
-    if (day === saveState.selectedDailyDay) btn.classList.add("selected");
-    btn.textContent = String(day);
-    btn.setAttribute("aria-label", `October ${day} Daily Challenge`);
-    btn.onclick = () => {
-      saveState.selectedDailyDay = day;
-      persistSaveState();
-      renderDailyCalendarGrid();
-      refreshLocalizedTextAndHomeStats();
-    };
-    container.appendChild(btn);
-  }
-  document.getElementById("cal-stars-count").textContent =
-    `${saveState.completedDailyDays.length} / 31 ★`;
-}
-
-function refreshLocalizedTextAndHomeStats() {
-  const lang = saveState.settings.lang;
-  const dict = I18N_DICT[lang] || I18N_DICT.en;
-  document.documentElement.lang = lang;
-  document.documentElement.dir = lang === "ur" ? "rtl" : "ltr";
-
-  document.querySelectorAll("[data-i18n]").forEach((el) => {
-    const key = el.getAttribute("data-i18n");
-    if (dict[key]) el.textContent = dict[key];
-  });
-
-  const spec = getDifficultySpecForLevel(saveState.level);
-  const tierName = dict[spec.tier] || spec.tier;
-  document.getElementById("home-continue-sub").textContent = `${dict.level} ${saveState.level} (${tierName})`;
-  document.getElementById("home-tier-preview").textContent =
-    `${tierName} • Grid ${spec.gridW}×${spec.gridH} • Up to ${spec.maxArrows} Arrows`;
-  document.getElementById("home-daily-date").textContent = `Oct ${saveState.selectedDailyDay}`;
-  document.getElementById("profile-stats-line").textContent =
-    `Highest Level: ${saveState.highestLevel} • Arrows Cleared: ${saveState.totalArrowsCleared}`;
-}
-
-function openCommonModal({ icon, title, body, primaryText, onPrimary, secondaryText, onSecondary }) {
-  const modal = document.getElementById("modal-common");
-  document.getElementById("modal-icon").textContent = icon || "✨";
-  document.getElementById("modal-title").textContent = title;
-  document.getElementById("modal-desc").textContent = body;
-
-  const pBtn = document.getElementById("modal-primary-btn");
-  pBtn.textContent = primaryText || "OK";
-  pBtn.onclick = () => {
-    modal.classList.remove("open");
-    if (onPrimary) onPrimary();
-  };
-
-  const sBtn = document.getElementById("modal-secondary-btn");
-  if (secondaryText) {
-    sBtn.style.display = "block";
-    sBtn.textContent = secondaryText;
-    sBtn.onclick = () => {
-      modal.classList.remove("open");
-      if (onSecondary) onSecondary();
-    };
+    arrow.state = 'clearing';
+    if (highlightedArrowId === arrow.id) highlightedArrowId = null;
+    spawnParticles(headScreen.x, headScreen.y, '#38bdf8', 14);
+    playTone(540 + Math.min(300, comboCount * 40), 'sine', 0.15, 0.14);
+    vibrate(15);
+    onSuccessfulArrowClear();
   } else {
-    sBtn.style.display = "none";
-  }
+    arrow.state = 'bumping';
+    arrow.bumpProgress = 0;
+    comboCount = 0;
+    spawnParticles(headScreen.x, headScreen.y, '#f43f5e', 8);
+    playTone(150, 'sawtooth', 0.22, 0.16);
+    vibrate([40, 30, 40]);
 
-  modal.classList.add("open");
+    if (!adminConfig.godMode) {
+      hearts = Math.max(0, hearts - 1);
+      updateHUD();
+      if (hearts === 0) {
+        setTimeout(() => {
+          showGameModal(
+            '💔',
+            'Out of Hearts!',
+            'Path was blocked! Use the Ruler (📏) laser sight to verify clear paths.',
+            'Try Again',
+            () => startLevel(currentLevel, activeDailyDay)
+          );
+        }, 320);
+      }
+    }
+  }
 }
 
-// Android Hardware Back & Background/Foreground Lifecycle Hooks
-window.onAppBackgrounded = function () {
-  isRenderLoopPaused = true;
-  persistSaveState();
-};
+function onSuccessfulArrowClear() {
+  totalArrowsCleared++;
+  localStorage.setItem('virus_ap_cleared', totalArrowsCleared);
 
-window.onAppForegrounded = function () {
-  isRenderLoopPaused = false;
-  isStaticCacheDirty = true;
-};
+  // Combo Tracker
+  const now = Date.now();
+  if (now - lastClearTime < 2200) {
+    comboCount++;
+    if (comboCount >= 3) {
+      const toast = document.getElementById('combo-toast');
+      toast.textContent = '🔥 x' + comboCount + ' VIRUS COMBO!';
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 950);
+    }
+  } else {
+    comboCount = 1;
+  }
+  lastClearTime = now;
 
-window.handleAndroidBack = function () {
-  const debugModal = document.getElementById("modal-debug-admin");
-  if (debugModal.classList.contains("open")) {
-    debugModal.classList.remove("open");
-    return "HANDLED";
-  }
-  const gameScreen = document.getElementById("screen-game");
-  if (gameScreen.classList.contains("active")) {
-    navigateToScreen("main");
-    return "HANDLED";
-  }
-  const mainScreen = document.getElementById("screen-main");
-  if (!mainScreen.classList.contains("active")) {
-    navigateToScreen("main");
-    return "HANDLED";
-  }
-  return "EXIT_APP";
-};
+  let bombExploded = false;
+  arrows.forEach(a => {
+    if (a.state !== 'idle') return;
+    if (a.lockCount > 0) a.lockCount--;
+    if (a.frozen) a.frozen = false;
+    if (a.bombTurns > 0) {
+      a.bombTurns--;
+      if (a.bombTurns === 0 && !adminConfig.godMode) bombExploded = true;
+    }
+  });
 
-document.addEventListener("visibilitychange", () => {
-  if (document.hidden) window.onAppBackgrounded();
-  else window.onAppForegrounded();
-});
+  updateHUD();
+
+  if (bombExploded) {
+    setTimeout(() => {
+      showGameModal(
+        '💥',
+        'Virus Bomb Detonated!',
+        'A countdown arrow reached 0 before escaping! Clear bomb arrows first or defuse them with EMP (💣).',
+        'Retry Level',
+        () => startLevel(currentLevel, activeDailyDay)
+      );
+    }, 250);
+  }
+}
 
 /* ============================================================================
-   SECTION 11: INITIALIZATION & DEBUG-ONLY HOOKS
+   6. BOOSTERS & ADMIN TROLL FUNCTIONS
    ============================================================================ */
-window.addEventListener("DOMContentLoaded", () => {
+function useHintBooster() {
+  if (adminConfig.disableBoosters) {
+    showInfoModal('🚫 Boosters Locked', 'Boosters are disabled in Impossible Mode!');
+    return;
+  }
+  if (hintsLeft <= 0) {
+    showInfoModal('💡 Out of Hints', 'Hints refill on the next level!');
+    return;
+  }
+  const occMap = getOccupiedLookup();
+  const freeArrow = arrows.find(a => a.state === 'idle' && a.lockCount === 0 && !a.frozen && !findBlockingCell(a, occMap).blocked);
+  if (freeArrow) {
+    hintsLeft--;
+    highlightedArrowId = freeArrow.id;
+    document.getElementById('badge-hints').textContent = hintsLeft;
+    playTone(680, 'triangle', 0.2, 0.12);
+  } else {
+    showInfoModal('💀 Deadlock Detected!', 'Zero arrows have a free path right now! The board is mathematically locked.');
+  }
+}
+
+function toggleRulerBooster() {
+  rulerActive = !rulerActive;
+  document.getElementById('btn-ruler').classList.toggle('active-tool', rulerActive);
+  playTone(440, 'sine', 0.1, 0.08);
+}
+
+function toggleEmpBombMode() {
+  if (adminConfig.disableBoosters) {
+    showInfoModal('🚫 EMP Locked', 'EMP Bombs are disabled by Admin!');
+    return;
+  }
+  if (bombsLeft <= 0 && !adminConfig.godMode) {
+    showInfoModal('💣 Out of EMP Bombs', 'EMP Bombs refill as you progress!');
+    return;
+  }
+  empBombActive = !empBombActive;
+  document.getElementById('btn-emp').classList.toggle('active-tool', empBombActive);
+}
+
+function triggerSingleAiStep() {
+  if (adminConfig.disableBoosters && !isAdminAuthenticated) {
+    showInfoModal('🚫 AI Disabled', 'AI Solver is locked in Impossible Mode!');
+    return;
+  }
+  const occMap = getOccupiedLookup();
+  const freeArrow = arrows.find(a => a.state === 'idle' && a.lockCount === 0 && !a.frozen && !findBlockingCell(a, occMap).blocked);
+  if (freeArrow) {
+    freeArrow.shieldHits = 0;
+    tryClearArrow(freeArrow);
+  } else if (arrows.length > 0 && isAdminAuthenticated) {
+    const anyIdle = arrows.find(a => a.state === 'idle');
+    if (anyIdle) {
+      anyIdle.lockCount = 0;
+      anyIdle.frozen = false;
+      anyIdle.shieldHits = 0;
+      anyIdle.state = 'clearing';
+      onSuccessfulArrowClear();
+    }
+  }
+}
+
+function toggleAdminFeature(key) {
+  adminConfig[key] = !adminConfig[key];
+  document.getElementById('adm-god-btn').textContent = '🛡️ God Mode: ' + (adminConfig.godMode ? 'ON' : 'OFF');
+  document.getElementById('adm-xray-btn').textContent = '👁️ X-Ray Order: ' + (adminConfig.xrayOrder ? 'ON' : 'OFF');
+  document.getElementById('adm-unsolvable-btn').textContent = '💀 Unsolvable: ' + (adminConfig.unsolvableMode ? 'ON' : 'OFF');
+  document.getElementById('adm-nobomb-btn').textContent = '🚫 Lock Boosters: ' + (adminConfig.disableBoosters ? 'ON' : 'OFF');
+  updateHUD();
+}
+
+function adminInjectDeadlockNow() {
+  adminConfig.unsolvableMode = true;
+  adminConfig.disableBoosters = true;
+  toggleAdminFeature('unsolvableMode');
+  toggleAdminFeature('unsolvableMode');
+  startLevel(currentLevel, activeDailyDay);
+  showInfoModal('💀 Deadlock Injected!', 'Current level now contains unsolvable pinwheel traps and boosters are locked!');
+}
+
+function adminSpawnMegaWall() {
+  adminConfig.gridOverride = 20;
+  document.getElementById('adm-grid-val').textContent = '20×23';
+  startLevel(currentLevel, null);
+}
+
+function adminRefillBoosters() {
+  hintsLeft = 99;
+  bombsLeft = 99;
+  document.getElementById('badge-hints').textContent = hintsLeft;
+  document.getElementById('badge-bombs').textContent = bombsLeft;
+  showInfoModal('💎 Boosters Maxed!', 'Granted 99 Hints and 99 Virus EMP Bombs.');
+}
+
+function adminWarpToLevel() {
+  const val = parseInt(document.getElementById('adm-lvl-input').value || '1', 10);
+  savedLevel = Math.max(1, val);
+  localStorage.setItem('virus_ap_level', savedLevel);
+  startLevel(savedLevel, null);
+}
+
+function updateAdminGridOverride(val) {
+  const v = parseInt(val, 10);
+  adminConfig.gridOverride = v <= 5 ? 0 : v;
+  document.getElementById('adm-grid-val').textContent = adminConfig.gridOverride === 0 ? 'Auto' : (v + '×' + (v + 3));
+}
+
+function adminAutoSolveCurrent() {
+  startLevel(currentLevel, activeDailyDay);
   setTimeout(() => {
-    document.getElementById("splash-overlay").classList.add("hidden");
-  }, 650);
-
-  // Main Menu Actions
-  document.getElementById("btn-home-continue").onclick = () => {
-    launchLevel(saveState.level, null, false);
-  };
-  document.getElementById("btn-home-restart").onclick = () => {
-    launchLevel(saveState.level, null, true);
-  };
-  document.getElementById("card-daily-shortcut").onclick = () => {
-    launchLevel(75, saveState.selectedDailyDay, false);
-  };
-  document.getElementById("btn-daily-start").onclick = () => {
-    launchLevel(75, saveState.selectedDailyDay, false);
-  };
-
-  // Game HUD & Tools
-  document.getElementById("btn-game-back").onclick = () => navigateToScreen("main");
-  document.getElementById("btn-game-fit").onclick = () => {
-    zoomScale = 1.0;
-    panOffsetX = 0;
-    panOffsetY = 0;
-  };
-  document.getElementById("btn-tool-hint").onclick = useHintTool;
-  document.getElementById("btn-tool-ruler").onclick = () => {
-    isRulerEnabled = !isRulerEnabled;
-    document.getElementById("btn-tool-ruler").classList.toggle("active-tool", isRulerEnabled);
-  };
-
-  // Bottom Navigation Tabs
-  document.getElementById("tab-btn-main").onclick = () => navigateToScreen("main");
-  document.getElementById("tab-btn-daily").onclick = () => navigateToScreen("daily");
-  document.getElementById("tab-btn-profile").onclick = () => navigateToScreen("profile");
-
-  // Settings Switches
-  function bindSwitch(id, key) {
-    const el = document.getElementById(id);
-    el.classList.toggle("on", Boolean(saveState.settings[key]));
-    el.setAttribute("aria-checked", String(Boolean(saveState.settings[key])));
-    el.onclick = () => {
-      saveState.settings[key] = !saveState.settings[key];
-      el.classList.toggle("on", saveState.settings[key]);
-      el.setAttribute("aria-checked", String(saveState.settings[key]));
-      isStaticCacheDirty = true;
-      persistSaveState();
-    };
-  }
-  bindSwitch("sw-sound", "sound");
-  bindSwitch("sw-vib", "vib");
-  bindSwitch("sw-motion", "reducedMotion");
-  bindSwitch("sw-colorblind", "colorBlind");
-
-  const langSelect = document.getElementById("select-lang");
-  langSelect.value = saveState.settings.lang;
-  langSelect.onchange = (e) => {
-    saveState.settings.lang = e.target.value;
-    persistSaveState();
-    refreshLocalizedTextAndHomeStats();
-  };
-
-  document.getElementById("row-privacy-info").onclick = () => {
-    openCommonModal({
-      icon: "🔒",
-      title: "Privacy & Data Safety",
-      body: "Arrow Escape by Virus collects zero personal data, requires no user account, and stores all progress locally on your device. Only Android VIBRATE permission is used for haptics.",
-      primaryText: "OK"
-    });
-  };
-
-  // Debug-Only Admin Hook (Strictly absent in release builds unless isDebugEnvironment() is true)
-  if (isDebugEnvironment()) {
-    const slot = document.getElementById("debug-header-slot");
-    const dbgBtn = document.createElement("button");
-    dbgBtn.className = "debug-pill-btn";
-    dbgBtn.textContent = "⚡ DEBUG ADMIN";
-    dbgBtn.onclick = () => {
-      document.getElementById("modal-debug-admin").classList.add("open");
-    };
-    slot.appendChild(dbgBtn);
-
-    document.getElementById("dbg-close-btn").onclick = () => {
-      document.getElementById("modal-debug-admin").classList.remove("open");
-    };
-    document.getElementById("dbg-jump-btn").onclick = () => {
-      const target = Math.max(1, parseInt(document.getElementById("dbg-level-input").value, 10) || 1);
-      document.getElementById("modal-debug-admin").classList.remove("open");
-      launchLevel(target, null, true);
-    };
-    document.getElementById("dbg-win-btn").onclick = () => {
-      document.getElementById("modal-debug-admin").classList.remove("open");
-      if (activeBoard) {
-        activeBoard.arrows = [];
-        handleLevelCompleted();
+    const timer = setInterval(() => {
+      if (arrows.length === 0) { clearInterval(timer); return; }
+      const anyIdle = arrows.find(a => a.state === 'idle');
+      if (anyIdle) {
+        anyIdle.lockCount = 0;
+        anyIdle.frozen = false;
+        anyIdle.shieldHits = 0;
+        anyIdle.state = 'clearing';
+        onSuccessfulArrowClear();
       }
-    };
-    document.getElementById("dbg-run-suite-btn").onclick = () => {
-      runAutomatedTestSuite(document.getElementById("dbg-suite-output"));
-    };
+    }, 65);
+  }, 120);
+}
+
+/* ============================================================================
+   7. HUD & LEVEL FLOW
+   ============================================================================ */
+function updateHUD() {
+  const activeCount = arrows.filter(a => a.state !== 'clearing').length;
+  document.getElementById('hud-arrows-left').textContent = activeCount;
+
+  const heartEls = document.querySelectorAll('#hud-hearts .heart');
+  heartEls.forEach((el, idx) => {
+    el.classList.toggle('god', adminConfig.godMode);
+    el.classList.toggle('lost', !adminConfig.godMode && idx >= hearts);
+  });
+}
+
+function startLevel(lvl, dailyDay = null) {
+  currentLevel = lvl;
+  activeDailyDay = dailyDay;
+  hearts = 3;
+  comboCount = 0;
+  rulerActive = false;
+  empBombActive = false;
+  highlightedArrowId = null;
+  resetCameraZoom();
+
+  document.getElementById('btn-ruler').classList.remove('active-tool');
+  document.getElementById('btn-emp').classList.remove('active-tool');
+  document.getElementById('badge-hints').textContent = hintsLeft;
+  document.getElementById('badge-bombs').textContent = bombsLeft;
+
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-game').classList.add('active');
+  document.getElementById('bottom-nav').style.display = 'none';
+
+  const modeLabels = {
+    normal: 'Hard 🔥',
+    hard: 'Extreme 💀',
+    virus: 'Nightmare ⚡',
+    impossible: 'Impossible 🩸'
+  };
+  document.getElementById('hud-diff-badge').textContent = modeLabels[gameDifficulty];
+
+  if (dailyDay !== null) {
+    document.getElementById('hud-level-title').textContent = 'Oct ' + dailyDay;
+    generateSolvableMazeLevel(12 + dailyDay, dailyDay * 88888);
+  } else {
+    document.getElementById('hud-level-title').textContent = 'Level ' + lvl;
+    generateSolvableMazeLevel(lvl);
   }
 
-  refreshLocalizedTextAndHomeStats();
-  renderDailyCalendarGrid();
-  precomputeNextLevelAsync(saveState.level);
-  requestAnimationFrame(renderAnimationFrame);
-});
+  setTimeout(() => {
+    resizeCanvas();
+    updateHUD();
+  }, 20);
+}
+
+function onLevelWon() {
+  playTone(587, 'sine', 0.12, 0.15);
+  setTimeout(() => playTone(880, 'sine', 0.25, 0.16), 120);
+
+  if (activeDailyDay !== null) {
+    if (!completedDailyDays.includes(activeDailyDay)) {
+      completedDailyDays.push(activeDailyDay);
+      localStorage.setItem('virus_ap_daily', JSON.stringify(completedDailyDays));
+    }
+    showGameModal(
+      '🏆',
+      'October ' + activeDailyDay + ' Cleared!',
+      'Daily Star unlocked for your Virus Trophy!',
+      'Back to Calendar',
+      () => openTab('daily')
+    );
+  } else {
+    savedLevel = Math.max(savedLevel, currentLevel + 1);
+    localStorage.setItem('virus_ap_level', savedLevel);
+    showGameModal(
+      '🔥',
+      'Level ' + currentLevel + ' Crushed!',
+      'Every arrow escaped the grid! Ready for Level ' + (currentLevel + 1) + '?',
+      'Next Level',
+      () => startLevel(currentLevel + 1, null)
+    );
+  }
+}
+
+function continueSavedLevel() { startLevel(savedLevel, null); }
+function restartCurrentLevelFromHome() {
+  savedLevel = 1;
+  localStorage.setItem('virus_ap_level', '1');
+  startLevel(1, null);
+}
+function startDailyLevel(day) { selectedCalendarDay = day; startLevel(15, day); }
+function playSelectedDaily() { startLevel(15, selectedCalendarDay); }
+function exitToHome() { openTab('main'); }
+
+let modalCallback = null;
+function showGameModal(emoji, title, desc, btnText, cb) {
+  document.getElementById('modal-emoji').textContent = emoji;
+  document.getElementById('modal-title').textContent = title;
+  document.getElementById('modal-desc').textContent = desc;
+  document.getElementById('modal-btn').textContent = btnText;
+  modalCallback = cb;
+  document.getElementById('modal-overlay').classList.add('show');
+}
+function showInfoModal(title, desc) { showGameModal('⚡', title, desc, 'Got It', null); }
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('show');
+  if (modalCallback) {
+    const fn = modalCallback;
+    modalCallback = null;
+    fn();
+  }
+}
+
+// Initialize App
+window.onload = function() {
+  renderAllAvatarSlots();
+  applyStealthUI();
+  updateHomeLabels();
+  renderCalendar();
+  requestAnimationFrame(renderBoard);
+};
 </script>
 </body>
 </html>
