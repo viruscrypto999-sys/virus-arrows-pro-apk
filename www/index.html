@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>Virus Arrows — By iTzVirus</title>
+<title>Virus Arrows — By Virus (iTzVirus)</title>
 <link rel="icon" type="image/jpeg" href="virus.jpg">
 <link rel="apple-touch-icon" href="virus.jpg">
 <style>
@@ -66,7 +66,7 @@
     background: linear-gradient(90deg, #0b1120 0%, #1e1b4b 55%, #31102f 100%);
     border-bottom: 2px solid #e11d48;
     padding: 7px 12px;
-    display: flex;
+    display: none !important;
     justify-content: space-between;
     align-items: center;
     z-index: 100;
@@ -810,13 +810,9 @@
     cursor: pointer;
   }
   .sec-key:active { background: #e11d48; }
-</style>
 
-<style>
-/* Hide top exporter bar - GET FULL FILE banner */
 #exporter-bar { display: none !important; }
 </style>
-
 </head>
 <body>
 
@@ -849,7 +845,12 @@
 
 <div id="app-frame">
 
-  
+  <!-- TOP DIRECT FILE EXPORTER BAR (Matches Screenshot 21) -->
+  <div id="exporter-bar">
+    <div>
+      <div class="exp-left-title">⚡ GET FULL FILE</div>
+      <div class="exp-left-sub">No copy-paste cutoff!</div>
+    </div>
     <div class="exp-actions">
       <button class="exp-pill html-btn" onclick="exportCleanGameFile('index.html')">📥 index.html</button>
       <button class="exp-pill txt-btn" onclick="exportCleanGameFile('virus_arrows_full.txt')">📄 .txt</button>
@@ -888,7 +889,7 @@
         <svg><use href="#virus-anime-avatar"/></svg>
       </div>
       <div class="brand-title" onclick="handleSecretTriggerTap()" data-i18n="appTitle">Virus Arrows</div>
-      <div class="brand-sub" data-i18n="studioSub">BY ITZVIRUS</div>
+      <div class="brand-sub" data-i18n="studioSub">BY TALIB HUSSAIN (ITZVIRUS)</div>
 
       <!-- 5 Difficulty Tiers -->
       <div class="mode-selector">
@@ -1103,7 +1104,7 @@
         <span style="color:#94a3b8; font-size:20px;">›</span>
       </div>
 
-      <div class="me-list-item" style="cursor:pointer;" onclick="handleSecretTriggerTap(); showInfoModal('ℹ️ About Game', 'Virus Arrows (v6.0 Ultimate Edition)\nCreated by iTzVirus\n10 Arrow Colors • 10 Full Themes • 1,000+ Brutal Solvable Levels')">
+      <div class="me-list-item" style="cursor:pointer;" onclick="handleSecretTriggerTap(); showInfoModal('ℹ️ About Game', 'Virus Arrows (v6.0 Ultimate Edition)\nCreated by Virus (iTzVirus)\n10 Arrow Colors • 10 Full Themes • 1,000+ Brutal Solvable Levels')">
         <div class="me-item-left">
           <div class="sq-icon" style="background:#3b82f6;">i</div>
           <span>About Game (v6.0)</span>
@@ -1408,7 +1409,7 @@ const GAME_THEMES = [
 const STRINGS = {
   en: {
     appTitle: 'Virus Arrows',
-    studioSub: 'BY ITZVIRUS',
+    studioSub: 'BY TALIB HUSSAIN (ITZVIRUS)',
     dailyChallenge: 'DAILY CHALLENGE',
     play: 'Play',
     continueGame: 'Continue Game',
@@ -3024,16 +3025,12 @@ renderCustomizationGrids();
 requestAnimationFrame(renderBoard);
 
 function adminResetAllSettings() {
-  if (confirm('Reset ALL settings to default? Avatar will NOT be reset. Password, stealth mode, and all other settings will be cleared.')) {
-    // Avatar NOT reset - stays as is per user request
+  if (confirm('Reset ALL settings to default? Avatar will NOT be reset.')) {
     localStorage.removeItem('virus_admin_pass');
     localStorage.removeItem('virus_stealth_mode');
     localStorage.removeItem('virus_ap_level');
     localStorage.removeItem('virus_ap_daily');
-    localStorage.removeItem('virus_ap_best');
-    localStorage.removeItem('virus_ap_settings');
-    localStorage.removeItem('virus_ap_progress');
-    alert('All settings reset to default! (Avatar kept) Reloading...');
+    alert('Reset done! (Avatar kept)');
     location.reload();
   }
 }
