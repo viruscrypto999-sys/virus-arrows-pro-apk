@@ -84,25 +84,10 @@
     color: #cbd5e1;
     font-weight: 600;
   }
-  .exp-actions {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .exp-pill {
-    border: none;
-    border-radius: 16px;
-    padding: 6px 11px;
-    font-size: 11px;
-    font-weight: 800;
-    color: #fff;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-  }
-  .exp-pill.html-btn { background: #e11d48; }
-  .exp-pill.txt-btn { background: #2563eb; }
+  
+  
+  
+  
   .exp-close {
     background: rgba(255,255,255,0.1);
     color: #94a3b8;
@@ -848,12 +833,7 @@
     <div>
       <div class="exp-left-sub">No copy-paste cutoff!</div>
     </div>
-    <div class="exp-actions">
-      <button class="exp-pill html-btn" onclick="exportCleanGameFile('index.html')">📥 index.html</button>
-      <button class="exp-pill txt-btn" onclick="exportCleanGameFile('virus_arrows_full.txt')">📄 .txt</button>
-      <button class="exp-close" onclick="document.getElementById('exporter-bar').style.display='none'">✕</button>
-    </div>
-  </div>
+    
 
   <!-- ==================== 1. MAIN SCREEN ==================== -->
   <div id="screen-main" class="screen active">
@@ -1312,21 +1292,7 @@
 /* ============================================================================
    0. 1-TAP CLEAN FILE EXPORTER (Strips Top Exporter Bar Automatically)
    ============================================================================ */
-function exportCleanGameFile(filename) {
-  const clone = document.documentElement.cloneNode(true);
-  const expBar = clone.querySelector('#exporter-bar');
-  if (expBar) expBar.remove();
-  const fullHtml = '<!DOCTYPE html>\n' + clone.outerHTML;
-  const blob = new Blob([fullHtml], { type: 'text/plain;charset=utf-8' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-}
+
 
 /* ============================================================================
    1. 10 ARROW COLORS (DEFAULT = WHITE) & 10 FULL GAME THEMES
