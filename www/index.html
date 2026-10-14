@@ -783,6 +783,20 @@
   }
   .sec-key:active { background: #e11d48; }
 </style>
+
+<style>
+/* Fix: Stack theme panels vertically instead of side-by-side */
+.theme-modal-panels, .theme-dual-panel, [id*="theme-modal"] > div {
+  flex-direction: column !important;
+}
+/* Ensure theme sections don't overlap */
+.theme-section {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-bottom: 16px !important;
+}
+</style>
+
 </head>
 <body>
 
