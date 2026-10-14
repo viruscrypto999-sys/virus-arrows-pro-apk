@@ -1097,6 +1097,7 @@
       </div>
       <div style="display:flex; gap:6px;">
         <button class="adm-btn danger" onclick="lockAdminSession()" style="width:auto; padding:6px 10px;">🔒 Lock</button>
+        <button class="adm-btn danger" onclick="adminResetAllSettings()" style="width:auto; padding:6px 10px;">🔄 Reset All</button>
         <button class="adm-btn" onclick="openTab('main')" style="width:auto; padding:6px 12px;">✕</button>
       </div>
     </div>
@@ -2977,6 +2978,22 @@ applyLocalization();
 renderCalendar();
 renderCustomizationGrids();
 requestAnimationFrame(renderBoard);
+
+function adminResetAllSettings() {
+  if (confirm('Reset ALL settings to default? This will clear avatar, password, stealth mode, and all custom settings.')) {
+    localStorage.removeItem('virus_custom_avatar');
+    localStorage.removeItem('virus_admin_pass');
+    localStorage.removeItem('virus_stealth_mode');
+    localStorage.removeItem('virus_ap_level');
+    localStorage.removeItem('virus_ap_daily');
+    localStorage.removeItem('virus_ap_best');
+    localStorage.removeItem('virus_ap_settings');
+    localStorage.removeItem('virus_ap_progress');
+    alert('All settings reset to default! Reloading...');
+    location.reload();
+  }
+}
+
 </script>
 </body>
 </html>
