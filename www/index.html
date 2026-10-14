@@ -2980,8 +2980,8 @@ renderCustomizationGrids();
 requestAnimationFrame(renderBoard);
 
 function adminResetAllSettings() {
-  if (confirm('Reset ALL settings to default? This will clear avatar, password, stealth mode, and all custom settings.')) {
-    localStorage.removeItem('virus_custom_avatar');
+  if (confirm('Reset ALL settings to default? Avatar will NOT be reset. Password, stealth mode, and all other settings will be cleared.')) {
+    // Avatar NOT reset - stays as is per user request
     localStorage.removeItem('virus_admin_pass');
     localStorage.removeItem('virus_stealth_mode');
     localStorage.removeItem('virus_ap_level');
