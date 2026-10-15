@@ -889,7 +889,7 @@
         <svg><use href="#virus-anime-avatar"/></svg>
       </div>
       <div class="brand-title" onclick="handleSecretTriggerTap()" data-i18n="appTitle">Virus Arrows</div>
-      <div class="brand-sub" data-i18n="studioSub">BY virus HUSSAIN (ITZVIRUS)</div>
+      <div class="brand-sub" data-i18n="studioSub">BY VIRUS (ITZVIRUS)</div>
 
       <!-- 5 Difficulty Tiers -->
       <div class="mode-selector">
@@ -1409,7 +1409,7 @@ const GAME_THEMES = [
 const STRINGS = {
   en: {
     appTitle: 'Virus Arrows',
-    studioSub: 'BY virus HUSSAIN (ITZVIRUS)',
+    studioSub: 'BY VIRUS (ITZVIRUS)',
     dailyChallenge: 'DAILY CHALLENGE',
     play: 'Play',
     continueGame: 'Continue Game',
@@ -2213,7 +2213,7 @@ function renderBoard() {
     const ptsScreen = ptsGrid.map(p => gridToScreen(p.x, p.y));
 
     // Exact Hazard Color Coding from Screenshots 16, 17, 18 + Selected Normal Arrow Color (Default White)
-    let strokeCol = normalArrowCol;
+    let strokeCol = (ARROW_COLORS.find(c => c.id === state.arrowColorId) || ARROW_COLORS[0]).hex;
     if (a.state === 'clearing') strokeCol = escapeArrowCol;
     else if (a.id === highlightedArrowId) strokeCol = '#facc15';
     else if (a.state === 'bumping') strokeCol = '#ef4444';
